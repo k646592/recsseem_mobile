@@ -7,19 +7,25 @@ import 'package:recsseem_mobile/event/add_event_model.dart';
 class AddEventPage extends StatefulWidget {
   final DateTime selectedDate;
   final String outputdate;
+  final DateTime select;
 
-  const AddEventPage({Key? key, required this.selectedDate, required this.outputdate}) : super(key: key);
+  const AddEventPage(this.select, {Key? key, required this.selectedDate, required this.outputdate}) : super(key: key);
   @override
-  _AddEventPageState createState() => _AddEventPageState();
+  _AddEventPageState createState() => _AddEventPageState(select);
 
 }
 
 class _AddEventPageState extends State<AddEventPage> {
 
-  DateTimeRange dateRange = DateTimeRange(
-    start: DateTime.now(),
-    end: DateTime.now(),
-  );
+  final DateTime select;
+  _AddEventPageState(this.select){
+    dateRange = DateTimeRange(
+        start: select,
+        end: select
+    );
+  }
+
+  DateTimeRange? dateRange;
 
   TimeOfDay start_time = TimeOfDay(hour: 0, minute: 00);
   TimeOfDay end_time = TimeOfDay(hour: 23, minute: 59);
@@ -55,9 +61,9 @@ class _AddEventPageState extends State<AddEventPage> {
 
   @override
   Widget build(BuildContext context) {
-    final start = dateRange.start;
-    final end = dateRange.end;
-    final difference = dateRange.duration;
+    final start = dateRange!.start;
+    final end = dateRange!.end;
+    final difference = dateRange!.duration;
 
     return ChangeNotifierProvider<AddEventModel>(
       create: (_) => AddEventModel()..fetchUser(),
@@ -77,7 +83,7 @@ class _AddEventPageState extends State<AddEventPage> {
                   onPressed: () async {
                     model.startLoading();
                     try {
-                      await model.addEvent(_title, _unit, dateRange, start_time, end_time, _mailSend);
+                      await model.addEvent(_title, _unit, dateRange!, start_time, end_time, _mailSend);
                       //イベント登録
                       Navigator.of(context).push(
                         MaterialPageRoute(

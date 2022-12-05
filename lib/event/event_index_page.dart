@@ -361,7 +361,7 @@ class _EventIndexPage extends State<EventIndexPage> {
               await Navigator.of(context).push(
                 MaterialPageRoute(
                     builder: (context) {
-                      return AddEventPage(selectedDate: _focusedDay, outputdate: outputDate(_focusedDay),);
+                      return AddEventPage(_focusedDay, selectedDate: _focusedDay, outputdate: outputDate(_focusedDay),);
                     },
                     fullscreenDialog: true,
                 ),
