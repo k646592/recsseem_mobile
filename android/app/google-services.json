@@ -1,0 +1,46 @@
+{
+  "project_info": {
+    "project_number": "828600576143",
+    "project_id": "recsseemflutter",
+    "storage_bucket": "recsseemflutter.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:828600576143:android:1b3dd7d1b586e4e132a8fa",
+        "android_client_info": {
+          "package_name": "com.example.recsseem_mobile"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "828600576143-dj04o578gup32o1tg5cv4knkdc1ut2f2.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyBDmCDHLahnv3XSYvFHP32bMFJa8MCS6Fs"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": [
+            {
+              "client_id": "828600576143-dj04o578gup32o1tg5cv4knkdc1ut2f2.apps.googleusercontent.com",
+              "client_type": 3
+            },
+            {
+              "client_id": "828600576143-3ah8h62ta9slltj092h87jgaot1f8qm9.apps.googleusercontent.com",
+              "client_type": 2,
+              "ios_info": {
+                "bundle_id": "com.example.recsseemFlutter"
+              }
+            }
+          ]
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}
