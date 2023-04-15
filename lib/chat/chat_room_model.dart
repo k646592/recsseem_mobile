@@ -2,12 +2,13 @@ import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:firebase_auth/firebase_auth.dart';
-import '../domain/user.dart';
+import '../domain/chat_room.dart';
 
 class ChatRoomListModel extends ChangeNotifier {
-  List<Member> users = [];
 
-  Map<String, List<dynamic>> userGroupList = {};  //key:group, value:user
+  List<ChatRoom> chatRooms = [];
+
+  List<dynamic> joinChatRooms = [];
 
   String? email;
   String? name;
@@ -16,43 +17,40 @@ class ChatRoomListModel extends ChangeNotifier {
   String? status;
 
   void fetchChatRoomList() async {
+    final currentUser = FirebaseAuth.instance.currentUser;
+    final DocumentSnapshot<Map<String, dynamic>> userSnapshot = await FirebaseFirestore.instance.collection('users').doc(currentUser!.uid).get();
+    joinChatRooms = userSnapshot.data()!['joinChatRooms'];
 
-    final QuerySnapshot snapshot = await FirebaseFirestore.instance.collection('users').get();
+    final QuerySnapshot snap = await FirebaseFirestore.instance.collection('rooms').orderBy('createdAt').get();
 
-    final List<Member> users = snapshot.docs.map((DocumentSnapshot document) {
+    final List<ChatRoom> rooms = snap.docs.map((DocumentSnapshot document) {
       Map<String, dynamic> data = document.data()! as Map<String, dynamic>;
       final String id = document.id;
-      final String email = data['email'];
-      final String grade = data['grade'];
-      final String group = data['group'];
-      final String name = data['name'];
-      final String uid = data['uid'];
-      final String status = data['status'];
-      return Member(id, email, grade, group, name, uid, status);
+      final String roomName = data['roomName'];
+      final List<dynamic> admin = data['admin'].toList();
+      final String resentMessage = data['resentMessage'];
+      final String resentMessageSender = data['resentMessageSender'];
+      final DateTime createdAt = data['createdAt'].toDate();
+      final List<dynamic> members = data['members'].toList();
+      return ChatRoom(id, roomName, admin, resentMessage, resentMessageSender, createdAt, members);
     }).toList();
 
-    this.users = users;
-
-    this.userGroupList = {};
-
-    users.forEach((user) => {
-      if (userGroupList[user.group] != null) {
-        userGroupList[user.group]?.add(user)
+      for (var room in rooms) {
+        for(int i = 0; i<joinChatRooms.length; i++){
+          if(joinChatRooms[i] == room.id){
+            chatRooms.add(room);
+          }
+        }
       }
-      else {
-        userGroupList[user.group] = [user]
-      }
-    });
 
     final user = FirebaseAuth.instance.currentUser;
 
     FirebaseFirestore.instance.collection('users').doc(user!.uid).snapshots().listen((DocumentSnapshot snapshot) {
-      this.name = snapshot.get('name');
-      this.group = snapshot.get('group');
-      this.grade = snapshot.get('grade');
-      this.email = snapshot.get('email');
-      this.status = snapshot.get('status');
-      notifyListeners();
+      name = snapshot.get('name');
+      group = snapshot.get('group');
+      grade = snapshot.get('grade');
+      email = snapshot.get('email');
+      status = snapshot.get('status');
     });
 
     notifyListeners();

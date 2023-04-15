@@ -59,6 +59,11 @@ class RegisterModel extends ChangeNotifier {
     this.name = nameController.text;
     this.group = groupController.text;
     this.grade = gradeController.text;
+    String status = '未出席';
+
+    if(grade == null || grade == ''){
+      grade = 'B4';
+    }
 
     if (email != null && password != null ) {
       //firebase authでユーザー作成
@@ -80,6 +85,10 @@ class RegisterModel extends ChangeNotifier {
           'name': name,
           'group': group,
           'grade': grade,
+          'status': status,
+          'joinChatRooms': [],
+          'update': DateTime.now(),
+          'imgURl': 'https://4thsight.xyz/wp-content/uploads/2020/02/1582801063-300x300.png',
         });
       }
     }

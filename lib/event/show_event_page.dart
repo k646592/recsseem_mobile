@@ -1,4 +1,5 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:intl/intl.dart';
@@ -11,6 +12,8 @@ class ShowEventPage extends StatelessWidget {
   ShowEventPage(this.event);
 
   DateFormat output = DateFormat('yyyy/MM/dd  a hh:mm');
+
+  final user = FirebaseAuth.instance.currentUser;
 
   @override
   Widget build(BuildContext context) {
@@ -33,13 +36,25 @@ class ShowEventPage extends StatelessWidget {
             child: IconButton(
               icon: Icon(Icons.edit),
               onPressed: () async {
-                await Navigator.of(context).push(
-                  MaterialPageRoute(
-                      builder: (context) {
-                        return EditEventPage(event);
-                      }
-                  )
-                );
+                try{
+                  if(user!.uid != event.userId){
+                    throw 'イベント投稿者ではないため、編集できません。';
+                  }
+                  await Navigator.of(context).push(
+                      MaterialPageRoute(
+                          builder: (context) {
+                            return EditEventPage(event);
+                          }
+                      )
+                  );
+                }
+                catch(e){
+                  final snackBar = SnackBar(
+                    backgroundColor: Colors.red,
+                    content: Text(e.toString()),
+                  );
+                  ScaffoldMessenger.of(context).showSnackBar(snackBar);
+                }
               },
             )
           ),
@@ -181,21 +196,34 @@ class ShowEventPage extends StatelessWidget {
               TextButton(
                 child: Text("はい"),
                 onPressed: () async {
-                  //modelで削除
-                  FirebaseFirestore.instance.collection('events').doc(event.id).delete();
-                  Navigator.of(context).push(
-                    MaterialPageRoute(
-                        builder: (context) {
-                          return Footer();
-                        }
-                    )
-                  );
-                  final snackBar = SnackBar(
-                    backgroundColor: Colors.blue,
-                    content: Text("${event.title}を削除しました"),
-                  );
-                  ScaffoldMessenger.of(context).
-                  showSnackBar(snackBar);
+                  final user = FirebaseAuth.instance.currentUser;
+                  try{
+                    if ( user!.uid != event.userId){
+                      throw 'イベント投稿者ではないため、削除できません。';
+                    }
+                    FirebaseFirestore.instance.collection('events').doc(event.id).delete();
+                    Navigator.of(context).push(
+                        MaterialPageRoute(
+                            builder: (context) {
+                              return Footer(pageNumber: 0);
+                            }
+                        )
+                    );
+                    final snackBar = SnackBar(
+                      backgroundColor: Colors.blue,
+                      content: Text("${event.title}を削除しました"),
+                    );
+                    ScaffoldMessenger.of(context).
+                    showSnackBar(snackBar);
+                  }
+                  catch(e){
+                    final snackBar = SnackBar(
+                      backgroundColor: Colors.red,
+                      content: Text(e.toString()),
+                    );
+                    ScaffoldMessenger.of(context).showSnackBar(snackBar);
+                    Navigator.pop(context);
+                  }
                 },
               ),
             ],

@@ -10,6 +10,7 @@ import '../HeaderandFooter/footer.dart';
 String? error;
 
 class LoginPage extends StatelessWidget {
+  const LoginPage({super.key});
 
   @override
   Widget build(BuildContext context) {
@@ -18,6 +19,7 @@ class LoginPage extends StatelessWidget {
       child: Scaffold(
         appBar: AppBar(
           title: Text('ReCS/SEEM(ログイン)'),
+          leading: Icon(Icons.arrow_back),
         ),
         body: Center(
           child: Consumer<LoginModel>(builder: (context, model, child) {
@@ -62,7 +64,7 @@ class LoginPage extends StatelessWidget {
                             Navigator.of(context).push(
                               MaterialPageRoute(
                                 builder: (context) {
-                                  return Footer();
+                                  return const Footer(pageNumber: 0);
                                 },
                               ),
                             );

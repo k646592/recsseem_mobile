@@ -21,7 +21,7 @@ class _AddEventPageState extends State<AddEventPage> {
   _AddEventPageState(this.select){
     dateRange = DateTimeRange(
         start: select,
-        end: select
+        end: select,
     );
   }
 
@@ -88,7 +88,7 @@ class _AddEventPageState extends State<AddEventPage> {
                       Navigator.of(context).push(
                         MaterialPageRoute(
                             builder: (context) {
-                              return Footer();
+                              return const Footer(pageNumber: 0);
                             }
                         ),
                       );

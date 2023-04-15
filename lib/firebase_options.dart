@@ -68,7 +68,7 @@ class DefaultFirebaseOptions {
     projectId: 'recsseemflutter',
     storageBucket: 'recsseemflutter.appspot.com',
     iosClientId: '828600576143-j22pk5lenbldtud84md3a8ce2hqik52u.apps.googleusercontent.com',
-    iosBundleId: 'com.example.recsseemMobile',
+    iosBundleId: 'com.your.orgname.recsseemMobile',
   );
 
   static const FirebaseOptions macos = FirebaseOptions(
@@ -78,6 +78,6 @@ class DefaultFirebaseOptions {
     projectId: 'recsseemflutter',
     storageBucket: 'recsseemflutter.appspot.com',
     iosClientId: '828600576143-j22pk5lenbldtud84md3a8ce2hqik52u.apps.googleusercontent.com',
-    iosBundleId: 'com.example.recsseemMobile',
+    iosBundleId: 'com.your.orgname.recsseemMobile',
   );
 }

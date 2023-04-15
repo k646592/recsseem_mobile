@@ -10,13 +10,15 @@ import 'package:table_calendar/table_calendar.dart';
 import '../domain/event.dart';
 import '../login/login_page.dart';
 import '../mypage/edit_my_page.dart';
+import '../timer/timer.dart';
 import 'add_event_page.dart';
 import 'event_edit_page.dart';
 import 'holiday.dart';
+import 'dart:async';
 import 'package:url_launcher/link.dart';
 
 class EventIndexPage extends StatefulWidget {
-  EventIndexPage({Key? key}) : super(key: key);
+  const EventIndexPage({Key? key}) : super(key: key);
 
   @override
   State<EventIndexPage> createState() => _EventIndexPage();
@@ -33,37 +35,44 @@ class _EventIndexPage extends State<EventIndexPage> {
 
   @override
   Widget build(BuildContext context) {
+    final user = FirebaseAuth.instance.currentUser;
 
     return ChangeNotifierProvider<EventListModel>(
       create: (_) => EventListModel()..fetchEventList(),
       child: Scaffold(
         appBar: AppBar(
-          leading: Padding(
-            padding: const EdgeInsets.all(8.0),
-            child: IconButton(
-                icon: Icon(Icons.arrow_back_ios),
-                onPressed: () {
-                  Navigator.of(context).pop();
-                }
+          actions: [
+            Padding(
+              padding: const EdgeInsets.all(8.0),
+              child: IconButton(
+                  icon: const Icon(Icons.timer),
+                  onPressed: () async {
+                    await Navigator.of(context).push(
+                        MaterialPageRoute(builder: (context){
+                          return ClockTimer();
+                        })
+                    );
+                  }
+              ),
             ),
-          ),
+          ],
           title: Text('イベント一覧'),
           backgroundColor: Colors.black,
           centerTitle: true,
           elevation: 0.0,
         ),
-        endDrawer: Drawer(
+        drawer: Drawer(
           child: Consumer<EventListModel>(builder: (context, model, child) {
             return ListView(
             children: [
               DrawerHeader(
-                decoration: BoxDecoration(
+                decoration: const BoxDecoration(
                   color: Colors.yellow
                 ),
                 child: Column(
                   crossAxisAlignment: CrossAxisAlignment.center,
                   children: [
-                    Text('Menu&MyAccount',
+                    const Text('Menu&MyAccount',
                       style: TextStyle(
                         fontSize: 25,
                       ),
@@ -72,25 +81,26 @@ class _EventIndexPage extends State<EventIndexPage> {
                     Text('Group：${model.group}'),
                     Text('Grade：${model.grade}'),
                     Text('Email：${model.email}'),
+                    Text('出席状況：${model.status}'),
                   ],
                 ),
               ),
               ListTile(
                 title: TextButton.icon(
-                  icon: Icon(
+                  icon: const Icon(
                     Icons.logout_outlined,
                   ),
                   onPressed: () async {
                     try {
-                      await FirebaseAuth.instance.signOut();
+                      FirebaseAuth.instance.signOut();
                       Navigator.of(context).push(
                         MaterialPageRoute(
                           builder: (context) {
-                            return LoginPage();
+                            return const LoginPage();
                           }
                         ),
                       );
-                      final snackBar = SnackBar(
+                      const snackBar = SnackBar(
                         backgroundColor: Colors.green,
                           content: Text('ログアウトしました'),
                       );
@@ -116,7 +126,7 @@ class _EventIndexPage extends State<EventIndexPage> {
                   await Navigator.of(context).push(
                     MaterialPageRoute(
                       builder: (context) {
-                        return EditMyPage();
+                        return EditMyPage(name: model.name!, email: model.email!, group: model.group!, grade: model.grade!,);
                       }
                     ),
                   );
@@ -150,13 +160,32 @@ class _EventIndexPage extends State<EventIndexPage> {
               Divider(
                 color: Colors.black,
               ),
+              ListTile(
+                  title: Link(
+                    // 開きたいWebページのURLを指定
+                    uri: Uri.parse('http://192.168.11.115:3000'),
+                    // targetについては後述
+                    target: LinkTarget.self,
+                    builder: (BuildContext ctx, FollowLink? openLink) {
+                      return TextButton.icon(
+                        onPressed: openLink,
+                        label: const Text(
+                          '齋藤作 New bole (研究室内のみ)',
+                        ),
+                        icon: Icon(Icons.library_books),
+                      );
+                    },
+                  ),
+              ),
+              const Divider(
+                color: Colors.black,
+              ),
             ],
           );
           }),
           ),
         body: SingleChildScrollView(
           child: Consumer<EventListModel>(builder: (context, model, child) {
-            final events = model.events;
 
             final eventsList = model.eventsList;
 
@@ -208,14 +237,26 @@ class _EventIndexPage extends State<EventIndexPage> {
                       color: Colors.blue,
                       icon: Icons.edit,
                       onTap: () async {
-                        //編集画面に遷移
-                        await Navigator.push(
-                          context,
-                          MaterialPageRoute(
-                            builder: (context) => EditEventPage(event),
-                            fullscreenDialog: true,
-                          ),
-                        );
+                        try{
+                          if(user!.uid != event.userId){
+                            throw 'イベント投稿者ではないため、編集できません。';
+                          }
+                          //編集画面に遷移
+                          await Navigator.push(
+                            context,
+                            MaterialPageRoute(
+                              builder: (context) => EditEventPage(event),
+                              fullscreenDialog: true,
+                            ),
+                          );
+                        }
+                        catch(e){
+                          final snackBar = SnackBar(
+                            backgroundColor: Colors.red,
+                            content: Text(e.toString()),
+                          );
+                          ScaffoldMessenger.of(context).showSnackBar(snackBar);
+                        }
                       },
                     ),
                     IconSlideAction(
@@ -343,9 +384,9 @@ class _EventIndexPage extends State<EventIndexPage> {
                   ),
                 ),
                 ListView(
-                      shrinkWrap: true,
-                      children: widgets,
-                  ),
+                        shrinkWrap: true,
+                        children: widgets,
+                ),
               ],
             );
           }),
@@ -392,7 +433,6 @@ class _EventIndexPage extends State<EventIndexPage> {
     return _defaultTextColor;
   }
 
-
   String outputDate(DateTime day) {
     DateFormat output = DateFormat('yyyy/MM/dd/(EE)');
     return output.format(day);
@@ -415,15 +455,25 @@ class _EventIndexPage extends State<EventIndexPage> {
                 child: Text("はい"),
                 onPressed: () async {
                   //modelで削除
-                  await model.delete(event);
-                  Navigator.pop(context);
-                  final snackBar = SnackBar(
-                    backgroundColor: Colors.blue,
-                    content: Text("${event.title}を削除しました"),
-                  );
-                  model.fetchEventList();
-                  ScaffoldMessenger.of(context).
-                  showSnackBar(snackBar);
+                  try {
+                    await model.delete(event);
+                    Navigator.pop(context);
+                    final snackBar = SnackBar(
+                      backgroundColor: Colors.blue,
+                      content: Text("${event.title}を削除しました"),
+                    );
+                    model.fetchEventList();
+                    ScaffoldMessenger.of(context).
+                    showSnackBar(snackBar);
+                  }
+                  catch (e){
+                    final snackBar = SnackBar(
+                      backgroundColor: Colors.red,
+                      content: Text(e.toString()),
+                    );
+                    ScaffoldMessenger.of(context).showSnackBar(snackBar);
+                    Navigator.pop(context);
+                  }
                 },
               ),
             ],

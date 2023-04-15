@@ -3,38 +3,55 @@ import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 
+import '../domain/chat_room.dart';
+
 class MyModel extends ChangeNotifier {
-  bool isLoading = false;
-  String? email;
-  String? name;
-  String? group;
-  String? grade;
 
-  void startLoading(){
-    isLoading = true;
+  List<ChatRoom> chats = [];
+
+  List<dynamic> joinChatRooms = [];
+
+  String email = '';
+  String name = '';
+  String group = '';
+  String grade = '';
+  String status = '';
+  String? imgURL;
+
+  void fetchMyModel() async {
+    final currentUser = FirebaseAuth.instance.currentUser;
+    final DocumentSnapshot<Map<String, dynamic>> userSnapshot = await FirebaseFirestore.instance.collection('users').doc(currentUser!.uid).get();
+    email = userSnapshot.data()!['email'];
+    name = userSnapshot.data()!['name'];
+    group = userSnapshot.data()!['group'];
+    grade = userSnapshot.data()!['grade'];
+    status = userSnapshot.data()!['status'];
+    joinChatRooms = userSnapshot.data()!['joinChatRooms'];
+    imgURL = userSnapshot.data()!['imgURL'];
+
+    final QuerySnapshot snap = await FirebaseFirestore.instance.collection('rooms').orderBy('createdAt').get();
+
+    final List<ChatRoom> rooms = snap.docs.map((DocumentSnapshot document) {
+      Map<String, dynamic> data = document.data()! as Map<String, dynamic>;
+      final String id = document.id;
+      final String roomName = data['roomName'];
+      final List<dynamic> admin = data['admin'].toList();
+      final String resentMessage = data['resentMessage'];
+      final String resentMessageSender = data['resentMessageSender'];
+      final DateTime createdAt = data['createdAt'].toDate();
+      final List<dynamic> members = data['members'].toList();
+      return ChatRoom(id, roomName, admin, resentMessage, resentMessageSender, createdAt, members);
+    }).toList();
+
+    for (var room in rooms) {
+      for(int i = 0; i<joinChatRooms.length; i++){
+        if(joinChatRooms[i] == room.id){
+          chats.add(room);
+        }
+      }
+    }
+
     notifyListeners();
   }
 
-  void endLoading()
-  {
-    isLoading = false;
-    notifyListeners();
-  }
-
-  void fetchUser() async {
-    final user = FirebaseAuth.instance.currentUser;
-
-    FirebaseFirestore.instance.collection('users').doc(user!.uid).snapshots().listen((DocumentSnapshot snapshot) {
-      this.name = snapshot.get('name');
-      this.group = snapshot.get('group');
-      this.grade = snapshot.get('grade');
-      this.email = snapshot.get('email');
-      notifyListeners();
-    });
-    notifyListeners();
-  }
-
-  Future logout() async {
-    await FirebaseAuth.instance.signOut();
-  }
 }

@@ -5,7 +5,7 @@ import 'package:recsseem_mobile/HeaderandFooter/footer.dart';
 import 'package:recsseem_mobile/register/register_model.dart';
 
 class RegisterPage extends StatefulWidget {
-  RegisterPage({Key? key}) : super(key:key);
+  const RegisterPage({Key? key}) : super(key:key);
 
   @override
   _RegisterPageState createState() => _RegisterPageState();
@@ -16,7 +16,7 @@ class _RegisterPageState extends State<RegisterPage> {
   String _group = '';
   //エラーを表示
   String? error;
-  String _grade = '';
+  String _grade = 'B4';
   String _gradedisplay = 'B4';
 
   void _handleRadioButton(String group) =>
@@ -36,7 +36,7 @@ class _RegisterPageState extends State<RegisterPage> {
       create: (_) => RegisterModel(),
       child: Scaffold(
         appBar: AppBar(
-          title: Text('新規登録'),
+          title: const Text('新規登録'),
         ),
         body: Center(
           child: Consumer<RegisterModel>(builder: (context, model, child) {
@@ -48,7 +48,7 @@ class _RegisterPageState extends State<RegisterPage> {
                     children: [
                       TextField(
                         controller: model.emailController,
-                        decoration: InputDecoration(
+                        decoration: const InputDecoration(
                             hintText: 'Email　　※必要'
                         ),
                         onChanged: (text) {
@@ -67,24 +67,24 @@ class _RegisterPageState extends State<RegisterPage> {
                           model.setPassword(text);
                         },
                       ),
-                      SizedBox(
+                      const SizedBox(
                         height: 16,
                       ),
                       TextField(
                         controller: model.nameController,
-                        decoration: InputDecoration(
-                          hintText: '名前',
+                        decoration: const InputDecoration(
+                          hintText: '名前(苗字のみ)',
                         ),
                         onChanged: (text) {
                           model.setName(text);
                         },
                       ),
-                      SizedBox(
+                      const SizedBox(
                         height: 16,
                       ),
                       Text(
                         '選択した班：$_group',
-                        style: TextStyle(
+                        style: const TextStyle(
                           fontSize: 15,
                         ),
                       ),
@@ -212,7 +212,7 @@ class _RegisterPageState extends State<RegisterPage> {
                             Navigator.of(context).push(
                               MaterialPageRoute(
                                   builder: (context) {
-                                    return Footer();
+                                    return const Footer(pageNumber: 0);
                                   }
                               ),
                             );

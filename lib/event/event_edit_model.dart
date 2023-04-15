@@ -46,6 +46,10 @@ class EditEventModel extends ChangeNotifier {
     if (title == null || title == '') {
       throw 'タイトルが入力されていません';
     }
+
+    if(title.length > 30) {
+      throw 'タイトルの文字数が多いです';
+    }
     // firestoreに更新
     FirebaseFirestore.instance.collection('events').doc(event.id).update({
       'title': title,

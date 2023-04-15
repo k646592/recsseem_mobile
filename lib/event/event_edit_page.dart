@@ -84,7 +84,7 @@ class _EditEventPageState extends State<EditEventPage> {
                       Navigator.of(context).push(
                         MaterialPageRoute(
                             builder: (context) {
-                              return Footer();
+                              return const Footer(pageNumber: 0);
                             }
                         ),
                       );

@@ -1,24 +1,27 @@
-import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:recsseem_mobile/event/event_index_page.dart';
+import 'package:recsseem_mobile/newcalendar/view/new_event_index_page.dart';
 
 import '../attendancemanagement/attendance_management_page.dart';
-import '../chat/chat_page.dart';
+import '../chat/chat_room_page.dart';
 import '../mypage/my_page.dart';
 
 class Footer extends StatefulWidget {
-  Footer({Key? key}) : super(key:key);
+
+  final int pageNumber;
+  const Footer({super.key, required this.pageNumber});
 
   @override
   _FooterState createState() => _FooterState();
 }
 
 class _FooterState extends State<Footer> {
-  int _selectedIndex = 0;
+  late int _selectedIndex;
   final _bottomNavigationBarItems = <BottomNavigationBarItem>[];
 
   //アイコン情報
   static const _footerIcons = [
+    Icons.calendar_month,
     Icons.calendar_month,
     Icons.groups,
     Icons.chat,
@@ -28,6 +31,7 @@ class _FooterState extends State<Footer> {
   //アイコン文字列
   static const _footerItemNames = [
     'イベント一覧',
+    'イベント',
     '出席管理',
     'チャット',
     'マイページ',
@@ -35,17 +39,23 @@ class _FooterState extends State<Footer> {
 
   var _routes = [
     EventIndexPage(),
+    TopPage(),
     AttendanceManagementPage(),
-    ChatPage(),
+    ChatRoomListPage(),
     MyPage(),
   ];
 
   @override
   void initState() {
+    _selectedIndex = widget.pageNumber;
     super.initState();
-    _bottomNavigationBarItems.add(_UpdateActiveState(0));
-    for ( var i =1; i < _footerItemNames.length; i++) {
-      _bottomNavigationBarItems.add(_UpdateDeactiveState(i));
+    for ( var i =0; i < _footerItemNames.length; i++) {
+      if(_selectedIndex != i) {
+        _bottomNavigationBarItems.add(_UpdateDeactiveState(i));
+      }
+      else {
+        _bottomNavigationBarItems.add(_UpdateActiveState(_selectedIndex));
+      }
     }
   }
 
@@ -91,5 +101,4 @@ class _FooterState extends State<Footer> {
       ),
     );
   }
-
 }

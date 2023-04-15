@@ -42,9 +42,12 @@ class AddEventModel extends ChangeNotifier {
       username = snapshot.get('name');
       notifyListeners();
     });
+    notifyListeners();
   }
 
   Future addEvent(String title, String unit, DateTimeRange dateTimeRange, TimeOfDay startTime, TimeOfDay endTime, bool mailsend) async {
+    final user = FirebaseAuth.instance.currentUser;
+
     this.title = title;
     this.unit = unit;
     this.description = descriptionController.text;
@@ -72,6 +75,12 @@ class AddEventModel extends ChangeNotifier {
       throw '参加単位が入力されていません';
     }
 
+    if(title.length > 30) {
+      throw 'タイトルの文字数が多いです';
+    }
+
+    final Color color = Colors.red;
+
     final doc = FirebaseFirestore.instance.collection('events').doc();
     //firestoreに追加
     await doc.set ({
@@ -82,7 +91,9 @@ class AddEventModel extends ChangeNotifier {
       'unit': unit,
       'description': description,
       'mailSend': mailSend,
+      'userId': user!.uid,
+      'color': color.value,
     });
-
+    notifyListeners();
   }
 }

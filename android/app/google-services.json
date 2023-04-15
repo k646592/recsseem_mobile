@@ -34,7 +34,7 @@
               "client_id": "828600576143-3ah8h62ta9slltj092h87jgaot1f8qm9.apps.googleusercontent.com",
               "client_type": 2,
               "ios_info": {
-                "bundle_id": "com.example.recsseemFlutter"
+                "bundle_id": "com.your.orgname.recsseemFlutter"
               }
             }
           ]
