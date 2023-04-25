@@ -3,6 +3,7 @@ import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:intl/intl.dart';
+import 'package:recsseem_mobile/newcalendar/view/new_event_show.dart';
 import '../../../HeaderandFooter/footer.dart';
 import '../../../domain/event.dart';
 import '../month_view/month_view.dart';
@@ -158,7 +159,6 @@ class FilledCell<T extends Object?> extends StatelessWidget {
                           (index) => GestureDetector(
                         onTap: () {
                           onTileTap?.call(events[index], events[index].date);
-
                           showDialog(
                               context: context,
                               builder: (context) {
@@ -213,7 +213,13 @@ class FilledCell<T extends Object?> extends StatelessWidget {
                                             child:Center(
                                               child: IconButton(
                                                 onPressed: () {
-
+                                                  Navigator.of(context).push(
+                                                    MaterialPageRoute(
+                                                        builder: (context) {
+                                                          return NewEventShow(events[index]);
+                                                        }
+                                                    ),
+                                                  );
                                                 },
                                                 icon: const Icon(Icons.description),
                                                 color: Colors.black,

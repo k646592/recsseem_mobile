@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:intl/intl.dart';
 
+import '../../view/new_event_show.dart';
 import '../calendar_constants.dart';
 import '../calendar_controller_provider.dart';
 import '../calendar_event_data.dart';
@@ -907,7 +908,13 @@ class _MonthPageBuilder<T> extends StatelessWidget {
                                                           child:Center(
                                                             child: IconButton(
                                                               onPressed: () {
-
+                                                                Navigator.of(context).push(
+                                                                  MaterialPageRoute(
+                                                                      builder: (context) {
+                                                                        return NewEventShow(events[index]);
+                                                                      }
+                                                                  ),
+                                                                );
                                                               },
                                                               icon: const Icon(Icons.description),
                                                               color: Colors.black,

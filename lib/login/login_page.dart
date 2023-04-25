@@ -19,7 +19,7 @@ class LoginPage extends StatelessWidget {
       child: Scaffold(
         appBar: AppBar(
           title: Text('ReCS/SEEM(ログイン)'),
-          leading: Icon(Icons.arrow_back),
+          automaticallyImplyLeading: false,
         ),
         body: Center(
           child: Consumer<LoginModel>(builder: (context, model, child) {

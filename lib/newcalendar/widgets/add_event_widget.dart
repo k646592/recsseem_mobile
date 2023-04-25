@@ -113,301 +113,304 @@ class _AddEventWidgetState extends State<AddEventWidget> {
       child: Consumer<CreateEventModel>(builder: (context, model, child) {
         return Form(
           key: _form,
-          child: Column(
-            mainAxisSize: MainAxisSize.min,
-            children: [
-              Container(
-                padding: const EdgeInsets.all(5.0),
-                width: double.infinity,
-                decoration: BoxDecoration(
-                  border: Border.all(
-                      width: 2,
-                      color: AppColors.lightNavyBlue
-                  ),
-                  borderRadius: BorderRadius.circular(7),
-                ),
-                child: Row(
-                  children: [
-                    SizedBox(
-                      width: 10,
+          child: SingleChildScrollView(
+            child: Column(
+              mainAxisSize: MainAxisSize.min,
+              children: [
+                Container(
+                  padding: const EdgeInsets.all(5.0),
+                  width: double.infinity,
+                  decoration: BoxDecoration(
+                    border: Border.all(
+                        width: 2,
+                        color: AppColors.lightNavyBlue
                     ),
-                    Text('Content',
-                      style: TextStyle(
-                        fontSize: 17.0,
+                    borderRadius: BorderRadius.circular(7),
+                  ),
+                  child: Row(
+                    children: [
+                      SizedBox(
+                        width: 10,
+                      ),
+                      Text('Content',
+                        style: TextStyle(
+                          fontSize: 17.0,
+                        ),
+                      ),
+                      SizedBox(
+                        width: 10,
+                      ),
+                      DropdownButton(
+                        value: _content,
+                        items: const [
+                          DropdownMenuItem(
+                            child: Text('ミーティング'),
+                            value: 'ミーティング',
+                          ),
+                          DropdownMenuItem(
+                            child: Text('輪講'),
+                            value: '輪講',
+                          ),
+                          DropdownMenuItem(
+                            child: Text('その他'),
+                            value: 'その他',
+                          ),
+                        ],
+                        onChanged: (text) {
+                          setState(() {
+                            _content = text.toString();
+                            if (text.toString() == 'ミーティング') {
+                              _display = false;
+                              _title = 'ミーティング';
+                            }
+                            if (text.toString() == '輪講') {
+                              _display = false;
+                              _title = '輪講';
+                            }
+                            if (text.toString() == 'その他') {
+                              _display = true;
+                              _title = '';
+                            }
+                            colorSelector(_unit, _content);
+                          });
+                        },
+                      ),
+                    ],
+                  ),
+                ),
+                SizedBox(
+                  height: 15,
+                ),
+                TextFormField(
+                  decoration: AppConstants.inputDecoration.copyWith(
+                    labelText: _title,
+                  ),
+                  style: TextStyle(
+                    color: AppColors.black,
+                    fontSize: 17.0,
+                  ),
+                  enabled: _display,
+
+                  validator: (value) {
+                    if (_title == "")
+                      return "Please enter event title.";
+
+                    return null;
+                  },
+                  keyboardType: TextInputType.text,
+                  textInputAction: TextInputAction.next,
+                ),
+                SizedBox(
+                  height: 15,
+                ),
+                unitSelector(_content),
+                Row(
+                  children: [
+                    Expanded(
+                      child: DateTimeSelectorFormField(
+                        controller: _startDateController,
+                        decoration: AppConstants.inputDecoration.copyWith(
+                          labelText: "Start Date",
+                        ),
+                        validator: (value) {
+                          if (value == null || value == "")
+                            return "Please select date.";
+
+                          return null;
+                        },
+                        textStyle: TextStyle(
+                          color: AppColors.black,
+                          fontSize: 17.0,
+                        ),
+                        onSave: (date) => _startDate = date,
+                        type: DateTimeSelectionType.date,
                       ),
                     ),
-                    SizedBox(
-                      width: 10,
-                    ),
-                    DropdownButton(
-                      value: _content,
-                      items: const [
-                        DropdownMenuItem(
-                          child: Text('ミーティング'),
-                          value: 'ミーティング',
+                    SizedBox(width: 20.0),
+                    Expanded(
+                      child: DateTimeSelectorFormField(
+                        controller: _endDateController,
+                        decoration: AppConstants.inputDecoration.copyWith(
+                          labelText: "End Date",
                         ),
-                        DropdownMenuItem(
-                          child: Text('輪講'),
-                          value: '輪講',
+                        validator: (value) {
+                          if (value == null || value == "")
+                            return "Please select date.";
+
+                          return null;
+                        },
+                        textStyle: TextStyle(
+                          color: AppColors.black,
+                          fontSize: 17.0,
                         ),
-                        DropdownMenuItem(
-                          child: Text('その他'),
-                          value: 'その他',
-                        ),
-                      ],
-                      onChanged: (text) {
-                        setState(() {
-                          _content = text.toString();
-                          if (text.toString() == 'ミーティング') {
-                            _display = false;
-                            _title = 'ミーティング';
-                          }
-                          if (text.toString() == '輪講') {
-                            _display = false;
-                            _title = '輪講';
-                          }
-                          if (text.toString() == 'その他') {
-                            _display = true;
-                            _title = '';
-                          }
-                          colorSelector(_unit, _content);
-                        });
-                      },
+                        onSave: (date) => _endDate = date,
+                        type: DateTimeSelectionType.date,
+                      ),
                     ),
                   ],
                 ),
-              ),
-              SizedBox(
-                height: 15,
-              ),
-              TextFormField(
-                decoration: AppConstants.inputDecoration.copyWith(
-                  labelText: _title,
+                SizedBox(
+                  height: 15,
                 ),
-                style: TextStyle(
-                  color: AppColors.black,
-                  fontSize: 17.0,
-                ),
-                enabled: _display,
-
-                validator: (value) {
-                  if (_title == "")
-                    return "Please enter event title.";
-
-                  return null;
-                },
-                keyboardType: TextInputType.text,
-                textInputAction: TextInputAction.next,
-              ),
-              SizedBox(
-                height: 15,
-              ),
-              unitSelector(_content),
-              Row(
-                children: [
-                  Expanded(
-                    child: DateTimeSelectorFormField(
-                      controller: _startDateController,
-                      decoration: AppConstants.inputDecoration.copyWith(
-                        labelText: "Start Date",
-                      ),
-                      validator: (value) {
-                        if (value == null || value == "")
-                          return "Please select date.";
-
-                        return null;
-                      },
-                      textStyle: TextStyle(
-                        color: AppColors.black,
-                        fontSize: 17.0,
-                      ),
-                      onSave: (date) => _startDate = date,
-                      type: DateTimeSelectionType.date,
-                    ),
-                  ),
-                  SizedBox(width: 20.0),
-                  Expanded(
-                    child: DateTimeSelectorFormField(
-                      controller: _endDateController,
-                      decoration: AppConstants.inputDecoration.copyWith(
-                        labelText: "End Date",
-                      ),
-                      validator: (value) {
-                        if (value == null || value == "")
-                          return "Please select date.";
-
-                        return null;
-                      },
-                      textStyle: TextStyle(
-                        color: AppColors.black,
-                        fontSize: 17.0,
-                      ),
-                      onSave: (date) => _endDate = date,
-                      type: DateTimeSelectionType.date,
-                    ),
-                  ),
-                ],
-              ),
-              SizedBox(
-                height: 15,
-              ),
-              Row(
-                children: [
-                  Expanded(
-                    child: DateTimeSelectorFormField(
-                      controller: _startTimeController,
-                      decoration: AppConstants.inputDecoration.copyWith(
-                        labelText: "Start Time",
-                      ),
-                      validator: (value) {
-                        if (value == null || value == "")
-                          return "Please select start time.";
-
-                        return null;
-                      },
-                      onSave: (date) => _startTime = date,
-                      textStyle: TextStyle(
-                        color: AppColors.black,
-                        fontSize: 17.0,
-                      ),
-                      type: DateTimeSelectionType.time,
-                    ),
-                  ),
-                  SizedBox(width: 20.0),
-                  Expanded(
-                    child: DateTimeSelectorFormField(
-                      controller: _endTimeController,
-                      decoration: AppConstants.inputDecoration.copyWith(
-                        labelText: "End Time",
-                      ),
-                      validator: (value) {
-                        if (value == null || value == "")
-                          return "Please select end time.";
-
-                        return null;
-                      },
-                      onSave: (date) => _endTime = date,
-                      textStyle: TextStyle(
-                        color: AppColors.black,
-                        fontSize: 17.0,
-                      ),
-                      type: DateTimeSelectionType.time,
-                    ),
-                  ),
-                ],
-              ),
-              SizedBox(
-                height: 15,
-              ),
-              TextFormField(
-                focusNode: _descriptionNode,
-                style: TextStyle(
-                  color: AppColors.black,
-                  fontSize: 17.0,
-                ),
-                keyboardType: TextInputType.multiline,
-                textInputAction: TextInputAction.newline,
-                selectionControls: MaterialTextSelectionControls(),
-                minLines: 1,
-                maxLines: 10,
-                maxLength: 1000,
-                validator: (value) {
-                  if (value == null || value.trim() == "")
-                    return "Please enter event description.";
-
-                  return null;
-                },
-                onSaved: (value) => _description = value?.trim() ?? "",
-                decoration: AppConstants.inputDecoration.copyWith(
-                  hintText: "Event Description",
-                ),
-              ),
-              SizedBox(
-                height: 15.0,
-              ),
-              Row(
-                children: [
-                  Expanded(
-                    child: Container(
-                      padding: const EdgeInsets.all(5.0),
-                      width: double.infinity,
-                      decoration: BoxDecoration(
-                        border: Border.all(
-                            width: 2,
-                            color: AppColors.lightNavyBlue
+                Row(
+                  children: [
+                    Expanded(
+                      child: DateTimeSelectorFormField(
+                        controller: _startTimeController,
+                        decoration: AppConstants.inputDecoration.copyWith(
+                          labelText: "Start Time",
                         ),
-                        borderRadius: BorderRadius.circular(7),
+                        validator: (value) {
+                          if (value == null || value == "")
+                            return "Please select start time.";
+
+                          return null;
+                        },
+                        onSave: (date) => _startTime = date,
+                        textStyle: TextStyle(
+                          color: AppColors.black,
+                          fontSize: 17.0,
+                        ),
+                        type: DateTimeSelectionType.time,
                       ),
-                      child: Row(
-                        children: [
-                          SizedBox(
-                            width: 10,
+                    ),
+                    SizedBox(width: 20.0),
+                    Expanded(
+                      child: DateTimeSelectorFormField(
+                        controller: _endTimeController,
+                        decoration: AppConstants.inputDecoration.copyWith(
+                          labelText: "End Time",
+                        ),
+                        validator: (value) {
+                          if (value == null || value == "")
+                            return "Please select end time.";
+
+                          return null;
+                        },
+                        onSave: (date) => _endTime = date,
+                        textStyle: TextStyle(
+                          color: AppColors.black,
+                          fontSize: 17.0,
+                        ),
+                        type: DateTimeSelectionType.time,
+                      ),
+                    ),
+                  ],
+                ),
+                SizedBox(
+                  height: 15,
+                ),
+                TextFormField(
+                  focusNode: _descriptionNode,
+                  style: TextStyle(
+                    color: AppColors.black,
+                    fontSize: 17.0,
+                  ),
+                  keyboardType: TextInputType.multiline,
+                  textInputAction: TextInputAction.newline,
+                  selectionControls: MaterialTextSelectionControls(),
+                  minLines: 1,
+                  maxLines: 10,
+                  maxLength: 1000,
+                  validator: (value) {
+                    if (value == null || value.trim() == "")
+                      return "Please enter event description.";
+
+                    return null;
+                  },
+                  onSaved: (value) => _description = value?.trim() ?? "",
+                  decoration: AppConstants.inputDecoration.copyWith(
+                    hintText: "Event Description",
+                  ),
+                ),
+                SizedBox(
+                  height: 15.0,
+                ),
+                Row(
+                  children: [
+                    Expanded(
+                      child: Container(
+                        padding: const EdgeInsets.all(5.0),
+                        width: double.infinity,
+                        decoration: BoxDecoration(
+                          border: Border.all(
+                              width: 2,
+                              color: AppColors.lightNavyBlue
                           ),
-                          Text('メール送信',
-                            style: TextStyle(
-                              fontSize: 17.0,
+                          borderRadius: BorderRadius.circular(7),
+                        ),
+                        child: Row(
+                          children: [
+                            SizedBox(
+                              width: 10,
                             ),
-                          ),
-                          Flexible(
-                            child: ListTile(
-                              trailing: CupertinoSwitch(
-                                  value: _mailSend,
-                                  onChanged: (value) {
-                                    setState(() {
-                                      _mailSend = value;
-                                    });
-                                  }
+                            Text('メール送信',
+                              style: TextStyle(
+                                fontSize: 17.0,
                               ),
                             ),
-                          ),
-                        ],
+                            Flexible(
+                              child: ListTile(
+                                trailing: CupertinoSwitch(
+                                    value: _mailSend,
+                                    onChanged: (value) {
+                                      setState(() {
+                                        _mailSend = value;
+                                      });
+                                    }
+                                ),
+                              ),
+                            ),
+                          ],
+                        ),
                       ),
                     ),
-                  ),
-                ],
-              ),
-              SizedBox(
-                height: 15.0,
-              ),
-              Row(
-                children: [
-                  SizedBox(
-                    width: 20,
-                  ),
-                  Text(
-                    "Event Color: ",
-                    style: TextStyle(
-                      color: AppColors.black,
-                      fontSize: 17,
+                  ],
+                ),
+                SizedBox(
+                  height: 15.0,
+                ),
+                Row(
+                  children: [
+                    SizedBox(
+                      width: 20,
                     ),
-                  ),
-                  GestureDetector(
-                    onTap: _displayColorPicker,
-                    child: CircleAvatar(
-                      radius: 15,
-                      backgroundColor: _color,
+                    Text(
+                      "Event Color: ",
+                      style: TextStyle(
+                        color: AppColors.black,
+                        fontSize: 17,
+                      ),
                     ),
-                  ),
-                ],
-              ),
-              SizedBox(
-                height: 15,
-              ),
-              CustomButton(
-                onTap: () {
-                  _createEvent(model.username!, model.userId!);
-                  model.addEvent(calendarEvent);
-                  Navigator.of(context).push(
-                    MaterialPageRoute(
-                      builder: (context) {
-                        return TopPage();
-                      }
-                  ),
-                  );
-                },
-                title: "Add Event",
-              ),
-            ],
+                    GestureDetector(
+                      onTap: _displayColorPicker,
+                      child: CircleAvatar(
+                        radius: 15,
+                        backgroundColor: _color,
+                      ),
+                    ),
+                  ],
+                ),
+                SizedBox(
+                  height: 15,
+                ),
+                CustomButton(
+                  onTap: () {
+                    _createEvent(model.username!, model.userId!);
+                    model.addEvent(calendarEvent);
+                    model.Mailer();
+                    Navigator.of(context).push(
+                      MaterialPageRoute(
+                        builder: (context) {
+                          return TopPage();
+                        }
+                    ),
+                    );
+                  },
+                  title: "Add Event",
+                ),
+              ],
+            ),
           ),
         );
       }),

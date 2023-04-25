@@ -47,10 +47,9 @@ dependencies:
   table_calendar: ^3.0.7
   intl: ^0.17.0
   url_launcher: ^6.1.7
-  cr_calendar: ^1.0.0+1
-  syncfusion_flutter_calendar: ^20.3.61
   shared_preferences: ^2.0.13
   flutter_colorpicker: ^0.6.0
+  mailer: ^6.0.1
 
 
 dev_dependencies:
