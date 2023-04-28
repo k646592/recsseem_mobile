@@ -15,71 +15,74 @@ class MonthViewPageDemo extends StatefulWidget {
   }) : super(key: key);
 
   @override
-  _MonthViewPageDemoState createState() => _MonthViewPageDemoState();
+  State<MonthViewPageDemo> createState() => _MonthViewPageDemoState();
 }
 
 class _MonthViewPageDemoState extends State<MonthViewPageDemo> {
+
+
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar: AppBar(
-        title: const Text('イベント一覧(月)'),
-        centerTitle: true,
-        actions: [
-          TextButton(
+        appBar: AppBar(
+          title: const Text('イベント一覧(月)'),
+          backgroundColor: Colors.black,
+          centerTitle: true,
+          actions: [
+            TextButton(
+                onPressed: () async {
+                  Navigator.of(context).push(
+                    MaterialPageRoute(
+                      builder: (context) {
+                        return const WeekViewDemo();
+                      },
+                    ),
+                  );
+                },
+              style: TextButton.styleFrom(
+                minimumSize: const Size(10, 10), //最小のサイズ
+
+              ),
+                child: const Text('週',
+                  style: TextStyle(
+                      color: Colors.white,
+                  ),
+                ),
+            ),
+            TextButton(
               onPressed: () async {
                 Navigator.of(context).push(
                   MaterialPageRoute(
                     builder: (context) {
-                      return const WeekViewDemo();
+                      return const DayViewPageDemo();
                     },
                   ),
                 );
               },
-              child: const Text('週',
+              style: TextButton.styleFrom(
+                minimumSize: const Size(10, 10), //最小のサイズ
+              ),
+              child: const Text('日',
                 style: TextStyle(
-                    color: Colors.white,
+                  color: Colors.white,
                 ),
               ),
-            style: TextButton.styleFrom(
-              minimumSize: Size(10, 10), //最小のサイズ
-
             ),
-          ),
-          TextButton(
-            onPressed: () async {
-              Navigator.of(context).push(
-                MaterialPageRoute(
-                  builder: (context) {
-                    return const DayViewPageDemo();
-                  },
-                ),
-              );
-            },
-            child: const Text('日',
-              style: TextStyle(
-                color: Colors.white,
-              ),
-            ),
-            style: TextButton.styleFrom(
-              minimumSize: Size(10, 10), //最小のサイズ
-
-            ),
-          ),
-        ],
-      ),
-      floatingActionButton: FloatingActionButton(
-        child: Icon(Icons.add),
-        elevation: 8,
-        onPressed: _addEvent,
-      ),
-      body: const MonthViewWidget(),
+          ],
+        ),
+        floatingActionButton: FloatingActionButton(
+          elevation: 8,
+          onPressed: _addEvent,
+          child: const Icon(Icons.add),
+        ),
+        body: const MonthViewWidget(),
     );
   }
 
   Future<void> _addEvent() async {
     final event = await context.pushRoute<CalendarEventData<CalendarEvent>>(
-      CreateEventPage(
+      const CreateEventPage(
         withDuration: true,
       ),
     );

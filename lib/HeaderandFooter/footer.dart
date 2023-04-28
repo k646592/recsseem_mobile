@@ -1,10 +1,12 @@
 import 'package:flutter/material.dart';
+import 'package:recsseem_mobile/HeaderandFooter/drawer.dart';
 import 'package:recsseem_mobile/event/event_index_page.dart';
 import 'package:recsseem_mobile/newcalendar/view/new_event_index_page.dart';
 
 import '../attendancemanagement/attendance_management_page.dart';
 import '../chat/chat_room_page.dart';
 import '../mypage/my_page.dart';
+import '../timer/timer.dart';
 
 class Footer extends StatefulWidget {
 
@@ -92,6 +94,28 @@ class _FooterState extends State<Footer> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
+      appBar: AppBar(
+        actions: [
+          Padding(
+            padding: const EdgeInsets.all(8.0),
+            child: IconButton(
+                icon: const Icon(Icons.timer),
+                onPressed: () async {
+                  await Navigator.of(context).push(
+                      MaterialPageRoute(builder: (context){
+                        return ClockTimer();
+                      })
+                  );
+                }
+            ),
+          ),
+        ],
+        backgroundColor: Colors.black,
+        centerTitle: true,
+        elevation: 0.0,
+        title: Text(_footerItemNames.elementAt(_selectedIndex)),
+      ),
+      drawer: const UserDrawer(),
       body: _routes.elementAt(_selectedIndex),
       bottomNavigationBar: BottomNavigationBar(
         type: BottomNavigationBarType.fixed,  //これを書かないと３つまでしか表示されない
