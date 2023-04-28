@@ -1,4 +1,5 @@
 import 'package:firebase_auth/firebase_auth.dart';
+import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 import 'package:url_launcher/link.dart';
@@ -47,19 +48,38 @@ class UserDrawer extends StatelessWidget {
                     ),
                     onPressed: () async {
                       try {
-                        FirebaseAuth.instance.signOut();
-                        Navigator.of(context).push(
-                          MaterialPageRoute(
-                              builder: (context) {
-                                return const LoginPage();
-                              }
-                          ),
-                        );
-                        const snackBar = SnackBar(
-                          backgroundColor: Colors.green,
-                          content: Text('ログアウトしました'),
-                        );
-                        ScaffoldMessenger.of(context).showSnackBar(snackBar);
+                        showDialog(
+                            context: context,
+                            builder: (_) => CupertinoAlertDialog(
+                              title: const Text("ログアウトしますか？"),
+                              actions: [
+                                CupertinoDialogAction(
+                                    isDestructiveAction: true,
+                                    onPressed: () {
+                                      Navigator.of(context).pop();
+                                    },
+                                    child: const Text('Cancel')),
+                                CupertinoDialogAction(
+                                  child: const Text('OK'),
+                                  onPressed: () {
+                                    FirebaseAuth.instance.signOut();
+                                    Navigator.of(context).push(
+                                      MaterialPageRoute(
+                                          builder: (context) {
+                                            return const LoginPage();
+                                          }
+                                      ),
+                                    );
+                                    const snackBar = SnackBar(
+                                      backgroundColor: Colors.green,
+                                      content: Text('ログアウトしました'),
+                                    );
+                                    ScaffoldMessenger.of(context).showSnackBar(snackBar);
+                                  },
+                                )
+                              ],
+                            ));
+
                       } catch (e) {
 //失敗した場合
                         final snackBar = SnackBar(

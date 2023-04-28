@@ -1,3 +1,5 @@
+import 'dart:ui';
+
 import 'package:flutter/material.dart';
 import 'package:firebase_core/firebase_core.dart';
 import 'package:recsseem_mobile/shared/constants.dart';
@@ -42,8 +44,13 @@ class _MyAppState extends State<MyApp> {
     return MaterialApp(
       title: 'Flutter Demo',
       debugShowCheckedModeBanner: false,
-      theme: ThemeData(
-        primarySwatch: Colors.blue,
+      theme: ThemeData.light(),
+      scrollBehavior: const ScrollBehavior().copyWith(
+        dragDevices: {
+          PointerDeviceKind.trackpad,
+          PointerDeviceKind.mouse,
+          PointerDeviceKind.touch,
+        },
       ),
       home: const LoginPage(),
     );

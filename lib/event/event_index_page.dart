@@ -7,15 +7,13 @@ import 'package:provider/provider.dart';
 import 'package:recsseem_mobile/event/event_index_model.dart';
 import 'package:recsseem_mobile/event/show_event_page.dart';
 import 'package:table_calendar/table_calendar.dart';
+import '../HeaderandFooter/drawer.dart';
 import '../domain/event.dart';
-import '../login/login_page.dart';
-import '../mypage/edit_my_page.dart';
 import '../timer/timer.dart';
 import 'add_event_page.dart';
 import 'event_edit_page.dart';
 import 'holiday.dart';
 import 'dart:async';
-import 'package:url_launcher/link.dart';
 
 class EventIndexPage extends StatefulWidget {
   const EventIndexPage({Key? key}) : super(key: key);
@@ -40,6 +38,28 @@ class _EventIndexPage extends State<EventIndexPage> {
     return ChangeNotifierProvider<EventListModel>(
       create: (_) => EventListModel()..fetchEventList(),
       child: Scaffold(
+        appBar: AppBar(
+          actions: [
+            Padding(
+              padding: const EdgeInsets.all(8.0),
+              child: IconButton(
+                  icon: const Icon(Icons.timer),
+                  onPressed: () async {
+                    await Navigator.of(context).push(
+                        MaterialPageRoute(builder: (context){
+                          return ClockTimer();
+                        })
+                    );
+                  }
+              ),
+            ),
+          ],
+          backgroundColor: Colors.black,
+          centerTitle: true,
+          elevation: 0.0,
+          title: const Text('イベント'),
+        ),
+        drawer: const UserDrawer(),
         body: SingleChildScrollView(
           child: Consumer<EventListModel>(builder: (context, model, child) {
 

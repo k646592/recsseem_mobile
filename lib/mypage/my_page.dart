@@ -1,7 +1,9 @@
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 import 'package:recsseem_mobile/domain/chat_room.dart';
+import '../HeaderandFooter/drawer.dart';
 import '../chat/chat_page.dart';
+import '../timer/timer.dart';
 import 'my_model.dart';
 
 class MyPage extends StatelessWidget {
@@ -12,7 +14,28 @@ class MyPage extends StatelessWidget {
     return ChangeNotifierProvider<MyModel>(
       create: (_) => MyModel()..fetchMyModel(),
       child: Scaffold(
-
+        appBar: AppBar(
+          actions: [
+            Padding(
+              padding: const EdgeInsets.all(8.0),
+              child: IconButton(
+                  icon: const Icon(Icons.timer),
+                  onPressed: () async {
+                    await Navigator.of(context).push(
+                        MaterialPageRoute(builder: (context){
+                          return ClockTimer();
+                        })
+                    );
+                  }
+              ),
+            ),
+          ],
+          backgroundColor: Colors.black,
+          centerTitle: true,
+          elevation: 0.0,
+          title: const Text('イベント'),
+        ),
+        drawer: const UserDrawer(),
         body: Center(
           child: Consumer<MyModel>(builder: (context, model, child) {
 

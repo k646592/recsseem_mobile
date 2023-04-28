@@ -8,8 +8,10 @@ import 'package:provider/provider.dart';
 import 'package:recsseem_mobile/attendancemanagement/show_attendance_page.dart';
 import 'package:recsseem_mobile/domain/attendance.dart';
 import 'package:table_calendar/table_calendar.dart';
+import '../HeaderandFooter/drawer.dart';
 import '../event/holiday.dart';
 import 'dart:async';
+import '../timer/timer.dart';
 import 'add_attendance_page.dart';
 import 'attendance_edit_page.dart';
 import 'attendance_management_model.dart';
@@ -73,6 +75,28 @@ class _AttendanceManagementPage extends State<AttendanceManagementPage> {
     return ChangeNotifierProvider<AttendanceListModel>(
       create: (_) => AttendanceListModel()..fetchAttendanceList(),
       child: Scaffold(
+        appBar: AppBar(
+          actions: [
+            Padding(
+              padding: const EdgeInsets.all(8.0),
+              child: IconButton(
+                  icon: const Icon(Icons.timer),
+                  onPressed: () async {
+                    await Navigator.of(context).push(
+                        MaterialPageRoute(builder: (context){
+                          return ClockTimer();
+                        })
+                    );
+                  }
+              ),
+            ),
+          ],
+          backgroundColor: Colors.black,
+          centerTitle: true,
+          elevation: 0.0,
+          title: const Text('イベント'),
+        ),
+        drawer: const UserDrawer(),
         body: SingleChildScrollView(
           child: Consumer<AttendanceListModel>(builder: (context, model, child) {
             final attendancesList = model.attendancesList;

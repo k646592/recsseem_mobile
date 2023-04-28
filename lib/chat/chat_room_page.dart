@@ -1,5 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
+import '../HeaderandFooter/drawer.dart';
+import '../timer/timer.dart';
 import 'add_room_page.dart';
 import 'chat_page.dart';
 import 'chat_room_model.dart';
@@ -18,6 +20,28 @@ class _ChatRoomListPage extends State<ChatRoomListPage> {
     return ChangeNotifierProvider<ChatRoomListModel>(
       create: (_) => ChatRoomListModel()..fetchChatRoomList(),
       child: Scaffold(
+        appBar: AppBar(
+          actions: [
+            Padding(
+              padding: const EdgeInsets.all(8.0),
+              child: IconButton(
+                  icon: const Icon(Icons.timer),
+                  onPressed: () async {
+                    await Navigator.of(context).push(
+                        MaterialPageRoute(builder: (context){
+                          return ClockTimer();
+                        })
+                    );
+                  }
+              ),
+            ),
+          ],
+          backgroundColor: Colors.black,
+          centerTitle: true,
+          elevation: 0.0,
+          title: const Text('イベント'),
+        ),
+        drawer: const UserDrawer(),
         body: SingleChildScrollView(
             child: Consumer<ChatRoomListModel>(builder: (context, model, child){
 

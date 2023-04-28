@@ -1,8 +1,6 @@
-import 'dart:ui';
-
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
-import 'package:recsseem_mobile/newcalendar/pages/month_view_page.dart';
+import 'package:recsseem_mobile/newcalendar/pages/calendar_view_page.dart';
 import 'package:recsseem_mobile/newcalendar/pages/web/web_home_page.dart';
 
 import '../model/calendar_event.dart';
@@ -23,22 +21,12 @@ class TopPage extends StatelessWidget {
       child: Consumer<NewEventListModel>(builder: (context, model, child) {
         return CalendarControllerProvider<CalendarEvent>(
           controller: EventController<CalendarEvent>()..addAll(model.eventsList),
-          child: MaterialApp(
-            title: 'Flutter Calendar Page Demo',
-            debugShowCheckedModeBanner: false,
-            theme: ThemeData.light(),
-            scrollBehavior: ScrollBehavior().copyWith(
-              dragDevices: {
-                PointerDeviceKind.trackpad,
-                PointerDeviceKind.mouse,
-                PointerDeviceKind.touch,
-              },
+          child: Scaffold(
+            body: ResponsiveWidget(
+                mobileWidget: const ViewPageDemo(),
+                webWidget: WebHomePage(),
+              ),
             ),
-            home: ResponsiveWidget(
-              mobileWidget: MonthViewPageDemo(),
-              webWidget: WebHomePage(),
-            ),
-          ),
         );
       })
     );
