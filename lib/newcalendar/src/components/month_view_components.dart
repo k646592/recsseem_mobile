@@ -6,6 +6,7 @@ import 'package:intl/intl.dart';
 import 'package:recsseem_mobile/newcalendar/view/new_event_show.dart';
 import '../../../HeaderandFooter/footer.dart';
 import '../../../domain/event.dart';
+import '../../view/new_event_edit.dart';
 import '../month_view/month_view.dart';
 
 import '../calendar_event_data.dart';
@@ -231,7 +232,13 @@ class FilledCell<T extends Object?> extends StatelessWidget {
                                             child:Center(
                                               child: IconButton(
                                                 onPressed: () {
-
+                                                  Navigator.of(context).push(
+                                                    MaterialPageRoute(
+                                                        builder: (context) {
+                                                          return NewEventEdit(events[index]);
+                                                        }
+                                                    ),
+                                                  );
                                                 },
                                                 icon: const Icon(Icons.edit),
                                                 color: Colors.blueAccent,

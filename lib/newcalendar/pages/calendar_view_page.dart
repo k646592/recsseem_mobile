@@ -50,9 +50,9 @@ class _ViewPageDemoState extends State<ViewPageDemo> {
           title: const Text('イベント'),
           bottom: const TabBar(
             tabs: <Tab>[
-              Tab(icon: Icon(Icons.calendar_view_month)),
-              Tab(icon: Icon(Icons.calendar_view_week)),
-              Tab(icon: Icon(Icons.calendar_view_day)),
+              Tab(text: 'Month',),
+              Tab(text: 'Week',),
+              Tab(text: 'Day',),
             ],
           ),
         ),

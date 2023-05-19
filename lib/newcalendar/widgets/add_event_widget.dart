@@ -3,8 +3,8 @@ import 'package:flutter/material.dart';
 import 'package:flutter_colorpicker/flutter_colorpicker.dart';
 import 'package:provider/provider.dart';
 import 'package:recsseem_mobile/newcalendar/view/extension.dart';
-import 'package:recsseem_mobile/newcalendar/view/new_event_index_page.dart';
 
+import '../../HeaderandFooter/footer.dart';
 import '../model/calendar_event.dart';
 import '../src/calendar_event_data.dart';
 import '../view/app_colors.dart';
@@ -62,6 +62,7 @@ class _AddEventWidgetState extends State<AddEventWidget> {
   late TextEditingController _startTimeController;
   late TextEditingController _endTimeController;
   late TextEditingController _endDateController;
+  late TextEditingController _titleController;
 
   //新しく追加
   late TextEditingController _arriveTimeController;
@@ -85,6 +86,8 @@ class _AddEventWidgetState extends State<AddEventWidget> {
     _arriveTimeController = TextEditingController();
     _leaveTimeController = TextEditingController();
     _mailSendController = TextEditingController();
+    _titleController = TextEditingController();
+    _titleController.text = 'ミーティング';
   }
 
   @override
@@ -129,31 +132,31 @@ class _AddEventWidgetState extends State<AddEventWidget> {
                   ),
                   child: Row(
                     children: [
-                      SizedBox(
+                      const SizedBox(
                         width: 10,
                       ),
-                      Text('Content',
+                      const Text('Content',
                         style: TextStyle(
                           fontSize: 17.0,
                         ),
                       ),
-                      SizedBox(
+                      const SizedBox(
                         width: 10,
                       ),
                       DropdownButton(
                         value: _content,
                         items: const [
                           DropdownMenuItem(
-                            child: Text('ミーティング'),
                             value: 'ミーティング',
+                            child: Text('ミーティング'),
                           ),
                           DropdownMenuItem(
-                            child: Text('輪講'),
                             value: '輪講',
+                            child: Text('輪講'),
                           ),
                           DropdownMenuItem(
-                            child: Text('その他'),
                             value: 'その他',
+                            child: Text('その他'),
                           ),
                         ],
                         onChanged: (text) {
@@ -162,14 +165,17 @@ class _AddEventWidgetState extends State<AddEventWidget> {
                             if (text.toString() == 'ミーティング') {
                               _display = false;
                               _title = 'ミーティング';
+                              _titleController.text = 'ミーティング';
                             }
                             if (text.toString() == '輪講') {
                               _display = false;
                               _title = '輪講';
+                              _titleController.text = '輪講';
                             }
                             if (text.toString() == 'その他') {
                               _display = true;
                               _title = '';
+                              _titleController.text = '';
                             }
                             colorSelector(_unit, _content);
                           });
@@ -178,29 +184,37 @@ class _AddEventWidgetState extends State<AddEventWidget> {
                     ],
                   ),
                 ),
-                SizedBox(
+                const SizedBox(
                   height: 15,
                 ),
                 TextFormField(
+                  controller: _titleController,
                   decoration: AppConstants.inputDecoration.copyWith(
-                    labelText: _title,
+
                   ),
-                  style: TextStyle(
+                  style: const TextStyle(
                     color: AppColors.black,
                     fontSize: 17.0,
                   ),
                   enabled: _display,
 
+                  onChanged: (text) {
+                    setState(() {
+                      _title = text;
+                    });
+                  },
+
                   validator: (value) {
-                    if (_title == "")
+                    if (_title == "") {
                       return "Please enter event title.";
+                    }
 
                     return null;
                   },
                   keyboardType: TextInputType.text,
                   textInputAction: TextInputAction.next,
                 ),
-                SizedBox(
+                const SizedBox(
                   height: 15,
                 ),
                 unitSelector(_content),
@@ -213,12 +227,13 @@ class _AddEventWidgetState extends State<AddEventWidget> {
                           labelText: "Start Date",
                         ),
                         validator: (value) {
-                          if (value == null || value == "")
+                          if (value == null || value == "") {
                             return "Please select date.";
+                          }
 
                           return null;
                         },
-                        textStyle: TextStyle(
+                        textStyle: const TextStyle(
                           color: AppColors.black,
                           fontSize: 17.0,
                         ),
@@ -226,7 +241,7 @@ class _AddEventWidgetState extends State<AddEventWidget> {
                         type: DateTimeSelectionType.date,
                       ),
                     ),
-                    SizedBox(width: 20.0),
+                    const SizedBox(width: 20.0),
                     Expanded(
                       child: DateTimeSelectorFormField(
                         controller: _endDateController,
@@ -234,12 +249,13 @@ class _AddEventWidgetState extends State<AddEventWidget> {
                           labelText: "End Date",
                         ),
                         validator: (value) {
-                          if (value == null || value == "")
+                          if (value == null || value == "") {
                             return "Please select date.";
+                          }
 
                           return null;
                         },
-                        textStyle: TextStyle(
+                        textStyle: const TextStyle(
                           color: AppColors.black,
                           fontSize: 17.0,
                         ),
@@ -249,7 +265,7 @@ class _AddEventWidgetState extends State<AddEventWidget> {
                     ),
                   ],
                 ),
-                SizedBox(
+                const SizedBox(
                   height: 15,
                 ),
                 Row(
@@ -261,20 +277,21 @@ class _AddEventWidgetState extends State<AddEventWidget> {
                           labelText: "Start Time",
                         ),
                         validator: (value) {
-                          if (value == null || value == "")
+                          if (value == null || value == "") {
                             return "Please select start time.";
+                          }
 
                           return null;
                         },
                         onSave: (date) => _startTime = date,
-                        textStyle: TextStyle(
+                        textStyle: const TextStyle(
                           color: AppColors.black,
                           fontSize: 17.0,
                         ),
                         type: DateTimeSelectionType.time,
                       ),
                     ),
-                    SizedBox(width: 20.0),
+                    const SizedBox(width: 20.0),
                     Expanded(
                       child: DateTimeSelectorFormField(
                         controller: _endTimeController,
@@ -282,13 +299,14 @@ class _AddEventWidgetState extends State<AddEventWidget> {
                           labelText: "End Time",
                         ),
                         validator: (value) {
-                          if (value == null || value == "")
+                          if (value == null || value == "") {
                             return "Please select end time.";
+                          }
 
                           return null;
                         },
                         onSave: (date) => _endTime = date,
-                        textStyle: TextStyle(
+                        textStyle: const TextStyle(
                           color: AppColors.black,
                           fontSize: 17.0,
                         ),
@@ -297,12 +315,12 @@ class _AddEventWidgetState extends State<AddEventWidget> {
                     ),
                   ],
                 ),
-                SizedBox(
+                const SizedBox(
                   height: 15,
                 ),
                 TextFormField(
                   focusNode: _descriptionNode,
-                  style: TextStyle(
+                  style: const TextStyle(
                     color: AppColors.black,
                     fontSize: 17.0,
                   ),
@@ -313,9 +331,9 @@ class _AddEventWidgetState extends State<AddEventWidget> {
                   maxLines: 10,
                   maxLength: 1000,
                   validator: (value) {
-                    if (value == null || value.trim() == "")
+                    if (value == null || value.trim() == "") {
                       return "Please enter event description.";
-
+                    }
                     return null;
                   },
                   onSaved: (value) => _description = value?.trim() ?? "",
@@ -323,7 +341,7 @@ class _AddEventWidgetState extends State<AddEventWidget> {
                     hintText: "Event Description",
                   ),
                 ),
-                SizedBox(
+                const SizedBox(
                   height: 15.0,
                 ),
                 Row(
@@ -341,10 +359,10 @@ class _AddEventWidgetState extends State<AddEventWidget> {
                         ),
                         child: Row(
                           children: [
-                            SizedBox(
+                            const SizedBox(
                               width: 10,
                             ),
-                            Text('メール送信',
+                            const Text('メール送信',
                               style: TextStyle(
                                 fontSize: 17.0,
                               ),
@@ -367,15 +385,15 @@ class _AddEventWidgetState extends State<AddEventWidget> {
                     ),
                   ],
                 ),
-                SizedBox(
+                const SizedBox(
                   height: 15.0,
                 ),
                 Row(
                   children: [
-                    SizedBox(
+                    const SizedBox(
                       width: 20,
                     ),
-                    Text(
+                    const Text(
                       "Event Color: ",
                       style: TextStyle(
                         color: AppColors.black,
@@ -391,18 +409,20 @@ class _AddEventWidgetState extends State<AddEventWidget> {
                     ),
                   ],
                 ),
-                SizedBox(
+                const SizedBox(
                   height: 15,
                 ),
                 CustomButton(
                   onTap: () {
                     _createEvent(model.username!, model.userId!);
                     model.addEvent(calendarEvent);
-                    model.Mailer();
+                    if(_mailSend == true) {
+                      model.Mailer(calendarEvent);
+                    }
                     Navigator.of(context).push(
                       MaterialPageRoute(
                         builder: (context) {
-                          return TopPage();
+                          return const Footer(pageNumber: 1);
                         }
                     ),
                     );
@@ -464,14 +484,14 @@ class _AddEventWidgetState extends State<AddEventWidget> {
         clipBehavior: Clip.hardEdge,
         shape: RoundedRectangleBorder(
           borderRadius: BorderRadius.circular(30.0),
-          side: BorderSide(
+          side: const BorderSide(
             color: AppColors.bluishGrey,
             width: 2,
           ),
         ),
-        contentPadding: EdgeInsets.all(20.0),
+        contentPadding: const EdgeInsets.all(20.0),
         children: [
-          Text(
+          const Text(
             "Event Color",
             style: TextStyle(
               color: AppColors.black,
@@ -493,14 +513,15 @@ class _AddEventWidgetState extends State<AddEventWidget> {
           ),
           Center(
             child: Padding(
-              padding: EdgeInsets.only(top: 50.0, bottom: 30.0),
+              padding: const EdgeInsets.only(top: 50.0, bottom: 30.0),
               child: CustomButton(
                 title: "Select",
                 onTap: () {
-                  if (mounted)
+                  if (mounted) {
                     setState(() {
                       _color = color;
                     });
+                  }
                   context.pop();
                 },
               ),
@@ -527,51 +548,51 @@ class _AddEventWidgetState extends State<AddEventWidget> {
             ),
             child: Row(
                 children: [
-                  SizedBox(
+                  const SizedBox(
                     width: 10,
                   ),
-                  Text('参加単位',
+                  const Text('参加単位',
                     style: TextStyle(
                       fontSize: 17.0,
                     ),
                   ),
-                  SizedBox(
+                  const SizedBox(
                     width: 10,
                   ),
                   DropdownButton(
                       value: _unit,
                       items: const [
                         DropdownMenuItem(
-                          child: Text('全体'),
                           value: '全体',
+                          child: Text('全体'),
                         ),
                         DropdownMenuItem(
-                          child: Text('個人'),
                           value: '個人',
+                          child: Text('個人'),
                         ),
                         DropdownMenuItem(
-                          child: Text('Net班'),
                           value: 'Net班',
+                          child: Text('Net班'),
                         ),
                         DropdownMenuItem(
-                          child: Text('Grid班'),
                           value: 'Grid班',
+                          child: Text('Grid班'),
                         ),
                         DropdownMenuItem(
-                          child: Text('Web班'),
                           value: 'Web班',
+                          child: Text('Web班'),
                         ),
                         DropdownMenuItem(
-                          child: Text('B4'),
                           value: 'B4',
+                          child: Text('B4'),
                         ),
                         DropdownMenuItem(
-                          child: Text('M1'),
                           value: 'M1',
+                          child: Text('M1'),
                         ),
                         DropdownMenuItem(
-                          child: Text('M2'),
                           value: 'M2',
+                          child: Text('M2'),
                         ),
                       ],
                       onChanged: (text) {
@@ -583,13 +604,15 @@ class _AddEventWidgetState extends State<AddEventWidget> {
                   ),
                 ]),
           ),
-          SizedBox(
+          const SizedBox(
             height: 15,
           ),
         ],
       );
     }
-    else return SizedBox();
+    else {
+      return const SizedBox();
+    }
   }
 
   void colorSelector(String unit, String content) {

@@ -1,10 +1,10 @@
 import 'package:flutter/material.dart';
-import 'package:recsseem_mobile/event/event_index_page.dart';
 import 'package:recsseem_mobile/newcalendar/view/new_event_index_page.dart';
 
 import '../attendancemanagement/attendance_management_page.dart';
 import '../chat/chat_room_page.dart';
 import '../mypage/my_page.dart';
+import '../new_chat.dart';
 
 class Footer extends StatefulWidget {
 
@@ -30,19 +30,19 @@ class _FooterState extends State<Footer> {
 
   //アイコン文字列
   static const _footerItemNames = [
-    'イベント一覧',
     'イベント',
     '出席管理',
     'チャット',
+    '新チャット',
     'マイページ',
   ];
 
-  var _routes = [
-    EventIndexPage(),
+  final _routes = [
     TopPage(),
-    AttendanceManagementPage(),
-    ChatRoomListPage(),
-    MyPage(),
+    const AttendanceManagementPage(),
+    const ChatRoomListPage(),
+    const NewChat(),
+    const MyPage(),
   ];
 
   @override

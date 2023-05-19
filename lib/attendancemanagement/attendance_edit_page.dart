@@ -1,6 +1,5 @@
 import 'package:flutter/material.dart';
 import 'package:flutter/cupertino.dart';
-import 'package:intl/intl.dart';
 import 'package:provider/provider.dart';
 import 'package:recsseem_mobile/HeaderandFooter/footer.dart';
 import 'package:recsseem_mobile/domain/attendance.dart';
@@ -104,9 +103,7 @@ class _EditAttendancePageState extends State<EditAttendancePage> {
         body: Center(
           child: Consumer<EditAttendanceModel>(builder: (context, model, child) {
             final start = dateRange!.start;
-            final end = dateRange!.end;
-            final difference = dateRange!.duration;
-            DateFormat dateformat = DateFormat('yyyy/MM/dd/(EEE)');
+
 
             return ListView(
               padding: const EdgeInsets.all(16.0),

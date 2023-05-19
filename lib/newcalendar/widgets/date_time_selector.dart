@@ -55,7 +55,7 @@ class _DateTimeSelectorFormFieldState extends State<DateTimeSelectorFormField> {
     if (widget.displayDefault && widget.minimumDateTime != null) {
       if (widget.type == DateTimeSelectionType.date) {
         _textEditingController.text = widget.minimumDateTime
-            ?.dateToStringWithFormat(format: "dd/MM/yyyy") ??
+            ?.dateToStringWithFormat(format: "yyyy年MM月dd日") ??
             "";
       } else {
         _textEditingController.text =
@@ -77,7 +77,7 @@ class _DateTimeSelectorFormFieldState extends State<DateTimeSelectorFormField> {
     if (widget.type == DateTimeSelectionType.date) {
       date = await _showDateSelector();
       _textEditingController.text =
-          (date ?? _selectedDate).dateToStringWithFormat(format: "dd/MM/yyyy");
+          (date ?? _selectedDate).dateToStringWithFormat(format: "yyyy年MM月dd日");
     } else {
       date = await _showTimeSelector();
       _textEditingController.text =
