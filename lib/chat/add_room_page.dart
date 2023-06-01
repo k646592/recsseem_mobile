@@ -46,7 +46,7 @@ class _AddRoomPage extends State<AddRoomPage> {
                       Navigator.of(context).push(
                         MaterialPageRoute(
                             builder: (context) {
-                              return const Footer(pageNumber: 3);
+                              return const Footer(pageNumber: 2);
                             }
                         ),
                       );

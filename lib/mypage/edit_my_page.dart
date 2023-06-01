@@ -189,7 +189,7 @@ class _EditMyPageState extends State<EditMyPage> {
                             Navigator.of(context).push(
                               MaterialPageRoute(
                                   builder: (context) {
-                                    return const Footer(pageNumber: 4);
+                                    return const Footer(pageNumber: 3);
                                   }
                               ),
                             );

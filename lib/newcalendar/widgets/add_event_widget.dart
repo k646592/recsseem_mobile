@@ -422,7 +422,7 @@ class _AddEventWidgetState extends State<AddEventWidget> {
                     Navigator.of(context).push(
                       MaterialPageRoute(
                         builder: (context) {
-                          return const Footer(pageNumber: 1);
+                          return const Footer(pageNumber: 0);
                         }
                     ),
                     );

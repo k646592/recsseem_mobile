@@ -73,7 +73,7 @@ class _AddAttendancePageState extends State<AddAttendancePage> {
                       Navigator.of(context).push(
                         MaterialPageRoute(
                             builder: (context) {
-                              return const Footer(pageNumber: 2);
+                              return const Footer(pageNumber: 1);
                             }
                         ),
                       );

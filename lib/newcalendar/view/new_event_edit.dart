@@ -480,7 +480,7 @@ class _NewEventEditState extends State<NewEventEdit> {
                         Navigator.of(context).push(
                           MaterialPageRoute(
                               builder: (context) {
-                                return const Footer(pageNumber: 1);
+                                return const Footer(pageNumber: 0);
                               }
                           ),
                         );

@@ -290,7 +290,7 @@ class _AttendanceManagementPage extends State<AttendanceManagementPage> {
                           ),
                         ),
                       ),
-                      SizedBox(
+                      const SizedBox(
                         width: 5,
                       ),
                       Expanded(
@@ -553,7 +553,7 @@ class _AttendanceManagementPage extends State<AttendanceManagementPage> {
 
                     //カレンダーのヘッダー
                     headerStyle: HeaderStyle(
-                      decoration: BoxDecoration(
+                      decoration: const BoxDecoration(
                         color: Colors.blue,
                       ),
                       headerMargin: const EdgeInsets.only(bottom: 8.0),
@@ -625,7 +625,6 @@ class _AttendanceManagementPage extends State<AttendanceManagementPage> {
 
         floatingActionButton: Consumer<AttendanceListModel>(builder: (context, model, child) {
           return FloatingActionButton(
-            child: Icon(Icons.add),
             tooltip: 'Increment',
             backgroundColor: Colors.lightGreen,
             //ボタンが押されたら
@@ -640,6 +639,7 @@ class _AttendanceManagementPage extends State<AttendanceManagementPage> {
                 ),
               );
             },
+            child: const Icon(Icons.add),
           );
         }),
       ),

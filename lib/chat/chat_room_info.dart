@@ -157,7 +157,7 @@ class _ChatRoomInfoState extends State<ChatRoomInfo> {
             Navigator.of(context).push(
               MaterialPageRoute(
                   builder: (context) {
-                    return const Footer(pageNumber: 3);
+                    return const Footer(pageNumber: 2);
                   }
               ),
             );

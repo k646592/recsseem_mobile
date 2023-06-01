@@ -4,7 +4,6 @@ import 'package:recsseem_mobile/newcalendar/view/new_event_index_page.dart';
 import '../attendancemanagement/attendance_management_page.dart';
 import '../chat/chat_room_page.dart';
 import '../mypage/my_page.dart';
-import '../new_chat.dart';
 
 class Footer extends StatefulWidget {
 
@@ -22,7 +21,6 @@ class _FooterState extends State<Footer> {
   //アイコン情報
   static const _footerIcons = [
     Icons.calendar_month,
-    Icons.calendar_month,
     Icons.groups,
     Icons.chat,
     Icons.account_circle,
@@ -33,7 +31,6 @@ class _FooterState extends State<Footer> {
     'イベント',
     '出席管理',
     'チャット',
-    '新チャット',
     'マイページ',
   ];
 
@@ -41,7 +38,6 @@ class _FooterState extends State<Footer> {
     TopPage(),
     const AttendanceManagementPage(),
     const ChatRoomListPage(),
-    const NewChat(),
     const MyPage(),
   ];
 

@@ -17,80 +17,100 @@ class _ChatRoomListPage extends State<ChatRoomListPage> {
 
   @override
   Widget build(BuildContext context) {
-    return ChangeNotifierProvider<ChatRoomListModel>(
-      create: (_) => ChatRoomListModel()..fetchChatRoomList(),
-      child: Scaffold(
-        appBar: AppBar(
-          actions: [
-            Padding(
-              padding: const EdgeInsets.all(8.0),
-              child: IconButton(
-                  icon: const Icon(Icons.timer),
-                  onPressed: () async {
-                    await Navigator.of(context).push(
-                        MaterialPageRoute(builder: (context){
-                          return ClockTimer();
-                        })
-                    );
-                  }
+    return DefaultTabController(
+      length: 2,
+      child: ChangeNotifierProvider<ChatRoomListModel>(
+        create: (_) => ChatRoomListModel()..fetchChatRoomList(),
+        child: Scaffold(
+          appBar: AppBar(
+            actions: [
+              Padding(
+                padding: const EdgeInsets.all(8.0),
+                child: IconButton(
+                    icon: const Icon(Icons.timer),
+                    onPressed: () async {
+                      await Navigator.of(context).push(
+                          MaterialPageRoute(builder: (context){
+                            return ClockTimer();
+                          })
+                      );
+                    }
+                ),
               ),
+            ],
+            backgroundColor: Colors.black,
+            centerTitle: true,
+            elevation: 0.0,
+            title: const Text('イベント'),
+            bottom: const TabBar(
+              tabs: <Tab>[
+                Tab(text: '個人',),
+                Tab(text: 'グループ',),
+              ],
             ),
-          ],
-          backgroundColor: Colors.black,
-          centerTitle: true,
-          elevation: 0.0,
-          title: const Text('イベント'),
-        ),
-        drawer: const UserDrawer(),
-        body: SingleChildScrollView(
-            child: Consumer<ChatRoomListModel>(builder: (context, model, child){
+          ),
+          drawer: const UserDrawer(),
+          body: TabBarView(
+            children: [
+              SingleChildScrollView(
+                child: Container(
+                  color: Colors.red,
+                ),
+              ),
+              SingleChildScrollView(
+                  child: Consumer<ChatRoomListModel>(builder: (context, model, child){
 
-              final List<Widget> widgets = model.chatRooms.map(
-                    (room) => Card(
-                      child: ListTile(
-                        title: Text(room.roomName,),
-                        subtitle: Text(room.admin[1]),
-                        trailing: IconButton(
-                          icon: const Icon(Icons.input),
-                          onPressed: () async {
-                            await Navigator.of(context).push(
-                              MaterialPageRoute(
-                                  builder: (context) {
-                                    return ChatPage(roomId: room.id, roomName: room.roomName, adminId: room.admin[0], adminName: room.admin[1],);
-                                  })
-                            );
-                          },
+                    final List<Widget> widgets = model.chatRooms.map(
+                          (room) => Card(
+                        child: ListTile(
+                          title: Text(room.roomName,),
+                          subtitle: Text(room.admin[1]),
+                          trailing: IconButton(
+                            icon: const Icon(Icons.input),
+                            onPressed: () async {
+                              await Navigator.of(context).push(
+                                  MaterialPageRoute(
+                                      builder: (context) {
+                                        return ChatPage(roomId: room.id, roomName: room.roomName, adminId: room.admin[0], adminName: room.admin[1],);
+                                      })
+                              );
+                            },
+                          ),
                         ),
                       ),
-                    ),
-              ).toList();
+                    ).toList();
 
-              if(model.chatRooms.isEmpty) {
-                return Center(
-                  child: CircularProgressIndicator(
-                    color: Theme.of(context).primaryColor,
-                  ),
-                );
-              }
-              else {
-                return ListView(
-                  shrinkWrap: true,
-                  children: widgets,
-                );
-              }
 
-            })
-        ),
-        floatingActionButton: FloatingActionButton(
-          child: const Icon(Icons.add),
-          onPressed: () async {
-            await Navigator.of(context).push(
-              MaterialPageRoute(
-                  builder: (context) {
-                    return const AddRoomPage();
-                  }),
-            );
-          },
+
+                    if(model.chatRooms.isEmpty) {
+                      return Center(
+                        child: CircularProgressIndicator(
+                          color: Theme.of(context).primaryColor,
+                        ),
+                      );
+                    }
+                    else {
+                      return ListView(
+                        shrinkWrap: true,
+                        children: widgets,
+                      );
+                    }
+
+                  })
+              ),
+            ],
+          ),
+          floatingActionButton: FloatingActionButton(
+            child: const Icon(Icons.add),
+            onPressed: () async {
+              await Navigator.of(context).push(
+                MaterialPageRoute(
+                    builder: (context) {
+                      return const AddRoomPage();
+                    }),
+              );
+            },
+          ),
         ),
       ),
     );
