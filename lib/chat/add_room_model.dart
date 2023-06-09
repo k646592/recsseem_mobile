@@ -188,8 +188,9 @@ class AddChatRoomModel extends ChangeNotifier {
       'admin': [user.uid, userName],
       'createdAt': createdAt,
       'members': members,
-      'resentMessage': '',
-      'resentMessageSender': '',
+      'recentMessage': '',
+      'recentMessageSender': '',
+      'imgURL': 'https://www.seekpng.com/png/full/967-9676420_group-icon-org2x-group-icon-orange.png',
     });
     notifyListeners();
 

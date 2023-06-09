@@ -18,7 +18,7 @@ class LoginPage extends StatelessWidget {
       create: (_) => LoginModel(),
       child: Scaffold(
         appBar: AppBar(
-          title: Text('ReCS/SEEM(ログイン)'),
+          title: const Text('ReCS/SEEM(ログイン)'),
           automaticallyImplyLeading: false,
         ),
         body: Center(
@@ -31,19 +31,19 @@ class LoginPage extends StatelessWidget {
                     children: [
                       TextField(
                         controller: model.emailController,
-                        decoration: InputDecoration(
+                        decoration: const InputDecoration(
                           hintText: 'Email',
                         ),
                         onChanged: (text) {
                           model.setEmail(text);
                         },
                       ),
-                      SizedBox(
+                      const SizedBox(
                         height: 16,
                       ),
                       TextField(
                         controller: model.passwordController,
-                        decoration: InputDecoration(
+                        decoration: const InputDecoration(
                           hintText: 'Password',
                         ),
                         onChanged: (text) {
@@ -51,7 +51,7 @@ class LoginPage extends StatelessWidget {
                         },
                         obscureText: true,
                       ),
-                      SizedBox(
+                      const SizedBox(
                         height: 16,
                       ),
                       ElevatedButton(
@@ -93,7 +93,7 @@ class LoginPage extends StatelessWidget {
                             model.endLoading();
                           }
                         },
-                        child: Text('ログイン'),
+                        child: const Text('ログイン'),
                       ),
                       TextButton(
                         onPressed: () async {
@@ -101,12 +101,12 @@ class LoginPage extends StatelessWidget {
                           await Navigator.push(
                             context,
                             MaterialPageRoute(
-                              builder: (context) => RegisterPage(),
+                              builder: (context) => const RegisterPage(),
                               fullscreenDialog: true,
                             ),
                           );
                         },
-                        child: Text('新規登録の方はこちら'),
+                        child: const Text('新規登録の方はこちら'),
                       ),
                       TextButton(
                         onPressed: () async {
@@ -119,7 +119,7 @@ class LoginPage extends StatelessWidget {
                             ),
                           );
                         },
-                        child: Text('パスワードを忘れた場合はこちら'),
+                        child: const Text('パスワードを忘れた場合はこちら'),
                       ),
                     ],
                   ),
@@ -127,7 +127,7 @@ class LoginPage extends StatelessWidget {
                 if (model.isLoading)
                   Container(
                     color: Colors.black45,
-                    child: Center(
+                    child: const Center(
                       child: CircularProgressIndicator(),
                     ),
                   ),

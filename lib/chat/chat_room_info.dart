@@ -13,7 +13,8 @@ class ChatRoomInfo extends StatefulWidget {
   final String roomName;
   final String adminId;
   final String adminName;
-  const ChatRoomInfo({Key? key, required this.roomId, required this.roomName, required this.adminId, required this.adminName}) : super(key: key);
+  final String imgURL;
+  const ChatRoomInfo({Key? key, required this.roomId, required this.roomName, required this.adminId, required this.adminName, required this.imgURL}) : super(key: key);
 
   @override
   State<ChatRoomInfo> createState() => _ChatRoomInfoState();
@@ -37,7 +38,7 @@ class _ChatRoomInfoState extends State<ChatRoomInfo> {
                   await Navigator.of(context).push(
                     MaterialPageRoute(
                         builder: (context) {
-                          return ChatMemberAddPage(roomId: widget.roomId, roomName: widget.roomName, adminId: widget.adminId, adminName: widget.adminName);
+                          return ChatMemberAddPage(roomId: widget.roomId, roomName: widget.roomName, adminId: widget.adminId, adminName: widget.adminName, imgURL: widget.imgURL,);
                         }),
                   );
                 },
@@ -50,7 +51,7 @@ class _ChatRoomInfoState extends State<ChatRoomInfo> {
               await Navigator.of(context).push(
                   MaterialPageRoute(
                       builder: (context) {
-                        return ChatPage(roomId: widget.roomId, roomName: widget.roomName, adminId: widget.adminId, adminName: widget.adminName);
+                        return ChatPage(roomId: widget.roomId, roomName: widget.roomName, adminId: widget.adminId, adminName: widget.adminName, imgURL: widget.imgURL,);
                       }),
               );
             },
@@ -73,21 +74,15 @@ class _ChatRoomInfoState extends State<ChatRoomInfo> {
                       children: [
                         CircleAvatar(
                           radius: 30,
-                          backgroundColor: Colors.deepOrange,
-                          child: Text(
-                            widget.roomName.substring(0, 1).toUpperCase(),
-                            style: const TextStyle(
-                              fontWeight: FontWeight.w500,
-                              color: Colors.white,
-                            ),
-                          ),
+                          backgroundColor: Colors.black,
+                          backgroundImage: widget.imgURL != '' ? NetworkImage(widget.imgURL) : const NetworkImage('https://www.seekpng.com/png/full/967-9676420_group-icon-org2x-group-icon-orange.png'),
                         ),
                         const SizedBox(width: 20,),
                         Column(
                           crossAxisAlignment: CrossAxisAlignment.start,
                           children: [
                             Text('ルーム名： ${widget.roomName}',
-                              style: TextStyle(
+                              style: const TextStyle(
                                 fontWeight: FontWeight.w500,
                               ),
                             ),
@@ -112,8 +107,8 @@ class _ChatRoomInfoState extends State<ChatRoomInfo> {
     if(chatInfoList.isNotEmpty){
       return Column(
         children: [
-          Center(
-            child: const Text('メンバーリスト',
+          const Center(
+            child: Text('メンバーリスト',
               style: TextStyle(
                 fontSize: 20,
                 color: Colors.black,
@@ -130,7 +125,7 @@ class _ChatRoomInfoState extends State<ChatRoomInfo> {
                     leading: CircleAvatar(
                       radius: 30,
                       backgroundColor: Colors.grey,
-                      backgroundImage: chatInfoList[index].imgURL != null ? NetworkImage(chatInfoList[index].imgURL) : const NetworkImage('https://4thsight.xyz/wp-content/uploads/2020/02/1582801063-300x300.png'),
+                      backgroundImage: chatInfoList[index].imgURL != '' ? NetworkImage(chatInfoList[index].imgURL) : const NetworkImage('https://4thsight.xyz/wp-content/uploads/2020/02/1582801063-300x300.png'),
                     ),
                     title: Text(chatInfoList[index].name),
                     subtitle: Text(chatInfoList[index].group),
@@ -161,7 +156,7 @@ class _ChatRoomInfoState extends State<ChatRoomInfo> {
                   }
               ),
             );
-            final snackBar = SnackBar(
+            const snackBar = SnackBar(
               backgroundColor: Colors.green,
               content: Text('退会しました'),
             );
@@ -213,7 +208,7 @@ class _ChatRoomInfoState extends State<ChatRoomInfo> {
                     await Navigator.of(context).push(
                         MaterialPageRoute(
                             builder: (context) {
-                              return ChatRoomInfo(roomId: widget.roomId, roomName: widget.roomName, adminId: widget.adminId, adminName: widget.adminName);
+                              return ChatRoomInfo(roomId: widget.roomId, roomName: widget.roomName, adminId: widget.adminId, adminName: widget.adminName, imgURL: widget.imgURL,);
                             })
                     );
                     final snackBar = SnackBar(

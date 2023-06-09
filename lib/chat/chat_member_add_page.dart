@@ -9,7 +9,8 @@ class ChatMemberAddPage extends StatefulWidget {
   final String roomName;
   final String adminId;
   final String adminName;
-  const ChatMemberAddPage({Key? key, required this.roomId, required this.roomName, required this.adminId, required this.adminName}) : super(key: key);
+  final String imgURL;
+  const ChatMemberAddPage({Key? key, required this.roomId, required this.roomName, required this.adminId, required this.adminName, required this.imgURL}) : super(key: key);
 
   @override
   State<ChatMemberAddPage> createState() => _ChatMemberAddPage();
@@ -42,7 +43,7 @@ class _ChatMemberAddPage extends State<ChatMemberAddPage> {
                       Navigator.of(context).push(
                         MaterialPageRoute(
                             builder: (context) {
-                              return ChatRoomInfo(roomId: widget.roomId, roomName: widget.roomName, adminId: widget.adminId, adminName: widget.adminName);
+                              return ChatRoomInfo(roomId: widget.roomId, roomName: widget.roomName, adminId: widget.adminId, adminName: widget.adminName, imgURL: widget.imgURL,);
                             }
                         ),
                       );
@@ -64,10 +65,10 @@ class _ChatMemberAddPage extends State<ChatMemberAddPage> {
                       model.endLoading();
                     }
                   },
-                  child: Text("追加"),
                   style: ElevatedButton.styleFrom(
                     backgroundColor: Colors.red,
                   ),
+                  child: const Text("追加"),
                 ),
               );
             }),
@@ -86,7 +87,7 @@ class _ChatMemberAddPage extends State<ChatMemberAddPage> {
                       leading: CircleAvatar(
                         radius: 30,
                         backgroundColor: Colors.grey,
-                        backgroundImage: model.memberList[index].imgURL != null ? NetworkImage(model.memberList[index].imgURL) : const NetworkImage('https://4thsight.xyz/wp-content/uploads/2020/02/1582801063-300x300.png'),
+                        backgroundImage: model.memberList[index].imgURL != '' ? NetworkImage(model.memberList[index].imgURL) : const NetworkImage('https://4thsight.xyz/wp-content/uploads/2020/02/1582801063-300x300.png'),
                       ),
                       title: Text(model.memberList[index].name),
                       subtitle: Text(model.memberList[index].group),

@@ -39,7 +39,6 @@ class MyPage extends StatelessWidget {
         body: Center(
           child: Consumer<MyModel>(builder: (context, model, child) {
 
-
             final email = model.email;
             final name = model.name;
             final group = model.group;
@@ -51,14 +50,8 @@ class MyPage extends StatelessWidget {
                 child: ListTile(
                   leading: CircleAvatar(
                     radius: 30,
-                    backgroundColor: Colors.deepOrange,
-                    child: Text(room.roomName.substring(0,1),
-                      style: const TextStyle(
-                        color: Colors.white,
-                        fontSize: 15,
-                        fontWeight: FontWeight.bold,
-                      ),
-                    ),
+                    backgroundColor: Colors.black,
+                    backgroundImage: room.imgURL != '' ? NetworkImage(room.imgURL) : const NetworkImage('https://www.seekpng.com/png/full/967-9676420_group-icon-org2x-group-icon-orange.png'),
                   ),
                   title: Text(room.roomName),
                   subtitle: Text(room.admin[1]),
@@ -66,7 +59,7 @@ class MyPage extends StatelessWidget {
                     onPressed: () async {
                       Navigator.of(context).push(
                         MaterialPageRoute(builder: (context){
-                          return ChatPage(roomId: room.id, roomName: room.roomName, adminId: room.admin[0], adminName: room.admin[1]);
+                          return ChatPage(roomId: room.id, roomName: room.roomName, adminId: room.admin[0], adminName: room.admin[1], imgURL: room.imgURL);
                         }),
                       );
                     },
@@ -89,7 +82,7 @@ class MyPage extends StatelessWidget {
                       child: CircleAvatar(
                         backgroundColor: Colors.grey,
                         radius: 50,
-                        backgroundImage: model.imgURL != null ? NetworkImage(model.imgURL!) : const NetworkImage('https://4thsight.xyz/wp-content/uploads/2020/02/1582801063-300x300.png'),
+                        backgroundImage: model.imgURL != '' ? NetworkImage(model.imgURL) : const NetworkImage('https://4thsight.xyz/wp-content/uploads/2020/02/1582801063-300x300.png'),
                       ),
                     ),
                     Container(

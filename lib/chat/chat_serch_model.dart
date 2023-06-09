@@ -28,11 +28,12 @@ class ChatSearchModel extends ChangeNotifier {
       final String id = document.id;
       final String roomName = data['roomName'];
       final List<dynamic> admin = data['admin'].toList();
-      final String resentMessage = data['resentMessage'];
-      final String resentMessageSender = data['resentMessageSender'];
+      final String recentMessage = data['recentMessage'];
+      final String recentMessageSender = data['recentMessageSender'];
       final DateTime createdAt = data['createdAt'].toDate();
       final List<dynamic> members = data['members'].toList();
-      return ChatRoom(id, roomName, admin, resentMessage, resentMessageSender, createdAt, members);
+      final String imgURl = data['imgURL'];
+      return ChatRoom(id, roomName, admin, recentMessage, recentMessageSender, createdAt, members, imgURl);
     }).toList();
 
     chatRooms = rooms;

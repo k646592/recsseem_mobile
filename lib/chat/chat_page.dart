@@ -10,11 +10,13 @@ class ChatPage extends StatefulWidget {
   final String roomName;
   final String adminId;
   final String adminName;
+  final String imgURL;
   const ChatPage({Key? key,
     required this.roomId,
     required this.roomName,
     required this.adminId,
     required this.adminName,
+    required this.imgURL,
   }) : super(key:key);
 
   @override
@@ -49,7 +51,7 @@ class _ChatPageState extends State<ChatPage> {
                     await Navigator.of(context).push(
                         MaterialPageRoute(
                             builder: (context) {
-                              return ChatRoomInfo(roomId: widget.roomId, roomName: widget.roomName, adminId: widget.adminId, adminName: widget.adminName);
+                              return ChatRoomInfo(roomId: widget.roomId, roomName: widget.roomName, adminId: widget.adminId, adminName: widget.adminName, imgURL: widget.imgURL,);
                             })
                     );
                   },
@@ -82,7 +84,11 @@ class _ChatPageState extends State<ChatPage> {
               userAvatarNameColors: [Colors.green],  // ユーザー名の文字色の変更
             ),
             l10n: const ChatL10nJa(unreadMessagesLabel: ''),
-          ) : Text('表示されていない');
+          ) : Center(
+            child: CircularProgressIndicator(
+              color: Theme.of(context).primaryColor,
+            ),
+          );
         }),
       ),
     );

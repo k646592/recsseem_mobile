@@ -2,7 +2,6 @@ import 'dart:convert';
 import 'dart:math';
 
 import 'package:cloud_firestore/cloud_firestore.dart';
-import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/cupertino.dart';
 
 import '../domain/chat_message.dart';
@@ -15,10 +14,11 @@ String randomString() {
 }
 
 
-class ChatPageModel extends ChangeNotifier {
+class IndividualChatPageModel extends ChangeNotifier {
 
-  final String roomId;
-  ChatPageModel({Key? key, required this.roomId,}) : super();
+  final String myId;
+  final String partnerId;
+  IndividualChatPageModel({Key? key, required this.myId, required this.partnerId}) : super();
 
   final List<types.Message> messages = [];
 
@@ -26,9 +26,7 @@ class ChatPageModel extends ChangeNotifier {
 
   //メッセージの受け取り
   void fetchChatMessageList() async {
-    final user = FirebaseAuth.instance.currentUser;
-
-    final QuerySnapshot snapshot = await FirebaseFirestore.instance.collection('rooms').doc(roomId).collection('messages').orderBy('time').get();
+    final QuerySnapshot snapshot = await FirebaseFirestore.instance.collection('users').doc(myId).collection('privateChat').doc(partnerId).collection('messages').orderBy('time').get();
 
     final List<ChatMessage> chatMessages = snapshot.docs.map((DocumentSnapshot document) {
       Map<String, dynamic> data = document.data()! as Map<String, dynamic>;
@@ -36,7 +34,6 @@ class ChatPageModel extends ChangeNotifier {
       final String message = data['message'];
       final String senderId = data['senderId'];
       final String senderName = data['senderName'];
-
       final String imgURL = data['imgURL'];
       final types.User users = types.User(
         id: senderId,
@@ -57,9 +54,9 @@ class ChatPageModel extends ChangeNotifier {
       ));
     }
 
-    FirebaseFirestore.instance.collection('users').doc(user!.uid).snapshots().listen((DocumentSnapshot snapshot) {
+    FirebaseFirestore.instance.collection('users').doc(myId).snapshots().listen((DocumentSnapshot snapshot) {
       myUser = types.User(
-        id: snapshot.get('uid'),
+        id: myId,
         firstName: snapshot.get('name'),
         imageUrl: snapshot.get('imgURL'),
       );
@@ -89,15 +86,22 @@ class ChatPageModel extends ChangeNotifier {
       'time': DateTime.now().millisecondsSinceEpoch,
     };
 
-    sendMessageStore(roomId, chatMessageMap, randomString());
+    sendMessageStore(chatMessageMap, randomString());
 
     notifyListeners();
   }
 
-  Future sendMessageStore(String roomId, Map<String, dynamic> chatMessageData, String random) async {
-    FirebaseFirestore.instance.collection('rooms').doc(roomId).collection('messages').doc(random).set(chatMessageData);
+  Future sendMessageStore(Map<String, dynamic> chatMessageData, String random) async {
+    FirebaseFirestore.instance.collection('users').doc(myId).collection('privateChat').doc(partnerId).collection('messages').doc(random).set(chatMessageData);
+    FirebaseFirestore.instance.collection('users').doc(partnerId).collection('privateChat').doc(myId).collection('messages').doc(random).set(chatMessageData);
 
-    FirebaseFirestore.instance.collection('rooms').doc(roomId).update({
+    FirebaseFirestore.instance.collection('users').doc(myId).collection('privateChat').doc(partnerId).update({
+      'recentMessage': chatMessageData['message'],
+      'recentMessageSender': chatMessageData['senderId'],
+      'recentMessageTime': chatMessageData['time'].toString(),
+    });
+
+    FirebaseFirestore.instance.collection('users').doc(partnerId).collection('privateChat').doc(myId).update({
       'recentMessage': chatMessageData['message'],
       'recentMessageSender': chatMessageData['senderId'],
       'recentMessageTime': chatMessageData['time'].toString(),

@@ -1,10 +1,11 @@
 class ChatRoom {
-  ChatRoom(this.id, this.roomName, this.admin, this.resentMessage, this.resentMessageSender, this.createdAt, this.members);
+  ChatRoom(this.id, this.roomName, this.admin, this.recentMessage, this.recentMessageSender, this.createdAt, this.members, this.imgURL);
   String id;
   String roomName;
   List<dynamic> admin;
-  String resentMessage;
-  String resentMessageSender;
+  String recentMessage;
+  String recentMessageSender;
   DateTime createdAt;
   List<dynamic> members;
+  String imgURL;
 }

@@ -51,7 +51,7 @@ class _AddRoomPage extends State<AddRoomPage> {
                         ),
                       );
 
-                      final snackBar = SnackBar(
+                      const snackBar = SnackBar(
                         backgroundColor: Colors.green,
                         content: Text('チャットルームを追加しました'),
                       );

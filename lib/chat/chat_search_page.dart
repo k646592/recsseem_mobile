@@ -101,11 +101,11 @@ class _ChatSearchPageState extends State<ChatSearchPage> {
                             model.entryRoom(model.chatRooms[index].id);
                             Navigator.of(context).push(
                               MaterialPageRoute(builder: (context){
-                                return ChatPage(roomId: model.chatRooms[index].id, roomName: model.chatRooms[index].roomName, adminId: model.chatRooms[index].admin[0], adminName: model.chatRooms[index].admin[1]);
+                                return ChatPage(roomId: model.chatRooms[index].id, roomName: model.chatRooms[index].roomName, adminId: model.chatRooms[index].admin[0], adminName: model.chatRooms[index].admin[1], imgURL: model.chatRooms[index].imgURL,);
                               }),
                             );
                           },
-                          icon: Icon(Icons.login_outlined),
+                          icon: const Icon(Icons.login_outlined),
                         ),
                       ),
                     );
