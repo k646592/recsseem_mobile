@@ -270,7 +270,7 @@ class _AttendanceManagementPage extends State<AttendanceManagementPage> {
                         child: ElevatedButton(
                           onPressed: () async {
                             await model.attendanceUpdate('出席');
-                            final snackBar = SnackBar(
+                            const snackBar = SnackBar(
                               backgroundColor: Colors.green,
                               content: Text("出席しました"),
                             );
@@ -278,15 +278,15 @@ class _AttendanceManagementPage extends State<AttendanceManagementPage> {
                             ScaffoldMessenger.of(context).
                             showSnackBar(snackBar);
                           },
-                          child: Text(
+                          style: ElevatedButton.styleFrom(
+                            primary: Colors.green[400], //ボタンの背景色
+                            onPrimary: Colors.white,
+                          ),
+                          child: const Text(
                             '出席',
                             style: TextStyle(
                               color: Colors.black,
                             ),
-                          ),
-                          style: ElevatedButton.styleFrom(
-                            primary: Colors.green[400], //ボタンの背景色
-                            onPrimary: Colors.white,
                           ),
                         ),
                       ),
