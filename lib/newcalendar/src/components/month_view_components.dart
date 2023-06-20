@@ -302,7 +302,7 @@ Future delete(Event event) {
 
 Future showConfirmDialog(BuildContext context, CalendarEventData events) {
   Event event = Event(
-      events.id!, events.name!, events.title, events.startTime!, events.endTime!, events.unit!, events.description, events.mailSend, events.userId!, events.color.value);
+      events.id!, events.title, events.startTime!, events.endTime!, events.unit!, events.description, events.mailSend, events.userId!, events.color.value);
   return showDialog(
       context: context,
       barrierDismissible: false,
@@ -325,7 +325,7 @@ Future showConfirmDialog(BuildContext context, CalendarEventData events) {
                   await Navigator.of(context).push(
                     MaterialPageRoute(
                         builder: (context) {
-                          return const Footer(pageNumber: 1,);
+                          return const Footer(pageNumber: 0);
                         }
                     ),
                   );

@@ -151,12 +151,17 @@ class AddChatRoomModel extends ChangeNotifier {
 
     this.users = users;
 
-    this.users.forEach((member) {
-      if(member.group == 'Network班') netMembers.add(member);
-      else if(member.group == 'Grid班') gridMembers.add(member);
-      else if(member.group == 'Web班') webMembers.add(member);
-      else teacherMembers.add(member);
-    });
+    for (var member in this.users) {
+      if(member.group == 'Network班') {
+        netMembers.add(member);
+      } else if(member.group == 'Grid班') {
+        gridMembers.add(member);
+      } else if(member.group == 'Web班') {
+        webMembers.add(member);
+      } else {
+        teacherMembers.add(member);
+      }
+    }
 
     FirebaseFirestore.instance.collection('users').doc(user!.uid).snapshots().listen((DocumentSnapshot snapshot) {
       userName = snapshot.get('name');
@@ -173,9 +178,9 @@ class AddChatRoomModel extends ChangeNotifier {
 
     final List<String> members = [];
     members.add(user!.uid);
-    users.forEach((member) {
+    for (var member in users) {
       if(member.join == true) members.add(member.id);
-    });
+    }
 
     if (roomName == null || roomName == "") {
       throw 'ルーム名が入力されていません';
@@ -185,7 +190,7 @@ class AddChatRoomModel extends ChangeNotifier {
     //firestoreに追加
     await doc.set ({
       'roomName': roomName,
-      'admin': [user.uid, userName],
+      'admin': user.uid,
       'createdAt': createdAt,
       'members': members,
       'recentMessage': '',

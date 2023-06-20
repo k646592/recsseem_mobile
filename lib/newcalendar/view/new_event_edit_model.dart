@@ -31,7 +31,6 @@ class NewEditEventModel extends ChangeNotifier {
     // firestoreに更新
     await FirebaseFirestore.instance.collection('events').doc(event.id).update({
       'title': event.title,
-      'user_name': event.name,
       'start': startDay,
       'end': endDay,
       'unit': event.unit,

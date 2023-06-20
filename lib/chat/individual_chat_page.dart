@@ -64,6 +64,7 @@ class _IndividualChatPageState extends State<IndividualChatPage> {
             user: myUser,
             messages: messages,
             onSendPressed: model.handleSendPressed,
+            onAttachmentPressed: model.handleImageSelection,
             showUserAvatars: true,
             showUserNames: true,
             theme: const DefaultChatTheme(

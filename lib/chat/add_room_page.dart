@@ -68,10 +68,10 @@ class _AddRoomPage extends State<AddRoomPage> {
                       model.endLoading();
                     }
                   },
-                  child: Text("作成"),
                   style: ElevatedButton.styleFrom(
                     backgroundColor: Colors.red,
                   ),
+                  child: const Text("作成"),
                 ),
               );
             }),
@@ -202,14 +202,14 @@ class _AddRoomPage extends State<AddRoomPage> {
                   children: [
                     Text(
                       'ルーム作成者：${model.userName}',
-                      style: TextStyle(
+                      style: const TextStyle(
                         fontSize: 25,
                       ),
                     ),
-                    Divider(
+                    const Divider(
                       color: Colors.black,
                     ),
-                    Text('チャットルーム名',
+                    const Text('チャットルーム名',
                       style: TextStyle(
                         fontSize: 25,
                       ),
@@ -238,7 +238,7 @@ class _AddRoomPage extends State<AddRoomPage> {
                           model.setRoomName(text);
                         },
                       ),
-                    Divider(
+                    const Divider(
                       color: Colors.black,
                     ),
                     const Text('ルーム作成日時',

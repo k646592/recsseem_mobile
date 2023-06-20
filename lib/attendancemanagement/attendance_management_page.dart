@@ -279,8 +279,7 @@ class _AttendanceManagementPage extends State<AttendanceManagementPage> {
                             showSnackBar(snackBar);
                           },
                           style: ElevatedButton.styleFrom(
-                            primary: Colors.green[400], //ボタンの背景色
-                            onPrimary: Colors.white,
+                            foregroundColor: Colors.white, backgroundColor: Colors.green[400],
                           ),
                           child: const Text(
                             '出席',
@@ -313,8 +312,7 @@ class _AttendanceManagementPage extends State<AttendanceManagementPage> {
                             ),
                           ),
                           style: ElevatedButton.styleFrom(
-                            primary: Colors.yellow, //ボタンの背景色
-                            onPrimary: Colors.white,
+                            foregroundColor: Colors.white, backgroundColor: Colors.yellow,
                           ),
                         ),
                       ),
@@ -340,8 +338,7 @@ class _AttendanceManagementPage extends State<AttendanceManagementPage> {
                             ),
                           ),
                           style: ElevatedButton.styleFrom(
-                            primary: Colors.grey, //ボタンの背景色
-                            onPrimary: Colors.white,
+                            foregroundColor: Colors.white, backgroundColor: Colors.grey,
                           ),
                         ),
                       ),
@@ -367,8 +364,7 @@ class _AttendanceManagementPage extends State<AttendanceManagementPage> {
                             ),
                           ),
                           style: ElevatedButton.styleFrom(
-                            primary: Colors.red, //ボタンの背景色
-                            onPrimary: Colors.white,
+                            foregroundColor: Colors.white, backgroundColor: Colors.red,
                           ),
                         ),
                       ),

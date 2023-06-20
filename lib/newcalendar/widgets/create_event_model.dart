@@ -32,7 +32,6 @@ class CreateEventModel extends ChangeNotifier {
     //firestoreに追加
     await doc.set ({
       'title': event.title,
-      'user_name': event.name,
       'start': startDay,
       'end': endDay,
       'unit': event.unit,

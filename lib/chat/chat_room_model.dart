@@ -53,28 +53,25 @@ class ChatRoomListModel extends ChangeNotifier {
 
     this.userData = userData;
 
-    final QuerySnapshot snap = await FirebaseFirestore.instance.collection('rooms').orderBy('createdAt').get();
+    for(int i=0; i<joinChatRooms.length; i++) {
+      final DocumentSnapshot snapshot = await FirebaseFirestore.instance.collection('rooms').doc(joinChatRooms[i]).get();
+      String admin = snapshot.get('admin');
+      final DocumentSnapshot user = await FirebaseFirestore.instance.collection('users').doc(admin).get();
+      String userName = user.get('name');
+      chatRooms.add(
+          ChatRoom(snapshot.id, snapshot.get('roomName'), [admin, userName], snapshot.get('recentMessage'), snapshot.get('recentMessageSender'), snapshot.get('createdAt').toDate(), snapshot.get('members').toList(), snapshot.get('imgURL'))
+      );
 
-    final List<ChatRoom> rooms = snap.docs.map((DocumentSnapshot document) {
-      Map<String, dynamic> data = document.data()! as Map<String, dynamic>;
+    }
+
+    final QuerySnapshot docSnap = await FirebaseFirestore.instance.collection('users').doc(currentUser.uid).collection('privateChat').get();
+
+    final List<String> chats = docSnap.docs.map((DocumentSnapshot document) {
       final String id = document.id;
-      final String roomName = data['roomName'];
-      final List<dynamic> admin = data['admin'].toList();
-      final String recentMessage = data['recentMessage'];
-      final String recentMessageSender = data['recentMessageSender'];
-      final DateTime createdAt = data['createdAt'].toDate();
-      final List<dynamic> members = data['members'].toList();
-      final String imgURL = data['imgURL'];
-      return ChatRoom(id, roomName, admin, recentMessage, recentMessageSender, createdAt, members, imgURL);
+      return id;
     }).toList();
 
-      for (var room in rooms) {
-        for(int i = 0; i<joinChatRooms.length; i++){
-          if(joinChatRooms[i] == room.id){
-            chatRooms.add(room);
-          }
-        }
-      }
+    docList = chats;
 
     FirebaseFirestore.instance.collection('users').doc(currentUser.uid).snapshots().listen((DocumentSnapshot snapshot) {
       name = snapshot.get('name');
@@ -89,18 +86,10 @@ class ChatRoomListModel extends ChangeNotifier {
 
     Future individualChat(String uid) async {
     final currentUser = FirebaseAuth.instance.currentUser;
-    final QuerySnapshot docSnap = await FirebaseFirestore.instance.collection('users').doc(currentUser!.uid).collection('privateChat').get();
-
-    final List<String> chats = docSnap.docs.map((DocumentSnapshot document) {
-      final String id = document.id;
-      return id;
-    }).toList();
-
-    docList = chats;
 
     if(docList.isEmpty) {
       //新しい個人チャットルームの作成
-      final doc = FirebaseFirestore.instance.collection('users').doc(currentUser.uid).collection('privateChat').doc(uid);
+      final doc = FirebaseFirestore.instance.collection('users').doc(currentUser!.uid).collection('privateChat').doc(uid);
       //FireStoreに追加
       doc.set ({
         'partnerId': uid,
@@ -116,26 +105,29 @@ class ChatRoomListModel extends ChangeNotifier {
         'recentMessage': '',
         'recentMessageSender': '',
       });
+
+      partnerId = uid;
+      myId = currentUser.uid;
     }
 
     else {
-      docList.forEach((doc) {
+      for (var doc in docList) {
         if( doc == uid ) {
           //既にチャットルームが存在
           partnerId = uid;
-          myId = currentUser.uid;
+          myId = currentUser!.uid;
         }
         else {
           //チャットルームが存在しないため、新たに作成
-          final doc = FirebaseFirestore.instance.collection('user').doc(currentUser.uid).collection('privateChat').doc(uid);
+          final myDoc = FirebaseFirestore.instance.collection('users').doc(currentUser!.uid).collection('privateChat').doc(uid);
           //FireStoreに追加
-          doc.set ({
+          myDoc.set ({
             'partnerId': uid,
             'createdAt': DateTime.now(),
             'recentMessage': '',
             'recentMessageSender': '',
           });
-          final partnerDoc = FirebaseFirestore.instance.collection('user').doc(uid).collection('privateChat').doc(currentUser.uid);
+          final partnerDoc = FirebaseFirestore.instance.collection('users').doc(uid).collection('privateChat').doc(currentUser.uid);
           //FireStoreに追加
           partnerDoc.set ({
             'partnerId': currentUser.uid,
@@ -147,7 +139,7 @@ class ChatRoomListModel extends ChangeNotifier {
           partnerId = uid;
           myId = currentUser.uid;
         }
-      });
+      }
     }
     notifyListeners();
   }
