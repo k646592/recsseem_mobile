@@ -12,7 +12,6 @@ class ChatSearchModel extends ChangeNotifier {
   List<ChatRoom> chatRooms = [];
   List<dynamic> joinChatRooms = [];
 
-
   initiateSearchMethod(bool isLoading) async {
     if(searchController.text.isNotEmpty) {
       isLoading = true;
@@ -22,41 +21,47 @@ class ChatSearchModel extends ChangeNotifier {
   }
 
   void searchByName(String roomName) async {
+    chatRooms = [];
     final QuerySnapshot snapshot = await FirebaseFirestore.instance.collection('rooms').where('roomName', isEqualTo: roomName).get();
-    final List<ChatRoom> rooms = snapshot.docs.map((DocumentSnapshot document) {
+    final List<ChatRoomSearch> rooms = snapshot.docs.map((DocumentSnapshot document) {
       Map<String, dynamic> data = document.data()! as Map<String, dynamic>;
       final String id = document.id;
       final String roomName = data['roomName'];
-      final List<dynamic> admin = data['admin'].toList();
+      final String admin = data['admin'];
       final String recentMessage = data['recentMessage'];
       final String recentMessageSender = data['recentMessageSender'];
       final DateTime createdAt = data['createdAt'].toDate();
       final List<dynamic> members = data['members'].toList();
       final String imgURl = data['imgURL'];
-      return ChatRoom(id, roomName, admin, recentMessage, recentMessageSender, createdAt, members, imgURl);
+      return ChatRoomSearch(id, roomName, admin, recentMessage, recentMessageSender, createdAt, members, imgURl);
     }).toList();
 
-    chatRooms = rooms;
+    for(int i=0; i<rooms.length; i++) {
+      if(joinChatRooms.where((joinRoom) => joinRoom.toString() == rooms[i].id).isEmpty) {
+        FirebaseFirestore.instance.collection('users').doc(rooms[i].admin).snapshots().listen((DocumentSnapshot snapshot) {
+          chatRooms.add(ChatRoom(
+              rooms[i].id,
+              rooms[i].roomName,
+              [rooms[i].admin, snapshot.get('name')],
+              rooms[i].recentMessage,
+              rooms[i].recentMessageSender,
+              rooms[i].createdAt,
+              rooms[i].members,
+              rooms[i].imgURL
+          ));
+        });
+      }
+    }
     notifyListeners();
   }
 
   void fetchChatSearch() async {
     final user = FirebaseAuth.instance.currentUser;
 
-
     FirebaseFirestore.instance.collection('users').doc(user!.uid).snapshots().listen((DocumentSnapshot snapshot) {
-      joinChatRooms = snapshot.get('joinChatRooms');
+      joinChatRooms = snapshot.get('joinChatRooms').toList();
     });
 
-    joinChatRooms.forEach((room) {
-      for(int i=0; i<chatRooms.length; i++) {
-        if(chatRooms[i].id == room) {
-          chatRooms.removeAt(i);
-          break;
-        }
-      }
-      notifyListeners();
-    });
     notifyListeners();
   }
 

@@ -2,10 +2,10 @@ import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 import 'package:recsseem_mobile/chat/individual_chat_page.dart';
 import '../HeaderandFooter/drawer.dart';
-import '../timer/timer.dart';
 import 'add_room_page.dart';
 import 'chat_page.dart';
 import 'chat_room_model.dart';
+import 'chat_search_page.dart';
 
 class ChatRoomListPage extends StatefulWidget {
   const ChatRoomListPage({Key? key}) : super(key: key);
@@ -28,11 +28,11 @@ class _ChatRoomListPage extends State<ChatRoomListPage> {
               Padding(
                 padding: const EdgeInsets.all(8.0),
                 child: IconButton(
-                    icon: const Icon(Icons.timer),
+                    icon: const Icon(Icons.search),
                     onPressed: () async {
                       await Navigator.of(context).push(
                           MaterialPageRoute(builder: (context){
-                            return ClockTimer();
+                            return const ChatSearchPage();
                           })
                       );
                     }
