@@ -53,5 +53,22 @@
     <string>This app requires to add file to your camera</string>
     <key>NSMicrophoneUsageDescription</key>
     <string>This app requires to add file to your photo library your microphone</string>
+
+
+    <!-- バックグラウンドでデータを落としてきたりするのに必要 -->
+    <key>UIBackgroundModes</key>
+    <array>
+      <string>fetch</string>
+      <string>remote-notification</string>
+    </array>
+
+    <!-- 音楽ファイルにアクセスするために必要 -->
+    <key>NSAppleMusicUsageDescription</key>
+    <string>ここに何に使うのかの理由を書く</string>
+
+    <!-- 写真ファイルにアクセスするために必要 -->
+    <key>NSPhotoLibraryUsageDescription</key>
+    <string>ここに何に使うのかの理由を書く</string>
+
 </dict>
 </plist>

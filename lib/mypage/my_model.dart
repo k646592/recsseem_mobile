@@ -29,28 +29,12 @@ class MyModel extends ChangeNotifier {
     joinChatRooms = userSnapshot.data()!['joinChatRooms'];
     imgURL = userSnapshot.data()!['imgURL'];
     notifyListeners();
-
-    final QuerySnapshot snap = await FirebaseFirestore.instance.collection('rooms').orderBy('createdAt').get();
-
-    final List<ChatRoom> rooms = snap.docs.map((DocumentSnapshot document) {
-      Map<String, dynamic> data = document.data()! as Map<String, dynamic>;
-      final String id = document.id;
-      final String roomName = data['roomName'];
-      final List<dynamic> admin = data['admin'].toList();
-      final String recentMessage = data['recentMessage'];
-      final String recentMessageSender = data['recentMessageSender'];
-      final DateTime createdAt = data['createdAt'].toDate();
-      final List<dynamic> members = data['members'].toList();
-      final String imgURL = data['imgURL'];
-      return ChatRoom(id, roomName, admin, recentMessage, recentMessageSender, createdAt, members, imgURL);
-    }).toList();
-
-    for (var room in rooms) {
-      for(int i = 0; i<joinChatRooms.length; i++){
-        if(joinChatRooms[i] == room.id){
-          chats.add(room);
-        }
-      }
+    
+    for(int i=0; i<joinChatRooms.length; i++) {
+      DocumentSnapshot snapshot = await FirebaseFirestore.instance.collection('rooms').doc(joinChatRooms[i].toString()).get();
+      DocumentSnapshot snap = await FirebaseFirestore.instance.collection('users').doc(snapshot.get('admin')).get();
+      String adminName = snap.get('name');
+      chats.add(ChatRoom(snapshot.id, snapshot.get('roomName'), [snapshot.get('admin'), adminName], snapshot.get('recentMessage'), snapshot.get('recentMessageSender'), snapshot.get('createdAt').toDate(), snapshot.get('members'), snapshot.get('imgURL')));
     }
 
     notifyListeners();

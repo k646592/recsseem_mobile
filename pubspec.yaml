@@ -51,7 +51,12 @@ dependencies:
   flutter_colorpicker: ^0.6.0
   mailer: ^6.0.1
   flutter_chat_ui: ^1.6.8
-
+  flutter_link_previewer: ^3.2.1
+  file_picker: ^5.3.2
+  mime: ^1.0.4
+  http: ^0.13.6
+  path_provider: ^2.0.15
+  open_filex: ^4.3.2
 
 dev_dependencies:
   flutter_test:
