@@ -31,12 +31,6 @@ class IndividualChatPageModel extends ChangeNotifier {
 
   String? partnerName;
 
-  File? imageFile;
-  String? img;
-
-  File? docFile;
-  String? file;
-
   //メッセージの受け取り
   void fetchChatMessageList() async {
     final QuerySnapshot snapshot = await FirebaseFirestore.instance.collection('users').doc(myId).collection('privateChat').doc(partnerId).collection('messages').orderBy('time').get();

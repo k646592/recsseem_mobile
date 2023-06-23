@@ -4,12 +4,13 @@ import 'dart:math';
 
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
-import 'package:firebase_storage/firebase_storage.dart';
 import 'package:flutter/cupertino.dart';
-import 'package:image_picker/image_picker.dart';
+import 'package:open_filex/open_filex.dart';
+import 'package:path_provider/path_provider.dart';
 
 import '../domain/chat_message.dart';
 import 'package:flutter_chat_types/flutter_chat_types.dart' as types;
+import 'package:http/http.dart' as http;
 
 String randomString() {
   final random = Random.secure();
@@ -26,11 +27,6 @@ class ChatPageModel extends ChangeNotifier {
   final List<types.Message> messages = [];
 
   types.User? myUser;
-
-  File? imageFile;
-  String? img;
-
-  String? imgURL;
 
   //メッセージの受け取り
   void fetchChatMessageList() async {
@@ -71,7 +67,7 @@ class ChatPageModel extends ChangeNotifier {
           ));
         });
       }
-      else {
+      else if (chatMessages[i].sendImg != ''){
         FirebaseFirestore.instance.collection('users').doc(chatMessages[i].senderId).snapshots().listen((DocumentSnapshot snapshot) {
           _addMessage(types.ImageMessage(
             author: types.User(
@@ -89,7 +85,23 @@ class ChatPageModel extends ChangeNotifier {
           ));
         });
       }
-
+      else {
+        FirebaseFirestore.instance.collection('users').doc(chatMessages[i].senderId).snapshots().listen((DocumentSnapshot snapshot) {
+          _addMessage(types.FileMessage(
+            author: types.User(
+              id: chatMessages[i].senderId,
+              firstName: snapshot.get('name'),
+              imageUrl: snapshot.get('imgURL'),
+            ),
+            createdAt: chatMessages[i].time,
+            id: chatMessages[i].id,
+            name: chatMessages[i].name,
+            size: chatMessages[i].size,
+            uri: chatMessages[i].sendFile,
+            mimeType: chatMessages[i].mimeType,
+          ));
+        });
+      }
     }
 
     FirebaseFirestore.instance.collection('users').doc(user!.uid).snapshots().listen((DocumentSnapshot snapshot) {
@@ -123,6 +135,8 @@ class ChatPageModel extends ChangeNotifier {
       'name': '',
       'size': 0,
       'width': 0,
+      'sendFile': '',
+      'mimeType': '',
       'senderId': myUser!.id,
       'time': DateTime.now().millisecondsSinceEpoch,
     };
@@ -130,55 +144,6 @@ class ChatPageModel extends ChangeNotifier {
     sendMessageStore(roomId, chatMessageMap, randomString());
 
     notifyListeners();
-  }
-
-  void handleImageSelection() async {
-    final result = await ImagePicker().pickImage(
-      imageQuality: 70,
-      maxWidth: 1440,
-      source: ImageSource.gallery,
-    );
-
-    if (result != null) {
-      imageFile = File(result.path);
-
-      if(imageFile!= null) {
-        final task = await FirebaseStorage.instance.ref().child('groupChats/${randomString()}').putFile(imageFile!);
-        task.ref.getDownloadURL();
-        img = await task.ref.getDownloadURL();
-      }
-      final bytes = await result.readAsBytes();
-      final image = await decodeImageFromList(bytes);
-
-      final message = types.ImageMessage(
-        author: myUser!,
-        createdAt: DateTime.now().millisecondsSinceEpoch,
-        height: image.height.toDouble(),
-        id: randomString(),
-        name: result.name,
-        size: bytes.length,
-        uri: img!,
-        width: image.width.toDouble(),
-      );
-
-      _addMessage(message);
-
-      Map<String, dynamic> chatImageMap = {
-        'message': '',
-        'sendImg': message.uri,
-        'height': image.height,
-        'name': result.name,
-        'size': bytes.length,
-        'width': image.width,
-        'senderId': myUser!.id,
-        'time': DateTime.now().millisecondsSinceEpoch,
-      };
-
-      sendImageStore(roomId, chatImageMap, randomString());
-
-      notifyListeners();
-
-    }
   }
 
   Future sendMessageStore(String roomId, Map<String, dynamic> chatMessageData, String random) async {
@@ -192,15 +157,57 @@ class ChatPageModel extends ChangeNotifier {
 
   }
 
-  Future sendImageStore(String roomId, Map<String, dynamic> chatImageData, String random) async {
-    FirebaseFirestore.instance.collection('rooms').doc(roomId).collection('messages').doc(random).set(chatImageData);
+  void handleMessageTap(BuildContext _, types.Message message) async {
+    if (message is types.FileMessage) {
+      var localPath = message.uri;
 
-    FirebaseFirestore.instance.collection('rooms').doc(roomId).update({
-      'recentMessage': chatImageData['sendImg'],
-      'recentMessageSender': chatImageData['senderId'],
-      'recentMessageTime': chatImageData['time'].toString(),
-    });
+      if (message.uri.startsWith('http')) {
+        try {
+          final index =
+          messages.indexWhere((element) => element.id == message.id);
+          final updatedMessage =
+          (messages[index] as types.FileMessage).copyWith(
+            isLoading: true,
+          );
+
+          messages[index] = updatedMessage;
+
+          final client = http.Client();
+          final request = await client.get(Uri.parse(message.uri));
+          final bytes = request.bodyBytes;
+          final documentsDir = (await getApplicationDocumentsDirectory()).path;
+          localPath = '$documentsDir/${message.name}';
+
+          if (!File(localPath).existsSync()) {
+            final file = File(localPath);
+            await file.writeAsBytes(bytes);
+          }
+        } finally {
+          final index =
+          messages.indexWhere((element) => element.id == message.id);
+          final updatedMessage =
+          (messages[index] as types.FileMessage).copyWith(
+            isLoading: null,
+          );
+
+          messages[index] = updatedMessage;
+
+        }
+      }
+
+      await OpenFilex.open(localPath);
+    }
+  }
+
+  void handlePreviewDataFetched(types.TextMessage message, types.PreviewData previewData,) {
+    final index = messages.indexWhere((element) => element.id == message.id);
+    final updatedMessage = (messages[index] as types.TextMessage).copyWith(
+      previewData: previewData,
+    );
+
+    messages[index] = updatedMessage;
 
   }
+
 
 }
