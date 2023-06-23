@@ -8,12 +8,19 @@ import 'package:recsseem_mobile/domain/attendance.dart';
 
 import 'attendance_edit_page.dart';
 
-class ShowAttendancePage extends StatelessWidget {
+class AttendanceShowPage extends StatefulWidget {
   final Attendance attendance;
-  ShowAttendancePage(this.attendance);
+  AttendanceShowPage(this.attendance, {super.key});
 
+  @override
+  State<AttendanceShowPage> createState() => _AttendanceShowPageState();
+}
+
+class _AttendanceShowPageState extends State<AttendanceShowPage> {
   DateFormat output = DateFormat('yyyy/MM/dd  a hh:mm');
+
   DateFormat outputdate = DateFormat('yyyy/MM/dd');
+
   DateFormat outputtime = DateFormat('a hh:mm');
 
   final user = FirebaseAuth.instance.currentUser;
@@ -27,7 +34,7 @@ class ShowAttendancePage extends StatelessWidget {
         leading: Padding(
           padding: const EdgeInsets.all(8.0),
           child: IconButton(
-              icon: Icon(Icons.arrow_back_ios),
+              icon: const Icon(Icons.arrow_back_ios),
               onPressed: () {
                 Navigator.of(context).pop();
               }
@@ -40,13 +47,13 @@ class ShowAttendancePage extends StatelessWidget {
                 icon: Icon(Icons.edit),
                 onPressed: () async {
                   try{
-                    if(user!.uid != attendance.userId){
+                    if(user!.uid != widget.attendance.userId){
                       throw 'イベント投稿者ではないため、編集できません。';
                     }
                     await Navigator.of(context).push(
                         MaterialPageRoute(
                             builder: (context) {
-                              return EditAttendancePage(attendance);
+                              return EditAttendancePage(widget.attendance);
                             }
                         )
                     );
@@ -67,7 +74,7 @@ class ShowAttendancePage extends StatelessWidget {
                 icon: Icon(Icons.delete),
                 onPressed: () async {
                   //削除しますか？って聞いて、はいだったら削除
-                  await showConfirmDialog(context, attendance);
+                  await showConfirmDialog(context, widget.attendance);
                 },
               )
           ),
@@ -78,7 +85,7 @@ class ShowAttendancePage extends StatelessWidget {
           padding: const EdgeInsets.all(8.0),
           child: ListView(
             children: [
-              Text('入力者：${attendance.username}',
+              Text('入力者：${widget.attendance.username}',
                 style: TextStyle(
                   fontSize: 25,
                 ),
@@ -86,7 +93,7 @@ class ShowAttendancePage extends StatelessWidget {
               Divider(
                 color: Colors.black,
               ),
-              Text('タイトル：${attendance.title}',
+              Text('タイトル：${widget.attendance.title}',
                 style: TextStyle(
                   fontSize: 25,
                 ),
@@ -94,7 +101,7 @@ class ShowAttendancePage extends StatelessWidget {
               Divider(
                 color: Colors.black,
               ),
-              attendanceList(attendance.title),
+              attendanceList(widget.attendance.title),
               Divider(
                 color: Colors.black,
               ),
@@ -111,7 +118,7 @@ class ShowAttendancePage extends StatelessWidget {
                       maxLines: 6,
                       minLines: 6,
                       decoration: InputDecoration(
-                        hintText: attendance.description,
+                        hintText: widget.attendance.description,
                         enabledBorder: OutlineInputBorder(
                           borderRadius: BorderRadius.circular(0),
                           borderSide: const BorderSide(
@@ -144,7 +151,7 @@ class ShowAttendancePage extends StatelessWidget {
                   Flexible(
                     child: ListTile(
                       trailing: CupertinoSwitch(
-                        value: attendance.mailSend,
+                        value: widget.attendance.mailSend,
                         onChanged: null,
                       ),
                     ),
@@ -167,7 +174,7 @@ class ShowAttendancePage extends StatelessWidget {
         children: [
           Row(
             children: [
-              Text('日付：${outputdate.format(attendance.start)}',
+              Text('日付：${outputdate.format(widget.attendance.start)}',
                 style: TextStyle(
                   fontSize: 25,
                 ),
@@ -176,7 +183,7 @@ class ShowAttendancePage extends StatelessWidget {
           ),
           Row(
             children: [
-              Text('到着予定時刻：${outputtime.format(attendance.start)}',
+              Text('到着予定時刻：${outputtime.format(widget.attendance.start)}',
                 style: TextStyle(
                   fontSize: 25,
                 ),
@@ -191,7 +198,7 @@ class ShowAttendancePage extends StatelessWidget {
         children: [
           Row(
             children: [
-              Text('日付：${outputdate.format(attendance.start)}',
+              Text('日付：${outputdate.format(widget.attendance.start)}',
                 style: TextStyle(
                   fontSize: 25,
                 ),
@@ -200,7 +207,7 @@ class ShowAttendancePage extends StatelessWidget {
           ),
           Row(
             children: [
-              Text('早退予定時刻：${outputtime.format(attendance.start)}',
+              Text('早退予定時刻：${outputtime.format(widget.attendance.start)}',
                 style: TextStyle(
                   fontSize: 25,
                 ),
@@ -215,7 +222,7 @@ class ShowAttendancePage extends StatelessWidget {
         children: [
           Row(
             children: [
-              Text('開始日時：${output.format(attendance.start)}',
+              Text('開始日時：${output.format(widget.attendance.start)}',
                 style: TextStyle(
                   fontSize: 25,
                 ),
@@ -224,7 +231,7 @@ class ShowAttendancePage extends StatelessWidget {
           ),
           Row(
             children: [
-              Text('終了日時：${output.format(attendance.end)}',
+              Text('終了日時：${output.format(widget.attendance.end)}',
                 style: TextStyle(
                   fontSize: 25,
                 ),
@@ -233,7 +240,7 @@ class ShowAttendancePage extends StatelessWidget {
           ),
           Row(
             children: [
-              Text('期間日数： ${attendance.end.difference(attendance.start).inDays} 日間',
+              Text('期間日数： ${widget.attendance.end.difference(widget.attendance.start).inDays} 日間',
                 style: TextStyle(
                   fontSize: 25,
                 ),

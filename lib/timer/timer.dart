@@ -40,8 +40,7 @@ class _ClockTimerState extends State<ClockTimer> {
     var dateFormat = DateFormat('HH:mm:ss');
     /// nowをdateFormatでstringに変換する
     var timeString = dateFormat.format(now);
-    setState(() => {
-      _time = timeString
-    });
+    setState(() => _time = timeString
+    );
   }
 }

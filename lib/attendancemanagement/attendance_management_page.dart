@@ -9,7 +9,7 @@ import 'package:recsseem_mobile/attendancemanagement/show_attendance_page.dart';
 import 'package:recsseem_mobile/domain/attendance.dart';
 import 'package:table_calendar/table_calendar.dart';
 import '../HeaderandFooter/drawer.dart';
-import '../event/holiday.dart';
+
 import 'dart:async';
 import '../timer/timer.dart';
 import 'add_attendance_page.dart';
@@ -137,7 +137,7 @@ class _AttendanceManagementPage extends State<AttendanceManagementPage> {
                       await Navigator.push(
                         context,
                         MaterialPageRoute(
-                          builder: (context) => ShowAttendancePage(attendance),
+                          builder: (context) => AttendanceShowPage(attendance),
                           fullscreenDialog: true,
                         ),
                       );
@@ -391,8 +391,7 @@ class _AttendanceManagementPage extends State<AttendanceManagementPage> {
                             ),
                           ),
                           style: ElevatedButton.styleFrom(
-                            primary: Colors.blue, //ボタンの背景色
-                            onPrimary: Colors.white,
+                            foregroundColor: Colors.white, backgroundColor: Colors.blue,
                           ),
                         ),
                       ),
@@ -530,7 +529,7 @@ class _AttendanceManagementPage extends State<AttendanceManagementPage> {
                             return Center(
                               child: Text(
                                 text,
-                                style: TextStyle(color: Colors.red),
+                                style: const TextStyle(color: Colors.red),
                               ),
                             );
                           }
@@ -544,6 +543,7 @@ class _AttendanceManagementPage extends State<AttendanceManagementPage> {
                               ),
                             );
                           }
+                          return null;
                         }
                     ),
 
@@ -646,12 +646,6 @@ class _AttendanceManagementPage extends State<AttendanceManagementPage> {
 
     if (day.weekday == DateTime.sunday) {
       return Colors.red;
-    }
-
-    for(var i=0; i<Holidays.holidays.length; i++) {
-      if(day == Holidays.holidays[i]) {
-        return Colors.red;
-      }
     }
 
     if (day.weekday == DateTime.saturday) {
