@@ -5,7 +5,8 @@ import '../../Calendar/model/calendar_event.dart';
 import '../../Calendar/src/calendar_controller_provider.dart';
 import '../../Calendar/view/app_colors.dart';
 import '../../Calendar/view/enumerations.dart';
-import 'add_event_widget.dart';
+import 'add_attendance_widget.dart';
+
 
 class CalendarConfig extends StatelessWidget {
   final void Function(CalendarView view) onViewChange;
@@ -99,7 +100,7 @@ class CalendarConfig extends StatelessWidget {
                 const SizedBox(
                   height: 20,
                 ),
-                AddEventWidget(
+                AddAttendanceWidget(
                   onEventAdd: (event) {
                     CalendarControllerProvider.of<CalendarEvent>(context)
                         .controller

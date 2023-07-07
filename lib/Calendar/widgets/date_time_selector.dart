@@ -1,5 +1,5 @@
 import 'package:flutter/material.dart';
-import 'package:recsseem_mobile/Event/view/extension.dart';
+import 'package:recsseem_mobile/Calendar/view/extension.dart';
 
 import '../src/calendar_constants.dart';
 

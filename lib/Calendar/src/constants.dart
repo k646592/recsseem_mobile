@@ -5,7 +5,7 @@ class Constants {
   Constants._();
 
   static final Random _random = Random();
-  static final int _maxColor = 256;
+  static const int _maxColor = 256;
 
   static const int hoursADay = 24;
   static const int minutesADay = 1440;

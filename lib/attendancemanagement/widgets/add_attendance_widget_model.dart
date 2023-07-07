@@ -10,8 +10,8 @@ import '../../Calendar/src/calendar_event_data.dart';
 import 'package:mailer/mailer.dart';
 import 'package:mailer/smtp_server.dart';
 
-class CreateEventModel extends ChangeNotifier {
-  
+class CreateAttendanceModel extends ChangeNotifier {
+
   String? username;
   String? userId;
 
@@ -114,5 +114,5 @@ class CreateEventModel extends ChangeNotifier {
     // close the connection
     await connection.close();
   }
-  }
+}
 

@@ -1,20 +1,21 @@
 import 'package:flutter/material.dart';
 
-import '../calendar_constants.dart';
-import '../calendar_controller_provider.dart';
-import '../calendar_event_data.dart';
+import '../../../Calendar/src/calendar_constants.dart';
+import '../../../Calendar/src/calendar_controller_provider.dart';
+import '../../../Calendar/src/calendar_event_data.dart';
 import '../components/components.dart';
-import '../components/event_scroll_notifier.dart';
-import '../components/safe_area_wrapper.dart';
-import '../constants.dart';
-import '../enumerations.dart';
-import '../event_arrangers/event_arrangers.dart';
-import '../event_controller.dart';
-import '../extensions.dart';
-import '../modals.dart';
-import '../style/header_style.dart';
-import '../typedefs.dart';
-import '_internal_week_view_page.dart';
+import '../../../Calendar/src/components/event_scroll_notifier.dart';
+import '../../../Calendar/src/components/safe_area_wrapper.dart';
+import '../../../Calendar/src/constants.dart';
+import '../../../Calendar/src/enumerations.dart';
+import '../../../Calendar/src/events_arrangers/event_arrangers.dart';
+import '../../../Calendar/src/event_controller.dart';
+import '../../../Calendar/src/extensions.dart';
+import '../../../Calendar/src/modals.dart';
+import '../../../Calendar/src/style/header_style.dart';
+import '../../../Calendar/src/typedefs.dart';
+import '../components/day_view_components.dart';
+import '../../../Calendar/src/week_view/_internal_week_view_page.dart';
 
 /// [Widget] to display week view.
 class WeekView<T extends Object?> extends StatefulWidget {

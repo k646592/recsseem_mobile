@@ -1,9 +1,10 @@
 import 'package:flutter/material.dart';
+import 'package:recsseem_mobile/Calendar/src/components/_internal_components.dart';
+import 'package:recsseem_mobile/Calendar/src/components/event_scroll_notifier.dart';
 
-import '../components/_internal_components.dart';
-import '../components/event_scroll_notifier.dart';
+
 import '../enumerations.dart';
-import '../event_arrangers/event_arrangers.dart';
+import '../events_arrangers/event_arrangers.dart';
 import '../event_controller.dart';
 import '../modals.dart';
 import '../painters.dart';

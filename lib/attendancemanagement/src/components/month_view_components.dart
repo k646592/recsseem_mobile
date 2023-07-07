@@ -3,18 +3,19 @@ import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:intl/intl.dart';
+import 'package:recsseem_mobile/Calendar/src/components/common_components.dart';
 import 'package:recsseem_mobile/Event/view/new_event_show.dart';
 import '../../../HeaderandFooter/footer.dart';
 import '../../../domain/event.dart';
-import '../../../Event/view/new_event_edit.dart';
-import '../../../Event/src/month_view/month_view.dart';
+
 
 import '../../../Calendar/src/calendar_event_data.dart';
 import '../../../Calendar/src/constants.dart';
 import '../../../Calendar/src/extensions.dart';
 import '../../../Calendar/src/style/header_style.dart';
 import '../../../Calendar/src/typedefs.dart';
-import '../../../Calendar/src/components/common_components.dart';
+import '../../view/attendance_edit.dart';
+
 
 class CircularCell extends StatelessWidget {
   /// Date of cell.
@@ -126,7 +127,7 @@ class FilledCell<T extends Object?> extends StatelessWidget {
       color: backgroundColor,
       child: Column(
         children: [
-          SizedBox(
+          const SizedBox(
             height: 5.0,
           ),
           CircleAvatar(
@@ -148,11 +149,11 @@ class FilledCell<T extends Object?> extends StatelessWidget {
           if (events.isNotEmpty)
             Expanded(
               child: Container(
-                margin: EdgeInsets.only(top: 5.0),
+                margin: const EdgeInsets.only(top: 5.0),
                 clipBehavior: Clip.antiAlias,
-                decoration: BoxDecoration(),
+                decoration: const BoxDecoration(),
                 child: SingleChildScrollView(
-                  physics: BouncingScrollPhysics(),
+                  physics: const BouncingScrollPhysics(),
                   child: Column(
                     mainAxisSize: MainAxisSize.min,
                     children: List.generate(
@@ -165,10 +166,10 @@ class FilledCell<T extends Object?> extends StatelessWidget {
                               builder: (context) {
                                 return SimpleDialog(
                                   title: Text(
-                                      "${returnTitle(events[index].title, events[index].unit!)}",
-                                      style: TextStyle(
-                                        color: events[index].color,
-                                      ),
+                                    returnTitle(events[index].title, events[index].unit!),
+                                    style: TextStyle(
+                                      color: events[index].color,
+                                    ),
                                   ),
                                   children: [
                                     SimpleDialogOption(
@@ -199,16 +200,16 @@ class FilledCell<T extends Object?> extends StatelessWidget {
                                             ),
                                           ),
                                           Expanded(
-                                              child:Center(
-                                                child: IconButton(
-                                                  onPressed: () async {
-                                                    await showConfirmDialog(context, events[index]);
-                                                  },
-                                                  icon: const Icon(Icons.delete_forever_rounded),
-                                                  color: Colors.red,
-                                                  iconSize: 30,
-                                                ),
+                                            child:Center(
+                                              child: IconButton(
+                                                onPressed: () async {
+                                                  await showConfirmDialog(context, events[index]);
+                                                },
+                                                icon: const Icon(Icons.delete_forever_rounded),
+                                                color: Colors.red,
+                                                iconSize: 30,
                                               ),
+                                            ),
                                           ),
                                           Expanded(
                                             child:Center(
@@ -235,7 +236,7 @@ class FilledCell<T extends Object?> extends StatelessWidget {
                                                   Navigator.of(context).push(
                                                     MaterialPageRoute(
                                                         builder: (context) {
-                                                          return NewEventEdit(events[index]);
+                                                          return AttendanceEdit(events[index]);
                                                         }
                                                     ),
                                                   );
@@ -259,7 +260,7 @@ class FilledCell<T extends Object?> extends StatelessWidget {
                             color: events[index].color,
                             borderRadius: BorderRadius.circular(4.0),
                           ),
-                          margin: EdgeInsets.symmetric(
+                          margin: const EdgeInsets.symmetric(
                               vertical: 2.0, horizontal: 3.0),
                           padding: const EdgeInsets.all(2.0),
                           alignment: Alignment.center,

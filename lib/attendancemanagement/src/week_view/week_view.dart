@@ -1,11 +1,9 @@
-import 'dart:async';
-
 import 'package:flutter/material.dart';
 
 import '../../../Calendar/src/calendar_constants.dart';
 import '../../../Calendar/src/calendar_controller_provider.dart';
 import '../../../Calendar/src/calendar_event_data.dart';
-import '../components/day_view_components.dart';
+import '../components/components.dart';
 import '../../../Calendar/src/components/event_scroll_notifier.dart';
 import '../../../Calendar/src/components/safe_area_wrapper.dart';
 import '../../../Calendar/src/constants.dart';
@@ -16,131 +14,141 @@ import '../../../Calendar/src/extensions.dart';
 import '../../../Calendar/src/modals.dart';
 import '../../../Calendar/src/style/header_style.dart';
 import '../../../Calendar/src/typedefs.dart';
-import '../../../Calendar/src/day_view/_internal_day_view_page.dart';
+import '../components/day_view_components.dart';
+import '../../../Calendar/src/week_view/_internal_week_view_page.dart';
 
-class DayView<T extends Object?> extends StatefulWidget {
-  /// A function that returns a [Widget] that determines appearance of each
-  /// cell in day calendar.
+/// [Widget] to display week view.
+class WeekView<T extends Object?> extends StatefulWidget {
+  /// Builder to build tile for events.
   final EventTileBuilder<T>? eventTileBuilder;
 
-  /// A function to generate the DateString in the calendar title.
-  /// Useful for I18n
-  final StringProvider? dateStringBuilder;
-
-  /// A function to generate the TimeString in the timeline.
-  /// Useful for I18n
-  final StringProvider? timeStringBuilder;
-
-  /// A function that returns a [Widget] that will be displayed left side of
-  /// day view.
-  ///
-  /// If null is provided then no time line will be visible.
-  ///
+  /// Builder for timeline.
   final DateWidgetBuilder? timeLineBuilder;
 
-  /// Builds day title bar.
-  final DateWidgetBuilder? dayTitleBuilder;
+  /// Header builder for week page header.
+  final WeekPageHeaderBuilder? weekPageHeaderBuilder;
 
   /// Builds custom PressDetector widget
   ///
   /// If null, internal PressDetector will be used to handle onDateLongPress()
   ///
-  final DetectorBuilder? dayDetectorBuilder;
+  final DetectorBuilder? weekDetectorBuilder;
 
-  /// Defines how events are arranged in day view.
-  /// User can define custom event arranger by implementing [EventArranger]
-  /// class and pass object of that class as argument.
+  /// This function will generate dateString int the calendar header.
+  /// Useful for I18n
+  final StringProvider? headerStringBuilder;
+
+  /// This function will generate the TimeString in the timeline.
+  /// Useful for I18n
+  final StringProvider? timeLineStringBuilder;
+
+  /// This function will generate WeekDayString in the weekday.
+  /// Useful for I18n
+  final String Function(int)? weekDayStringBuilder;
+
+  /// This function will generate WeekDayDateString in the weekday.
+  /// Useful for I18n
+  final String Function(int)? weekDayDateStringBuilder;
+
+  /// Arrange events.
   final EventArranger<T>? eventArranger;
 
-  /// This callback will run whenever page will change.
+  /// Called whenever user changes week.
   final CalendarPageChangeCallBack? onPageChange;
 
-  /// Determines the lower boundary user can scroll.
+  /// Minimum day to display in week view.
   ///
-  /// If not provided [CalendarConstants.epochDate] is default.
+  /// In calendar first date of the week that contains this data will be
+  /// minimum date.
+  ///
+  /// ex, If minDay is 16th March, 2022 then week containing this date will have
+  /// dates from 14th to 20th (Monday to Sunday). adn 14th date will
+  /// be the actual minimum date.
   final DateTime? minDay;
 
-  /// Determines upper boundary user can scroll.
+  /// Maximum day to display in week view.
   ///
-  /// If not provided [CalendarConstants.maxDate] is default.
+  /// In calendar last date of the week that contains this data will be
+  /// maximum date.
+  ///
+  /// ex, If maxDay is 16th March, 2022 then week containing this date will have
+  /// dates from 14th to 20th (Monday to Sunday). adn 20th date will
+  /// be the actual maximum date.
   final DateTime? maxDay;
 
-  /// Defines initial display day.
-  ///
-  /// If not provided [DateTime.now] is default date.
+  /// Initial week to display in week view.
   final DateTime? initialDay;
 
-  /// Defines settings for hour indication lines.
-  ///
-  /// Pass [HourIndicatorSettings.none] to remove Hour lines.
+  /// Settings for hour indicator settings.
   final HourIndicatorSettings? hourIndicatorSettings;
 
-  /// Defines settings for live time indicator.
-  ///
-  /// Pass [HourIndicatorSettings.none] to remove live time indicator.
+  /// Settings for live time indicator settings.
   final HourIndicatorSettings? liveTimeIndicatorSettings;
 
-  /// Page transition duration used when user try to change page using
-  /// [DayViewState.nextPage] or [DayViewState.previousPage]
+  /// duration for page transition while changing the week.
   final Duration pageTransitionDuration;
 
-  /// Page transition curve used when user try to change page using
-  /// [DayViewState.nextPage] or [DayViewState.previousPage]
+  /// Transition curve for transition.
   final Curve pageTransitionCurve;
 
-  /// A required parameters that controls events for day view.
-  ///
-  /// This will auto update day view when user adds events in controller.
-  /// This controller will store all the events. And returns events
-  /// for particular day.
+  /// Controller for Week view thia will refresh view when user adds or removes
+  /// event from controller.
   final EventController<T>? controller;
 
-  /// Defines height occupied by one minute of interval.
-  /// This will be used to calculate total height of day view.
+  /// Defines height occupied by one minute of time span. This parameter will
+  /// be used to calculate total height of Week view.
   final double heightPerMinute;
 
-  /// Defines the width of timeline. If null then it will
-  /// occupies 13% of [width].
+  /// Width of time line.
   final double? timeLineWidth;
 
-  /// if parsed true then live time line will be displayed in all days.
-  /// else it will be displayed in [DateTime.now] only.
-  ///
-  /// Parse [HourIndicatorSettings.none] as argument in
-  /// [DayView.liveTimeIndicatorSettings]
-  /// to remove time line completely.
+  /// Flag to show live time indicator in all day or only [initialDay]
   final bool showLiveTimeLineInAllDays;
 
-  /// Defines offset for timeline.
-  ///
-  /// This will translate all the widgets returned by
-  /// [DayView.timeLineBuilder] by provided offset.
-  ///
-  /// If offset is positive all the widgets will be translated up.
-  ///
-  /// If offset is negative all the widgets will be translated down.
-  /// Default value is 0.
+  /// Offset of time line
   final double timeLineOffset;
 
-  /// Width of day page.
-  ///
-  /// if null provided then device width will be considered.
+  /// Width of week view. If null provided device width will be considered.
   final double? width;
 
-  /// If true this will display vertical line in day view.
-  final bool showVerticalLine;
+  /// Height of week day title,
+  final double weekTitleHeight;
 
-  /// Defines offset of vertical line from hour line starts.
-  final double verticalLineOffset;
+  /// Builder to build week day.
+  final DateWidgetBuilder? weekDayBuilder;
 
-  /// Background colour of day view page.
-  final Color? backgroundColor;
+  /// Builder to build week number.
+  final WeekNumberBuilder? weekNumberBuilder;
 
-  /// Scroll offset of day view page.
+  /// Background color of week view page.
+  final Color backgroundColor;
+
+  /// Scroll offset of week view page.
   final double scrollOffset;
 
-  /// This method will be called when user taps on event tile.
+  /// Called when user taps on event tile.
   final CellTapCallback<T>? onEventTap;
+
+  /// Show weekends or not
+  ///
+  /// Default value is true.
+  ///
+  /// If it is false week view will remove weekends from week
+  /// even if weekends are added in [weekDays].
+  ///
+  /// ex, if [showWeekends] is false and [weekDays] are monday, tuesday,
+  /// saturday and sunday, only monday and tuesday will be visible in week view.
+  final bool showWeekends;
+
+  /// Defines which days should be displayed in one week.
+  ///
+  /// By default all the days will be visible.
+  /// Sequence will be monday to sunday.
+  ///
+  /// Duplicate values will be removed from list.
+  ///
+  /// ex, if there are two mondays in list it will display only one.
+  final List<WeekDays> weekDays;
 
   /// This method will be called when user long press on calendar.
   final DatePressCallback? onDateLongPress;
@@ -154,17 +162,16 @@ class DayView<T extends Object?> extends StatefulWidget {
   /// then DateTime object will be  DateTime(2022,01,11,1,0)
   final DateTapCallback? onDateTap;
 
+  /// Defines the day from which the week starts.
+  ///
+  /// Default value is [WeekDays.monday].
+  final WeekDays startDay;
+
   /// Defines size of the slots that provides long press callback on area
   /// where events are not there.
   final MinuteSlotSize minuteSlotSize;
 
-  /// Use this field to disable the calendar scrolling
-  final ScrollPhysics? scrollPhysics;
-
-  /// Use this field to disable the page view scrolling behavior
-  final ScrollPhysics? pageViewPhysics;
-
-  /// Style for DayView header.
+  /// Style for WeekView header.
   final HeaderStyle headerStyle;
 
   /// Option for SafeArea.
@@ -173,44 +180,48 @@ class DayView<T extends Object?> extends StatefulWidget {
   /// Display full day event builder.
   final FullDayEventBuilder<T>? fullDayEventBuilder;
 
-  /// Main widget for day view.
-  const DayView({
+  /// Main widget for week view.
+  const WeekView({
     Key? key,
-    this.eventTileBuilder,
-    this.dateStringBuilder,
-    this.timeStringBuilder,
     this.controller,
-    this.showVerticalLine = true,
+    this.eventTileBuilder,
     this.pageTransitionDuration = const Duration(milliseconds: 300),
     this.pageTransitionCurve = Curves.ease,
+    this.heightPerMinute = 1,
+    this.timeLineOffset = 0,
+    this.showLiveTimeLineInAllDays = false,
     this.width,
     this.minDay,
     this.maxDay,
     this.initialDay,
     this.hourIndicatorSettings,
-    this.heightPerMinute = 0.7,
     this.timeLineBuilder,
     this.timeLineWidth,
-    this.timeLineOffset = 0,
-    this.showLiveTimeLineInAllDays = false,
     this.liveTimeIndicatorSettings,
     this.onPageChange,
-    this.dayTitleBuilder,
+    this.weekPageHeaderBuilder,
     this.eventArranger,
-    this.verticalLineOffset = 10,
+    this.weekTitleHeight = 50,
+    this.weekDayBuilder,
+    this.weekNumberBuilder,
     this.backgroundColor = Colors.white,
     this.scrollOffset = 0.0,
     this.onEventTap,
     this.onDateLongPress,
     this.onDateTap,
+    this.weekDays = WeekDays.values,
+    this.showWeekends = true,
+    this.startDay = WeekDays.monday,
     this.minuteSlotSize = MinuteSlotSize.minutes60,
+    this.weekDetectorBuilder,
+    this.headerStringBuilder,
+    this.timeLineStringBuilder,
+    this.weekDayStringBuilder,
+    this.weekDayDateStringBuilder,
     this.headerStyle = const HeaderStyle(),
-    this.fullDayEventBuilder,
     this.safeAreaOption = const SafeAreaOption(),
-    this.scrollPhysics,
-    this.pageViewPhysics,
-    this.dayDetectorBuilder,
-  })  : assert(timeLineOffset >= 0,
+    this.fullDayEventBuilder,
+  })  : assert((timeLineOffset) >= 0,
   "timeLineOffset must be greater than or equal to 0"),
         assert(width == null || width > 0,
         "Calendar width must be greater than 0."),
@@ -219,25 +230,27 @@ class DayView<T extends Object?> extends StatefulWidget {
         assert(
         heightPerMinute > 0, "Height per minute must be greater than 0."),
         assert(
-        dayDetectorBuilder == null || onDateLongPress == null,
-        """If you use [dayPressDetectorBuilder]
+        weekDetectorBuilder == null || onDateLongPress == null,
+        """If you use [weekPressDetectorBuilder] 
           do not provide [onDateLongPress]""",
         ),
         super(key: key);
 
   @override
-  DayViewState<T> createState() => DayViewState<T>();
+  WeekViewState<T> createState() => WeekViewState<T>();
 }
 
-class DayViewState<T extends Object?> extends State<DayView<T>> {
+class WeekViewState<T extends Object?> extends State<WeekView<T>> {
   late double _width;
   late double _height;
   late double _timeLineWidth;
   late double _hourHeight;
-  late DateTime _currentDate;
+  late DateTime _currentStartDate;
+  late DateTime _currentEndDate;
   late DateTime _maxDate;
   late DateTime _minDate;
-  late int _totalDays;
+  late DateTime _currentWeek;
+  late int _totalWeeks;
   late int _currentIndex;
 
   late EventArranger<T> _eventArranger;
@@ -248,14 +261,17 @@ class DayViewState<T extends Object?> extends State<DayView<T>> {
   late PageController _pageController;
 
   late DateWidgetBuilder _timeLineBuilder;
-
   late EventTileBuilder<T> _eventTileBuilder;
-
-  late DateWidgetBuilder _dayTitleBuilder;
-
+  late WeekPageHeaderBuilder _weekHeaderBuilder;
+  late DateWidgetBuilder _weekDayBuilder;
+  late WeekNumberBuilder _weekNumberBuilder;
   late FullDayEventBuilder<T> _fullDayEventBuilder;
+  late DetectorBuilder _weekDetectorBuilder;
 
-  late DetectorBuilder _dayDetectorBuilder;
+  late double _weekTitleWidth;
+  late int _totalDaysInWeek;
+
+  late VoidCallback _reloadCallback;
 
   EventController<T>? _controller;
 
@@ -263,18 +279,20 @@ class DayViewState<T extends Object?> extends State<DayView<T>> {
 
   ScrollController get scrollController => _scrollController;
 
-  late VoidCallback _reloadCallback;
+  late List<WeekDays> _weekDays;
 
-  final _scrollConfiguration = EventScrollConfiguration<T>();
+  final _scrollConfiguration = EventScrollConfiguration();
 
   @override
   void initState() {
     super.initState();
 
     _reloadCallback = _reload;
+
+    _setWeekDays();
     _setDateRange();
 
-    _currentDate = (widget.initialDay ?? DateTime.now()).withoutTime;
+    _currentWeek = (widget.initialDay ?? DateTime.now()).withoutTime;
 
     _regulateCurrentDate();
 
@@ -283,6 +301,7 @@ class DayViewState<T extends Object?> extends State<DayView<T>> {
         ScrollController(initialScrollOffset: widget.scrollOffset);
     _pageController = PageController(initialPage: _currentIndex);
     _eventArranger = widget.eventArranger ?? SideEventArranger<T>();
+
     _assignBuilders();
   }
 
@@ -293,7 +312,7 @@ class DayViewState<T extends Object?> extends State<DayView<T>> {
     final newController = widget.controller ??
         CalendarControllerProvider.of<T>(context).controller;
 
-    if (newController != _controller) {
+    if (_controller != newController) {
       _controller = newController;
 
       _controller!
@@ -309,7 +328,7 @@ class DayViewState<T extends Object?> extends State<DayView<T>> {
   }
 
   @override
-  void didUpdateWidget(DayView<T> oldWidget) {
+  void didUpdateWidget(WeekView<T> oldWidget) {
     super.didUpdateWidget(oldWidget);
     // Update controller.
     final newController = widget.controller ??
@@ -320,6 +339,8 @@ class DayViewState<T extends Object?> extends State<DayView<T>> {
       _controller = newController;
       _controller?.addListener(_reloadCallback);
     }
+
+    _setWeekDays();
 
     // Update date range.
     if (widget.minDay != oldWidget.minDay ||
@@ -358,50 +379,57 @@ class DayViewState<T extends Object?> extends State<DayView<T>> {
           crossAxisAlignment: CrossAxisAlignment.start,
           mainAxisSize: MainAxisSize.min,
           children: [
-            _dayTitleBuilder(_currentDate),
+            _weekHeaderBuilder(_currentStartDate, _currentEndDate),
             Expanded(
               child: DecoratedBox(
                 decoration: BoxDecoration(color: widget.backgroundColor),
                 child: SizedBox(
                   height: _height,
+                  width: _width,
                   child: PageView.builder(
-                    physics: widget.pageViewPhysics,
-                    itemCount: _totalDays,
+                    itemCount: _totalWeeks,
                     controller: _pageController,
                     onPageChanged: _onPageChange,
                     itemBuilder: (_, index) {
-                      final date = DateTime(
-                          _minDate.year, _minDate.month, _minDate.day + index);
+                      final dates = DateTime(_minDate.year, _minDate.month,
+                          _minDate.day + (index * DateTime.daysPerWeek))
+                          .datesOfWeek(start: widget.startDay);
+
                       return ValueListenableBuilder(
                         valueListenable: _scrollConfiguration,
-                        builder: (_, __, ___) => InternalDayViewPage<T>(
+                        builder: (_, __, ___) => InternalWeekViewPage<T>(
                           key: ValueKey(
-                              _hourHeight.toString() + date.toString()),
+                              _hourHeight.toString() + dates[0].toString()),
+                          height: _height,
                           width: _width,
+                          weekTitleWidth: _weekTitleWidth,
+                          weekTitleHeight: widget.weekTitleHeight,
+                          weekDayBuilder: _weekDayBuilder,
+                          weekNumberBuilder: _weekNumberBuilder,
+                          weekDetectorBuilder: _weekDetectorBuilder,
                           liveTimeIndicatorSettings: _liveTimeIndicatorSettings,
                           timeLineBuilder: _timeLineBuilder,
-                          dayDetectorBuilder: _dayDetectorBuilder,
-                          eventTileBuilder: _eventTileBuilder,
-                          heightPerMinute: widget.heightPerMinute,
-                          hourIndicatorSettings: _hourIndicatorSettings,
-                          date: date,
                           onTileTap: widget.onEventTap,
                           onDateLongPress: widget.onDateLongPress,
                           onDateTap: widget.onDateTap,
+                          eventTileBuilder: _eventTileBuilder,
+                          heightPerMinute: widget.heightPerMinute,
+                          hourIndicatorSettings: _hourIndicatorSettings,
+                          dates: dates,
                           showLiveLine: widget.showLiveTimeLineInAllDays ||
-                              date.compareWithoutTime(DateTime.now()),
+                              _showLiveTimeIndicator(dates),
                           timeLineOffset: widget.timeLineOffset,
                           timeLineWidth: _timeLineWidth,
-                          verticalLineOffset: widget.verticalLineOffset,
-                          showVerticalLine: widget.showVerticalLine,
-                          height: _height,
+                          verticalLineOffset: 0,
+                          showVerticalLine: true,
                           controller: controller,
                           hourHeight: _hourHeight,
-                          eventArranger: _eventArranger,
-                          minuteSlotSize: widget.minuteSlotSize,
-                          scrollNotifier: _scrollConfiguration,
-                          fullDayEventBuilder: _fullDayEventBuilder,
                           scrollController: _scrollController,
+                          eventArranger: _eventArranger,
+                          weekDays: _weekDays,
+                          minuteSlotSize: widget.minuteSlotSize,
+                          scrollConfiguration: _scrollConfiguration,
+                          fullDayEventBuilder: _fullDayEventBuilder,
                         ),
                       );
                     },
@@ -428,14 +456,30 @@ class DayViewState<T extends Object?> extends State<DayView<T>> {
   }
 
   /// Reloads page.
-  ///
   void _reload() {
     if (mounted) {
       setState(() {});
     }
   }
 
-  /// Updates data related to size of this view.
+  void _setWeekDays() {
+    _weekDays = widget.weekDays.toSet().toList();
+
+    if (!widget.showWeekends) {
+      _weekDays
+        ..remove(WeekDays.saturday)
+        ..remove(WeekDays.sunday);
+    }
+
+    assert(
+    _weekDays.isNotEmpty,
+    "weekDays can not be empty.\n"
+        "Make sure you are providing weekdays in initialization of "
+        "WeekView. or showWeekends is true if you are providing only "
+        "saturday or sunday in weekDays.");
+    _totalDaysInWeek = _weekDays.length;
+  }
+
   void _updateViewDimensions() {
     _width = widget.width ?? MediaQuery.of(context).size.width;
 
@@ -445,7 +489,7 @@ class DayViewState<T extends Object?> extends State<DayView<T>> {
         HourIndicatorSettings(
           color: Constants.defaultLiveTimeIndicatorColor,
           height: widget.heightPerMinute,
-          offset: 5 + widget.verticalLineOffset,
+          offset: 5,
         );
 
     assert(_liveTimeIndicatorSettings.height < _hourHeight,
@@ -460,6 +504,10 @@ class DayViewState<T extends Object?> extends State<DayView<T>> {
 
     assert(_hourIndicatorSettings.height < _hourHeight,
     "hourIndicator height must be less than minuteHeight * 60");
+
+    _weekTitleWidth =
+        (_width - _timeLineWidth - _hourIndicatorSettings.offset) /
+            _totalDaysInWeek;
   }
 
   void _calculateHeights() {
@@ -470,11 +518,23 @@ class DayViewState<T extends Object?> extends State<DayView<T>> {
   void _assignBuilders() {
     _timeLineBuilder = widget.timeLineBuilder ?? _defaultTimeLineBuilder;
     _eventTileBuilder = widget.eventTileBuilder ?? _defaultEventTileBuilder;
-    _dayTitleBuilder = widget.dayTitleBuilder ?? _defaultDayBuilder;
+    _weekHeaderBuilder =
+        widget.weekPageHeaderBuilder ?? _defaultWeekPageHeaderBuilder;
+    _weekDayBuilder = widget.weekDayBuilder ?? _defaultWeekDayBuilder;
+    _weekDetectorBuilder =
+        widget.weekDetectorBuilder ?? _defaultPressDetectorBuilder;
+    _weekNumberBuilder = widget.weekNumberBuilder ?? _defaultWeekNumberBuilder;
     _fullDayEventBuilder =
         widget.fullDayEventBuilder ?? _defaultFullDayEventBuilder;
-    _dayDetectorBuilder =
-        widget.dayDetectorBuilder ?? _defaultPressDetectorBuilder;
+  }
+
+  Widget _defaultFullDayEventBuilder(
+      List<CalendarEventData<T>> events, DateTime dateTime) {
+    return FullDayEventView(
+      events: events,
+      boxConstraints: const BoxConstraints(maxHeight: 65),
+      date: dateTime,
+    );
   }
 
   /// Sets the current date of this month.
@@ -486,27 +546,36 @@ class DayViewState<T extends Object?> extends State<DayView<T>> {
   /// and then _regulateCurrentDate method.
   ///
   void _regulateCurrentDate() {
-    if (_currentDate.isBefore(_minDate)) {
-      _currentDate = _minDate;
-    } else if (_currentDate.isAfter(_maxDate)) {
-      _currentDate = _maxDate;
+    if (_currentWeek.isBefore(_minDate)) {
+      _currentWeek = _minDate;
+    } else if (_currentWeek.isAfter(_maxDate)) {
+      _currentWeek = _maxDate;
     }
 
-    _currentIndex = _currentDate.getDayDifference(_minDate);
+    _currentStartDate = _currentWeek.firstDayOfWeek(start: widget.startDay);
+    _currentEndDate = _currentWeek.lastDayOfWeek(start: widget.startDay);
+    _currentIndex =
+        _minDate.getWeekDifference(_currentEndDate, start: widget.startDay);
   }
 
   /// Sets the minimum and maximum dates for current view.
   void _setDateRange() {
-    _minDate = (widget.minDay ?? CalendarConstants.epochDate).withoutTime;
-    _maxDate = (widget.maxDay ?? CalendarConstants.maxDate).withoutTime;
+    _minDate = (widget.minDay ?? CalendarConstants.epochDate)
+        .firstDayOfWeek(start: widget.startDay)
+        .withoutTime;
+
+    _maxDate = (widget.maxDay ?? CalendarConstants.maxDate)
+        .lastDayOfWeek(start: widget.startDay)
+        .withoutTime;
 
     assert(
-    !_maxDate.isBefore(_minDate),
-    "Minimum date should be less than maximum date.\n"
+    _minDate.isBefore(_maxDate),
+    "Minimum date must be less than maximum date.\n"
         "Provided minimum date: $_minDate, maximum date: $_maxDate",
     );
 
-    _totalDays = _maxDate.getDayDifference(_minDate) + 1;
+    _totalWeeks =
+        _minDate.getWeekDifference(_maxDate, start: widget.startDay) + 1;
   }
 
   /// Default press detector builder. This builder will be used if
@@ -522,7 +591,7 @@ class DayViewState<T extends Object?> extends State<DayView<T>> {
     final heightPerSlot = minuteSlotSize.minutes * heightPerMinute;
     final slots = (Constants.hoursADay * 60) ~/ minuteSlotSize.minutes;
 
-    return Container(
+    return SizedBox(
       height: height,
       width: width,
       child: Stack(
@@ -561,80 +630,121 @@ class DayViewState<T extends Object?> extends State<DayView<T>> {
     );
   }
 
+  /// Default builder for week line.
+  Widget _defaultWeekDayBuilder(DateTime date) {
+    return Center(
+      child: Column(
+        mainAxisSize: MainAxisSize.min,
+        mainAxisAlignment: MainAxisAlignment.center,
+        children: [
+          Text(widget.weekDayStringBuilder?.call(date.weekday - 1) ??
+              Constants.weekTitles[date.weekday - 1]),
+          Text(widget.weekDayDateStringBuilder?.call(date.day) ??
+              date.day.toString()),
+        ],
+      ),
+    );
+  }
+
+  /// Default builder for week number.
+  Widget _defaultWeekNumberBuilder(DateTime date) {
+    final daysToAdd = DateTime.thursday - date.weekday;
+    final thursday = daysToAdd > 0
+        ? date.add(Duration(days: daysToAdd))
+        : date.subtract(Duration(days: daysToAdd.abs()));
+    final weekNumber =
+        (date.difference(DateTime(thursday.year)).inDays / 7).floor() + 1;
+    return Center(
+      child: Text("$weekNumber"),
+    );
+  }
+
   /// Default timeline builder this builder will be used if
   /// [widget.eventTileBuilder] is null
   ///
-  Widget _defaultTimeLineBuilder(date) => DefaultTimeLineMark(
-      date: date, timeStringBuilder: widget.timeStringBuilder);
+  Widget _defaultTimeLineBuilder(DateTime date) {
+    final timeLineString = widget.timeLineStringBuilder?.call(date) ??
+        "${((date.hour - 1) % 12) + 1} ${date.hour ~/ 12 == 0 ? "am" : "pm"}";
+    return Transform.translate(
+      offset: const Offset(0, -7.5),
+      child: Padding(
+        padding: const EdgeInsets.only(right: 7.0),
+        child: Text(
+          timeLineString,
+          textAlign: TextAlign.right,
+          style: const TextStyle(
+            fontSize: 15.0,
+          ),
+        ),
+      ),
+    );
+  }
 
   /// Default timeline builder. This builder will be used if
   /// [widget.eventTileBuilder] is null
-  ///
   Widget _defaultEventTileBuilder(
       DateTime date,
       List<CalendarEventData<T>> events,
       Rect boundary,
       DateTime startDuration,
-      DateTime endDuration,
-      ) {
-    if (events.isNotEmpty)
+      DateTime endDuration) {
+    if (events.isNotEmpty) {
       return RoundedEventTile(
-        borderRadius: BorderRadius.circular(10.0),
+        borderRadius: BorderRadius.circular(6.0),
         title: events[0].title,
-        totalEvents: events.length - 1,
-        description: events[0].description,
-        padding: EdgeInsets.all(10.0),
-        backgroundColor: events[0].color,
-        margin: EdgeInsets.all(2.0),
-        titleStyle: events[0].titleStyle,
+        titleStyle: events[0].titleStyle ??
+            TextStyle(
+              fontSize: 12,
+              color: events[0].color.accent,
+            ),
         descriptionStyle: events[0].descriptionStyle,
+        totalEvents: events.length,
+        padding: const EdgeInsets.all(7.0),
+        backgroundColor: events[0].color,
       );
-    else
-      return SizedBox.shrink();
+    } else {
+      return Container();
+    }
   }
 
   /// Default view header builder. This builder will be used if
   /// [widget.dayTitleBuilder] is null.
-  ///
-  Widget _defaultDayBuilder(DateTime date) {
-    return DayPageHeader(
-      date: _currentDate,
-      dateStringBuilder: widget.dateStringBuilder,
+  Widget _defaultWeekPageHeaderBuilder(DateTime startDate, DateTime endDate) {
+    return WeekPageHeader(
+      startDate: _currentStartDate,
+      endDate: _currentEndDate,
       onNextDay: nextPage,
       onPreviousDay: previousPage,
       onTitleTapped: () async {
         final selectedDate = await showDatePicker(
           context: context,
-          initialDate: date,
+          initialDate: startDate,
           firstDate: _minDate,
           lastDate: _maxDate,
         );
 
         if (selectedDate == null) return;
-        jumpToDate(selectedDate);
+        jumpToWeek(selectedDate);
       },
+      headerStringBuilder: widget.headerStringBuilder,
       headerStyle: widget.headerStyle,
     );
   }
 
-  Widget _defaultFullDayEventBuilder(
-      List<CalendarEventData<T>> events, DateTime date) =>
-      FullDayEventView(events: events, date: date);
-
   /// Called when user change page using any gesture or inbuilt functions.
-  ///
   void _onPageChange(int index) {
     if (mounted) {
       setState(() {
-        _currentDate = DateTime(
-          _currentDate.year,
-          _currentDate.month,
-          _currentDate.day + (index - _currentIndex),
+        _currentStartDate = DateTime(
+          _currentStartDate.year,
+          _currentStartDate.month,
+          _currentStartDate.day + (index - _currentIndex) * 7,
         );
+        _currentEndDate = _currentStartDate.add(const Duration(days: 6));
         _currentIndex = index;
       });
     }
-    widget.onPageChange?.call(_currentDate, _currentIndex);
+    widget.onPageChange?.call(_currentStartDate, _currentIndex);
   }
 
   /// Animate to next page
@@ -642,25 +752,24 @@ class DayViewState<T extends Object?> extends State<DayView<T>> {
   /// Arguments [duration] and [curve] will override default values provided
   /// as [DayView.pageTransitionDuration] and [DayView.pageTransitionCurve]
   /// respectively.
-  ///
-  ///
-  void nextPage({Duration? duration, Curve? curve}) => _pageController.nextPage(
-    duration: duration ?? widget.pageTransitionDuration,
-    curve: curve ?? widget.pageTransitionCurve,
-  );
+  void nextPage({Duration? duration, Curve? curve}) {
+    _pageController.nextPage(
+      duration: duration ?? widget.pageTransitionDuration,
+      curve: curve ?? widget.pageTransitionCurve,
+    );
+  }
 
   /// Animate to previous page
   ///
   /// Arguments [duration] and [curve] will override default values provided
   /// as [DayView.pageTransitionDuration] and [DayView.pageTransitionCurve]
   /// respectively.
-  ///
-  ///
-  void previousPage({Duration? duration, Curve? curve}) =>
-      _pageController.previousPage(
-        duration: duration ?? widget.pageTransitionDuration,
-        curve: curve ?? widget.pageTransitionCurve,
-      );
+  void previousPage({Duration? duration, Curve? curve}) {
+    _pageController.previousPage(
+      duration: duration ?? widget.pageTransitionDuration,
+      curve: curve ?? widget.pageTransitionCurve,
+    );
+  }
 
   /// Jumps to page number [page]
   ///
@@ -672,52 +781,51 @@ class DayViewState<T extends Object?> extends State<DayView<T>> {
   /// Arguments [duration] and [curve] will override default values provided
   /// as [DayView.pageTransitionDuration] and [DayView.pageTransitionCurve]
   /// respectively.
-  ///
-  ///
-  Future<void> animateToPage(int page, {Duration? duration, Curve? curve}) =>
-      _pageController.animateToPage(page,
-          duration: duration ?? widget.pageTransitionDuration,
-          curve: curve ?? widget.pageTransitionCurve);
-
-  /// Returns current page number.
-  ///
-  ///
-  int get currentPage => _currentIndex;
-
-  /// Jumps to page which gives day calendar for [date]
-  ///
-  ///
-  void jumpToDate(DateTime date) {
-    if (date.isBefore(_minDate) || date.isAfter(_maxDate)) {
-      throw "Invalid date selected.";
-    }
-    _pageController.jumpToPage(_minDate.getDayDifference(date));
+  Future<void> animateToPage(int page,
+      {Duration? duration, Curve? curve}) async {
+    await _pageController.animateToPage(page,
+        duration: duration ?? widget.pageTransitionDuration,
+        curve: curve ?? widget.pageTransitionCurve);
   }
 
-  /// Animate to page which gives day calendar for [date].
+  /// Returns current page number.
+  int get currentPage => _currentIndex;
+
+  /// Jumps to page which gives day calendar for [week]
+  void jumpToWeek(DateTime week) {
+    if (week.isBefore(_minDate) || week.isAfter(_maxDate)) {
+      throw "Invalid date selected.";
+    }
+    _pageController
+        .jumpToPage(_minDate.getWeekDifference(week, start: widget.startDay));
+  }
+
+  /// Animate to page which gives day calendar for [week].
   ///
   /// Arguments [duration] and [curve] will override default values provided
-  /// as [DayView.pageTransitionDuration] and [DayView.pageTransitionCurve]
+  /// as [WeekView.pageTransitionDuration] and [WeekView.pageTransitionCurve]
   /// respectively.
-  ///
-  ///
-  Future<void> animateToDate(DateTime date,
+  Future<void> animateToWeek(DateTime week,
       {Duration? duration, Curve? curve}) async {
-    if (date.isBefore(_minDate) || date.isAfter(_maxDate)) {
+    if (week.isBefore(_minDate) || week.isAfter(_maxDate)) {
       throw "Invalid date selected.";
     }
     await _pageController.animateToPage(
-      _minDate.getDayDifference(date),
+      _minDate.getWeekDifference(week, start: widget.startDay),
       duration: duration ?? widget.pageTransitionDuration,
       curve: curve ?? widget.pageTransitionCurve,
     );
   }
 
+  /// Returns the current visible week's first date.
+  DateTime get currentDate => DateTime(
+      _currentStartDate.year, _currentStartDate.month, _currentStartDate.day);
+
   /// Jumps to page which contains given events and make event
   /// tile visible to user.
   ///
   Future<void> jumpToEvent(CalendarEventData<T> event) async {
-    jumpToDate(event.date);
+    jumpToWeek(event.date);
 
     await _scrollConfiguration.setScrollEvent(
       event: event,
@@ -742,7 +850,7 @@ class DayViewState<T extends Object?> extends State<DayView<T>> {
   ///
   Future<void> animateToEvent(CalendarEventData<T> event,
       {Duration? duration, Curve? curve}) async {
-    await animateToDate(event.date, duration: duration, curve: curve);
+    await animateToWeek(event.date, duration: duration, curve: curve);
     await _scrollConfiguration.setScrollEvent(
       event: event,
       duration: duration ?? widget.pageTransitionDuration,
@@ -763,7 +871,8 @@ class DayViewState<T extends Object?> extends State<DayView<T>> {
     );
   }
 
-  /// Returns the current visible date in day view.
-  DateTime get currentDate =>
-      DateTime(_currentDate.year, _currentDate.month, _currentDate.day);
+  /// check if any dates contains current date or not.
+  /// Returns true if it does else false.
+  bool _showLiveTimeIndicator(List<DateTime> dates) =>
+      dates.any((date) => date.compareWithoutTime(DateTime.now()));
 }

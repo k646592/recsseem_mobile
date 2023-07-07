@@ -13,7 +13,7 @@ class HourIndicatorSettings {
     this.color = Colors.grey,
   }) : assert(height >= 0, "Height must be greater than or equal to 0.");
 
-  factory HourIndicatorSettings.none() => HourIndicatorSettings(
+  factory HourIndicatorSettings.none() => const HourIndicatorSettings(
     color: Colors.transparent,
     height: 0.0,
   );

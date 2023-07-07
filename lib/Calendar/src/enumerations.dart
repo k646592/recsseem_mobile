@@ -30,6 +30,9 @@ enum MinuteSlotSize {
   /// Slot size: 30 minutes
   minutes30,
 
+  /// Slot size: 45 minutes
+  minutes45,
+
   /// Slot size: 60 minutes
   minutes60,
 }

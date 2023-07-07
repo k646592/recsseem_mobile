@@ -29,7 +29,7 @@ class _AddAttendancePageState extends State<AddAttendancePage> {
   DateTimeRange? dateRange;
 
   TimeOfDay start_time = TimeOfDay.now();
-  TimeOfDay end_time = TimeOfDay(hour: 23, minute: 59);
+  TimeOfDay end_time = const TimeOfDay(hour: 23, minute: 59);
 
   String _content = '遅刻';
   bool display = false;

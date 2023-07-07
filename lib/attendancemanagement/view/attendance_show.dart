@@ -5,20 +5,20 @@ import 'package:recsseem_mobile/Calendar/src/calendar_event_data.dart';
 
 import '../../Calendar/view/app_colors.dart';
 
-class NewEventShow extends StatefulWidget {
+class AttendanceShow extends StatefulWidget {
 
   final CalendarEventData event;
-  const NewEventShow(this.event, {Key? key} ) : super(key: key);
+  const AttendanceShow(this.event, {Key? key} ) : super(key: key);
 
   @override
-  _NewEventShowState createState() => _NewEventShowState(event);
+  _AttendanceShowState createState() => _AttendanceShowState(event);
 
 }
 
-class _NewEventShowState extends State<NewEventShow> {
+class _AttendanceShowState extends State<AttendanceShow> {
 
   final CalendarEventData event;
-  _NewEventShowState(this.event);
+  _AttendanceShowState(this.event);
 
   @override
   Widget build(BuildContext context) {
@@ -60,7 +60,7 @@ class _NewEventShowState extends State<NewEventShow> {
                   borderRadius: BorderRadius.circular(7),
                 ),
                 child: Text(
-                    'タイトル：${event.title}',
+                  'タイトル：${event.title}',
                   style: const TextStyle(
                     color: AppColors.black,
                     fontSize: 17.0,
@@ -102,7 +102,7 @@ class _NewEventShowState extends State<NewEventShow> {
                   borderRadius: BorderRadius.circular(7),
                 ),
                 child: Text(
-                    '開始日時：${DateFormat('yyyy/MM/dd(EEE) a hh:mm').format(event.startTime!)}',
+                  '開始日時：${DateFormat('yyyy/MM/dd(EEE) a hh:mm').format(event.startTime!)}',
                   style: const TextStyle(
                     color: AppColors.black,
                     fontSize: 17.0,
@@ -123,7 +123,7 @@ class _NewEventShowState extends State<NewEventShow> {
                   borderRadius: BorderRadius.circular(7),
                 ),
                 child: Text(
-                    '終了日時：${DateFormat('yyyy/MM/dd(EEE) a hh:mm').format(event.endTime!)}',
+                  '終了日時：${DateFormat('yyyy/MM/dd(EEE) a hh:mm').format(event.endTime!)}',
                   style: const TextStyle(
                     color: AppColors.black,
                     fontSize: 17.0,
@@ -144,7 +144,7 @@ class _NewEventShowState extends State<NewEventShow> {
                   borderRadius: BorderRadius.circular(7),
                 ),
                 child: Text(
-                    '詳細：${event.description}',
+                  '詳細：${event.description}',
                   style: const TextStyle(
                     color: AppColors.black,
                     fontSize: 17.0,
@@ -180,8 +180,8 @@ class _NewEventShowState extends State<NewEventShow> {
                           Flexible(
                             child: ListTile(
                               trailing: CupertinoSwitch(
-                                  value: event.mailSend,
-                                  onChanged: null,
+                                value: event.mailSend,
+                                onChanged: null,
                               ),
                             ),
                           ),

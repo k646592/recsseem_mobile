@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
 
-import '../model/calendar_event.dart';
+import '../../Calendar/model/calendar_event.dart';
 import '../src/month_view/month_view.dart';
 
 class MonthViewWidget extends StatelessWidget {

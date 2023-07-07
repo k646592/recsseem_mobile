@@ -1,8 +1,9 @@
 import 'package:flutter/material.dart';
+import 'package:recsseem_mobile/attendancemanagement/widgets/calendar_configs.dart';
+import 'package:recsseem_mobile/attendancemanagement/widgets/calendar_view.dart';
 
 import '../../../Calendar/view/enumerations.dart';
-import '../../widgets/calendar_configs.dart';
-import '../../widgets/calendar_views.dart';
+
 
 class WebHomePage extends StatefulWidget {
   @override

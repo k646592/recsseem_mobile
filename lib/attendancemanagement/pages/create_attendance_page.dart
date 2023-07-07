@@ -2,19 +2,20 @@ import 'package:flutter/material.dart';
 import 'package:recsseem_mobile/Calendar/view/extension.dart';
 
 import '../../Calendar/view/app_colors.dart';
-import '../widgets/add_event_widget.dart';
+import '../widgets/add_attendance_widget.dart';
 
-class CreateEventPage extends StatefulWidget {
+
+class CreateAttendancePage extends StatefulWidget {
   final bool withDuration;
 
-  const CreateEventPage({Key? key, this.withDuration = false})
+  const CreateAttendancePage({Key? key, this.withDuration = false})
       : super(key: key);
 
   @override
-  _CreateEventPageState createState() => _CreateEventPageState();
+  _CreateAttendancePageState createState() => _CreateAttendancePageState();
 }
 
-class _CreateEventPageState extends State<CreateEventPage> {
+class _CreateAttendancePageState extends State<CreateAttendancePage> {
   @override
   void initState() {
     super.initState();
@@ -34,13 +35,13 @@ class _CreateEventPageState extends State<CreateEventPage> {
         centerTitle: false,
         leading: IconButton(
           onPressed: context.pop,
-          icon: Icon(
+          icon: const Icon(
             Icons.arrow_back,
             color: AppColors.black,
           ),
         ),
-        title: Text(
-          "Create New Event",
+        title: const Text(
+          "Create New Attendance",
           style: TextStyle(
             color: AppColors.black,
             fontSize: 20.0,
@@ -48,11 +49,9 @@ class _CreateEventPageState extends State<CreateEventPage> {
           ),
         ),
       ),
-      body: Padding(
-        padding: const EdgeInsets.all(20.0),
-        child: AddEventWidget(
-
-        ),
+      body: const Padding(
+        padding: EdgeInsets.all(20.0),
+        child: AddAttendanceWidget(),
       ),
     );
   }

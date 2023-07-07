@@ -155,6 +155,8 @@ extension MinutesExtension on MinuteSlotSize {
         return 15;
       case MinuteSlotSize.minutes30:
         return 30;
+      case MinuteSlotSize.minutes45:
+        return 45;
       case MinuteSlotSize.minutes60:
         return 60;
     }

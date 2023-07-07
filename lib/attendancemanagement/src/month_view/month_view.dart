@@ -1,13 +1,15 @@
 import 'package:flutter/material.dart';
 import 'package:intl/intl.dart';
-import 'package:recsseem_mobile/Event/view/new_event_edit.dart';
+import 'package:recsseem_mobile/attendancemanagement/view/attendance_edit.dart';
+import 'package:recsseem_mobile/attendancemanagement/view/attendance_show.dart';
 
-import '../../view/new_event_show.dart';
+import '../../../Calendar/src/components/safe_area_wrapper.dart';
+
 import '../../../Calendar/src/calendar_constants.dart';
 import '../../../Calendar/src/calendar_controller_provider.dart';
 import '../../../Calendar/src/calendar_event_data.dart';
 import '../components/components.dart';
-import '../../../Calendar/src/components/safe_area_wrapper.dart';
+
 import '../../../Calendar/src/constants.dart';
 import '../../../Calendar/src/enumerations.dart';
 import '../../../Calendar/src/event_controller.dart';
@@ -285,7 +287,7 @@ class MonthViewState<T extends Object?> extends State<MonthView<T>> {
         child: Column(
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
-            Container(
+            SizedBox(
               width: _width,
               child: _headerBuilder(_currentDate),
             ),
@@ -301,7 +303,7 @@ class MonthViewState<T extends Object?> extends State<MonthView<T>> {
                     mainAxisSize: MainAxisSize.min,
                     crossAxisAlignment: CrossAxisAlignment.start,
                     children: [
-                      Container(
+                      SizedBox(
                         width: _width,
                         child: Row(
                           children: List.generate(
@@ -318,7 +320,7 @@ class MonthViewState<T extends Object?> extends State<MonthView<T>> {
                       ),
                       Expanded(
                         child: LayoutBuilder(builder: (context, constraints) {
-                          final _cellAspectRatio =
+                          final cellAspectRatio =
                           widget.useAvailableVerticalSpace
                               ? calculateCellAspectRatio(
                             constraints.maxHeight,
@@ -338,7 +340,7 @@ class MonthViewState<T extends Object?> extends State<MonthView<T>> {
                               borderColor: widget.borderColor,
                               borderSize: widget.borderSize,
                               cellBuilder: _cellBuilder,
-                              cellRatio: _cellAspectRatio,
+                              cellRatio: cellAspectRatio,
                               date: date,
                               showBorder: widget.showBorder,
                               startDay: widget.startDay,
@@ -384,8 +386,8 @@ class MonthViewState<T extends Object?> extends State<MonthView<T>> {
   }
 
   double calculateCellAspectRatio(double height) {
-    final _cellHeight = height / 6;
-    return _cellWidth / _cellHeight;
+    final cellHeight = height / 6;
+    return _cellWidth / cellHeight;
   }
 
   void _assignBuilders() {
@@ -793,11 +795,11 @@ class _MonthPageBuilder<T> extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final monthDays = date.datesOfMonths(startDay: startDay);
-    return Container(
+    return SizedBox(
       width: width,
       height: height,
       child: GridView.builder(
-        physics: ClampingScrollPhysics(),
+        physics: const ClampingScrollPhysics(),
         gridDelegate: SliverGridDelegateWithFixedCrossAxisCount(
           crossAxisCount: 7,
           childAspectRatio: cellRatio,
@@ -852,105 +854,105 @@ class _MonthPageBuilder<T> extends StatelessWidget {
                                   ),
                                   subtitle: Text('${events[index].name}'),
                                   leading: IconButton(
-                                      padding: EdgeInsets.zero,
-                                      constraints: const BoxConstraints(),
-                                      onPressed: () {
-                                        showDialog(
-                                            context: context,
-                                            builder: (context) {
-                                              return SimpleDialog(
-                                                title: Text(
-                                                  "${returnTitle(events[index].title, events[index].unit!)}",
-                                                  style: TextStyle(
-                                                    color: events[index].color,
+                                    padding: EdgeInsets.zero,
+                                    constraints: const BoxConstraints(),
+                                    onPressed: () {
+                                      showDialog(
+                                          context: context,
+                                          builder: (context) {
+                                            return SimpleDialog(
+                                              title: Text(
+                                                returnTitle(events[index].title, events[index].unit!),
+                                                style: TextStyle(
+                                                  color: events[index].color,
+                                                ),
+                                              ),
+                                              children: [
+                                                SimpleDialogOption(
+                                                  child: Text('投稿者：${events[index].name!}'),
+                                                ),
+                                                SimpleDialogOption(
+                                                  child: Text('期間：${DateFormat('MM/dd(EEE)').format(events[index].date)}〜${DateFormat('MM/dd(EEE)').format(events[index].endDate)}'),
+                                                ),
+                                                SimpleDialogOption(
+                                                  child: Text('時刻：${DateFormat('aa HH:mm').format(events[index].startTime!)}〜${DateFormat('aa HH:mm').format(events[index].endTime!)}'),
+                                                ),
+                                                SimpleDialogOption(
+                                                  child: Text(events[index].description),
+                                                ),
+                                                SimpleDialogOption(
+                                                  child: Row(
+                                                    children: [
+                                                      Expanded(
+                                                        child:Center(
+                                                          child: IconButton(
+                                                            onPressed: () {
+                                                              Navigator.pop(context);
+                                                            },
+                                                            icon: const Icon(Icons.clear),
+                                                            color: Colors.grey,
+                                                            iconSize: 30,
+                                                          ),
+                                                        ),
+                                                      ),
+                                                      Expanded(
+                                                        child:Center(
+                                                          child: IconButton(
+                                                            onPressed: () async {
+                                                              await showConfirmDialog(context, events[index]);
+                                                            },
+                                                            icon: const Icon(Icons.delete_forever_rounded),
+                                                            color: Colors.red,
+                                                            iconSize: 30,
+                                                          ),
+                                                        ),
+                                                      ),
+                                                      Expanded(
+                                                        child:Center(
+                                                          child: IconButton(
+                                                            onPressed: () {
+                                                              Navigator.of(context).push(
+                                                                MaterialPageRoute(
+                                                                    builder: (context) {
+                                                                      return AttendanceShow(events[index]);
+                                                                    }
+                                                                ),
+                                                              );
+                                                            },
+                                                            icon: const Icon(Icons.description),
+                                                            color: Colors.black,
+                                                            iconSize: 30,
+                                                          ),
+                                                        ),
+                                                      ),
+                                                      Expanded(
+                                                        child:Center(
+                                                          child: IconButton(
+                                                            onPressed: () {
+                                                              Navigator.of(context).push(
+                                                                MaterialPageRoute(
+                                                                    builder: (context) {
+                                                                      return AttendanceEdit(events[index]);
+                                                                    }
+                                                                ),
+                                                              );
+                                                            },
+                                                            icon: const Icon(Icons.edit),
+                                                            color: Colors.blueAccent,
+                                                            iconSize: 30,
+                                                          ),
+                                                        ),
+                                                      ),
+                                                    ],
                                                   ),
                                                 ),
-                                                children: [
-                                                  SimpleDialogOption(
-                                                    child: Text('投稿者：${events[index].name!}'),
-                                                  ),
-                                                  SimpleDialogOption(
-                                                    child: Text('期間：${DateFormat('MM/dd(EEE)').format(events[index].date)}〜${DateFormat('MM/dd(EEE)').format(events[index].endDate)}'),
-                                                  ),
-                                                  SimpleDialogOption(
-                                                    child: Text('時刻：${DateFormat('aa HH:mm').format(events[index].startTime!)}〜${DateFormat('aa HH:mm').format(events[index].endTime!)}'),
-                                                  ),
-                                                  SimpleDialogOption(
-                                                    child: Text(events[index].description),
-                                                  ),
-                                                  SimpleDialogOption(
-                                                    child: Row(
-                                                      children: [
-                                                        Expanded(
-                                                          child:Center(
-                                                            child: IconButton(
-                                                              onPressed: () {
-                                                                Navigator.pop(context);
-                                                              },
-                                                              icon: const Icon(Icons.clear),
-                                                              color: Colors.grey,
-                                                              iconSize: 30,
-                                                            ),
-                                                          ),
-                                                        ),
-                                                        Expanded(
-                                                          child:Center(
-                                                            child: IconButton(
-                                                              onPressed: () async {
-                                                                await showConfirmDialog(context, events[index]);
-                                                              },
-                                                              icon: const Icon(Icons.delete_forever_rounded),
-                                                              color: Colors.red,
-                                                              iconSize: 30,
-                                                            ),
-                                                          ),
-                                                        ),
-                                                        Expanded(
-                                                          child:Center(
-                                                            child: IconButton(
-                                                              onPressed: () {
-                                                                Navigator.of(context).push(
-                                                                  MaterialPageRoute(
-                                                                      builder: (context) {
-                                                                        return NewEventShow(events[index]);
-                                                                      }
-                                                                  ),
-                                                                );
-                                                              },
-                                                              icon: const Icon(Icons.description),
-                                                              color: Colors.black,
-                                                              iconSize: 30,
-                                                            ),
-                                                          ),
-                                                        ),
-                                                        Expanded(
-                                                          child:Center(
-                                                            child: IconButton(
-                                                              onPressed: () {
-                                                                Navigator.of(context).push(
-                                                                  MaterialPageRoute(
-                                                                      builder: (context) {
-                                                                        return NewEventEdit(events[index]);
-                                                                      }
-                                                                  ),
-                                                                );
-                                                              },
-                                                              icon: const Icon(Icons.edit),
-                                                              color: Colors.blueAccent,
-                                                              iconSize: 30,
-                                                            ),
-                                                          ),
-                                                        ),
-                                                      ],
-                                                    ),
-                                                  ),
-                                                ],
-                                              );
-                                            }
-                                        );
-                                      },
-                                      icon: const Icon(Icons.event),
-                                    ),
+                                              ],
+                                            );
+                                          }
+                                      );
+                                    },
+                                    icon: const Icon(Icons.event),
+                                  ),
                                 );
                               },
                             ),
@@ -962,7 +964,7 @@ class _MonthPageBuilder<T> extends StatelessWidget {
             onLongPress: () {
               //セルを長押しすると予定の追加のページへ遷移
               onDateLongPress?.call(monthDays[index]);
-              print('aaa');
+
             },
 
             //各セルの表示

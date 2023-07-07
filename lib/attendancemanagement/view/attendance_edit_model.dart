@@ -10,8 +10,8 @@ import '../../Calendar/src/calendar_event_data.dart';
 import 'package:mailer/mailer.dart';
 import 'package:mailer/smtp_server.dart';
 
-class CreateEventModel extends ChangeNotifier {
-  
+class EditAttendanceModel extends ChangeNotifier {
+
   String? username;
   String? userId;
 
@@ -24,13 +24,12 @@ class CreateEventModel extends ChangeNotifier {
     userId = user.uid;
   }
 
-  Future addEvent(CalendarEventData<CalendarEvent> event) async {
+  Future editEvent(CalendarEventData<CalendarEvent> event) async {
     final startDay = DateTime(event.date.year,event.date.month, event.date.day, event.startTime!.hour, event.startTime!.minute);
     final endDay = DateTime(event.endDate.year,event.endDate.month, event.endDate.day, event.endTime!.hour, event.endTime!.minute);
 
-    final doc = FirebaseFirestore.instance.collection('events').doc();
-    //firestoreに追加
-    await doc.set ({
+    // firestoreに更新
+    await FirebaseFirestore.instance.collection('events').doc(event.id).update({
       'title': event.title,
       'start': startDay,
       'end': endDay,
@@ -114,5 +113,5 @@ class CreateEventModel extends ChangeNotifier {
     // close the connection
     await connection.close();
   }
-  }
+}
 

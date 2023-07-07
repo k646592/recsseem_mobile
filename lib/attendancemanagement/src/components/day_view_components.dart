@@ -1,12 +1,12 @@
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
+import 'package:recsseem_mobile/Calendar/src/components/common_components.dart';
 
 import '../../../Calendar/src/calendar_event_data.dart';
 import '../../../Calendar/src/constants.dart';
 import '../../../Calendar/src/extensions.dart';
 import '../../../Calendar/src/style/header_style.dart';
 import '../../../Calendar/src/typedefs.dart';
-import '../../../Calendar/src/components/common_components.dart';
 
 /// This class defines default tile to display in day view.
 class RoundedEventTile extends StatelessWidget {
@@ -164,14 +164,14 @@ class DefaultTimeLineMark extends StatelessWidget {
         ? timeStringBuilder!(date)
         : "${((date.hour - 1) % 12) + 1} ${date.hour ~/ 12 == 0 ? "am" : "pm"}";
     return Transform.translate(
-      offset: Offset(0, -7.5),
+      offset: const Offset(0, -7.5),
       child: Padding(
         padding: const EdgeInsets.only(right: 7.0),
         child: Text(
           timeString,
           textAlign: TextAlign.right,
           style: markingStyle ??
-              TextStyle(
+              const TextStyle(
                 fontSize: 15.0,
               ),
         ),
@@ -229,6 +229,11 @@ class FullDayEventView<T> extends StatelessWidget {
                 margin: const EdgeInsets.all(5.0),
                 padding: const EdgeInsets.all(1.0),
                 height: 24,
+                decoration: BoxDecoration(
+                  borderRadius: BorderRadius.circular(5),
+                  color: events[index].color,
+                ),
+                alignment: Alignment.centerLeft,
                 child: Text(
                   events[index].title,
                   style: titleStyle ??
@@ -238,11 +243,6 @@ class FullDayEventView<T> extends StatelessWidget {
                       ),
                   maxLines: 1,
                 ),
-                decoration: BoxDecoration(
-                  borderRadius: BorderRadius.circular(5),
-                  color: events[index].color,
-                ),
-                alignment: Alignment.centerLeft,
               ),
         ),
       ),

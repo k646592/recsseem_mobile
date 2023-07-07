@@ -6,29 +6,28 @@ import 'package:provider/provider.dart';
 import 'package:recsseem_mobile/HeaderandFooter/footer.dart';
 import 'package:recsseem_mobile/Calendar/src/calendar_event_data.dart';
 import 'package:recsseem_mobile/Calendar/view/extension.dart';
+import 'package:recsseem_mobile/attendancemanagement/view/attendance_edit_model.dart';
 
 import '../../Calendar/model/calendar_event.dart';
 import '../../Calendar/widgets/custom_button.dart';
 import '../../Calendar/widgets/date_time_selector.dart';
 import '../../Calendar/view/app_colors.dart';
 import '../../Calendar/view/constants.dart';
-import 'new_event_edit_model.dart';
 
-
-class NewEventEdit extends StatefulWidget {
+class AttendanceEdit extends StatefulWidget {
 
   final CalendarEventData event;
-  const NewEventEdit(this.event, {Key? key} ) : super(key: key);
+  const AttendanceEdit(this.event, {Key? key} ) : super(key: key);
 
   @override
-  _NewEventEditState createState() => _NewEventEditState(event);
+  _AttendanceEditState createState() => _AttendanceEditState(event);
 
 }
 
-class _NewEventEditState extends State<NewEventEdit> {
+class _AttendanceEditState extends State<AttendanceEdit> {
 
   final CalendarEventData event;
-  _NewEventEditState(this.event){
+  _AttendanceEditState(this.event){
     if (event.title == 'ミーティング' || event.title == '輪講') {
       _content = event.title;
       _display = false;
@@ -132,9 +131,9 @@ class _NewEventEditState extends State<NewEventEdit> {
 
   @override
   Widget build(BuildContext context) {
-    return ChangeNotifierProvider<NewEditEventModel>(
-      create: (_) => NewEditEventModel()..fetchUser(),
-      child: Consumer<NewEditEventModel>(builder: (context, model, child){
+    return ChangeNotifierProvider<EditAttendanceModel>(
+      create: (_) => EditAttendanceModel()..fetchUser(),
+      child: Consumer<EditAttendanceModel>(builder: (context, model, child){
         return Form(
           key: _form,
           child: Scaffold(

@@ -2,14 +2,15 @@ import 'package:flutter/material.dart';
 import 'package:recsseem_mobile/Calendar/view/extension.dart';
 import 'package:recsseem_mobile/Event/widgets/day_view_widget.dart';
 import 'package:recsseem_mobile/Event/widgets/week_view_widget.dart';
+import 'package:recsseem_mobile/attendancemanagement/widgets/month_view_widget.dart';
 
 import '../../HeaderandFooter/drawer.dart';
 import '../../timer/timer.dart';
 import '../../Calendar/model/calendar_event.dart';
 import '../../Calendar/src/calendar_controller_provider.dart';
 import '../../Calendar/src/calendar_event_data.dart';
-import '../widgets/month_view_widget.dart';
-import 'create_event_page.dart';
+import 'create_attendance_page.dart';
+
 
 class ViewPageDemo extends StatefulWidget {
   const ViewPageDemo({
@@ -36,7 +37,7 @@ class _ViewPageDemoState extends State<ViewPageDemo> {
                   onPressed: () async {
                     await Navigator.of(context).push(
                         MaterialPageRoute(builder: (context){
-                          return ClockTimer();
+                          return const ClockTimer();
                         })
                     );
                   }
@@ -57,18 +58,18 @@ class _ViewPageDemoState extends State<ViewPageDemo> {
           ),
         ),
         drawer: const UserDrawer(),
-          floatingActionButton: FloatingActionButton(
-            elevation: 8,
-            onPressed: _addEvent,
-            child: const Icon(Icons.add),
-          ),
-          body: const TabBarView(
-            children: [
-              MonthViewWidget(),
-              WeekViewWidget(),
-              DayViewWidget()
-            ],
-          ),
+        floatingActionButton: FloatingActionButton(
+          elevation: 8,
+          onPressed: _addEvent,
+          child: const Icon(Icons.add),
+        ),
+        body: const TabBarView(
+          children: [
+            MonthViewWidget(),
+            WeekViewWidget(),
+            DayViewWidget()
+          ],
+        ),
       ),
     );
   }
@@ -77,7 +78,7 @@ class _ViewPageDemoState extends State<ViewPageDemo> {
 
   Future<void> _addEvent() async {
     final event = await context.pushRoute<CalendarEventData<CalendarEvent>>(
-      const CreateEventPage(
+      const CreateAttendancePage(
         withDuration: true,
       ),
     );

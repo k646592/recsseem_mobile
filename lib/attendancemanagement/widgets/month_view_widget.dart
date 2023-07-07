@@ -1,13 +1,14 @@
 import 'package:flutter/material.dart';
+import 'package:recsseem_mobile/attendancemanagement/src/month_view/month_view.dart';
 
 import '../../Calendar/model/calendar_event.dart';
-import '../src/day_view/day_view.dart';
 
-class DayViewWidget extends StatelessWidget {
-  final GlobalKey<DayViewState>? state;
+
+class MonthViewWidget extends StatelessWidget {
+  final GlobalKey<MonthViewState>? state;
   final double? width;
 
-  const DayViewWidget({
+  const MonthViewWidget({
     Key? key,
     this.state,
     this.width,
@@ -15,7 +16,7 @@ class DayViewWidget extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return DayView<CalendarEvent>(
+    return MonthView<CalendarEvent>(
       key: state,
       width: width,
     );

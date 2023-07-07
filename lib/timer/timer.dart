@@ -3,6 +3,8 @@ import 'dart:async';
 import 'package:intl/intl.dart';
 
 class ClockTimer extends StatefulWidget {
+  const ClockTimer({super.key});
+
   @override
   State<StatefulWidget> createState() {
     return _ClockTimerState();
@@ -17,17 +19,17 @@ class _ClockTimerState extends State<ClockTimer> {
   void initState() {
     super.initState();
     /// Timer.periodic は繰り返し実行する時に使うメソッド
-    Timer.periodic(Duration(seconds: 1), _onTimer);
+    Timer.periodic(const Duration(seconds: 1), _onTimer);
   }
 
   @override
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-          title: Text('現在時刻')
+          title: const Text('現在時刻')
       ),
       body: Center(
-          child: Text(_time, style: TextStyle(fontSize: 60)
+          child: Text(_time, style: const TextStyle(fontSize: 60)
           ),
       ),
     );

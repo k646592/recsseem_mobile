@@ -4,8 +4,8 @@ import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:intl/intl.dart';
 
-import '../model/calendar_event.dart';
-import '../src/calendar_event_data.dart';
+import '../../Calendar/model/calendar_event.dart';
+import '../../Calendar/src/calendar_event_data.dart';
 
 import 'package:mailer/mailer.dart';
 import 'package:mailer/smtp_server.dart';

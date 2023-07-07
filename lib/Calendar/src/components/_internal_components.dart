@@ -5,7 +5,7 @@ import 'package:flutter/material.dart';
 import '../calendar_event_data.dart';
 import '../constants.dart';
 import '../enumerations.dart';
-import '../event_arrangers/event_arrangers.dart';
+import '../events_arrangers/event_arrangers.dart';
 import '../extensions.dart';
 import '../modals.dart';
 import '../painters.dart';

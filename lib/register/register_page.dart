@@ -55,12 +55,12 @@ class _RegisterPageState extends State<RegisterPage> {
                           model.setEmail(text);
                         },
                       ),
-                      SizedBox(
+                      const SizedBox(
                         height: 16,
                       ),
                       TextField(
                         controller: model.passwordController,
-                        decoration: InputDecoration(
+                        decoration: const InputDecoration(
                             hintText: 'Password　　※必要',
                         ),
                         onChanged: (text) {
@@ -103,7 +103,7 @@ class _RegisterPageState extends State<RegisterPage> {
                                     model.setGroup(_group);
                                 },
                               ),
-                              Text('Web班'),
+                              const Text('Web班'),
                             ],
                           ),
                           Row(
@@ -118,7 +118,7 @@ class _RegisterPageState extends State<RegisterPage> {
                                   model.setGroup(_group);
                                 },
                               ),
-                              Text('Grid班'),
+                              const Text('Grid班'),
                             ],
                           ),
                           Row(
@@ -133,7 +133,7 @@ class _RegisterPageState extends State<RegisterPage> {
                                   model.setGroup(_group);
                                 },
                               ),
-                              Text('Network班'),
+                              const Text('Network班'),
                             ],
                           ),
                           Row(
@@ -148,17 +148,17 @@ class _RegisterPageState extends State<RegisterPage> {
                                   model.setGroup(_group);
                                 },
                               ),
-                              Text('教員'),
+                              const Text('教員'),
                             ],
                           ),
                         ],
                       ),
-                      SizedBox(
+                      const SizedBox(
                         height: 16,
                       ),
                       Text(
                         '選択した学年：$_grade',
-                        style: TextStyle(
+                        style: const TextStyle(
                           fontSize: 15,
                         ),
                       ),
@@ -166,32 +166,32 @@ class _RegisterPageState extends State<RegisterPage> {
                         value: _gradedisplay,
                           items: const [
                             DropdownMenuItem(
-                              child: Text('B4'),
                               value: 'B4',
+                              child: Text('B4'),
                             ),
                             DropdownMenuItem(
-                              child: Text('M1'),
                               value: 'M1',
+                              child: Text('M1'),
                             ),
                             DropdownMenuItem(
-                              child: Text('M2'),
                               value: 'M2',
+                              child: Text('M2'),
                             ),
                             DropdownMenuItem(
-                              child: Text('D1'),
                               value: 'D1',
+                              child: Text('D1'),
                             ),
                             DropdownMenuItem(
-                              child: Text('D2'),
                               value: 'D2',
+                              child: Text('D2'),
                             ),
                             DropdownMenuItem(
-                              child: Text('D3'),
                               value: 'D3',
+                              child: Text('D3'),
                             ),
                             DropdownMenuItem(
-                              child: Text('教授'),
                               value: '教授',
+                              child: Text('教授'),
                             ),
                           ],
                           onChanged: (text) {
@@ -200,7 +200,7 @@ class _RegisterPageState extends State<RegisterPage> {
                             model.setGrade(_grade);
                           }
                       ),
-                      SizedBox(
+                      const SizedBox(
                         height: 16,
                       ),
                       ElevatedButton(
@@ -239,7 +239,7 @@ class _RegisterPageState extends State<RegisterPage> {
                             model.endLoading();
                           }
                         },
-                        child: Text('登録する'),
+                        child: const Text('登録する'),
                       ),
                     ],
                   ),
@@ -247,7 +247,7 @@ class _RegisterPageState extends State<RegisterPage> {
                 if (model.isLoading)
                   Container(
                     color: Colors.black45,
-                    child: Center(
+                    child: const Center(
                       child: CircularProgressIndicator(),
                     ),
                   ),

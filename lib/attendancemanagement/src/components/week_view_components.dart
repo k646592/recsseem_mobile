@@ -1,10 +1,11 @@
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 
+import '../../../Calendar/src/components/common_components.dart';
 import '../../../Calendar/src/constants.dart';
 import '../../../Calendar/src/style/header_style.dart';
 import '../../../Calendar/src/typedefs.dart';
-import '../../../Calendar/src/components/common_components.dart';
+
 
 class WeekPageHeader extends CalendarPageHeader {
   /// A header widget to display on week view.

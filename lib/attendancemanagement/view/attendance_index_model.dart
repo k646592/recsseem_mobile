@@ -5,7 +5,7 @@ import '../../domain/event.dart';
 import '../../Calendar/model/calendar_event.dart';
 import '../../Calendar/src/calendar_event_data.dart';
 
-class NewEventListModel extends ChangeNotifier {
+class AttendanceListModel extends ChangeNotifier {
   List<CalendarEventData<CalendarEvent>> eventsList = [];
 
   String? email;
@@ -36,7 +36,7 @@ class NewEventListModel extends ChangeNotifier {
 
     String content = '';
     for(var i=0; i<events.length; i++) {
-      
+
       if(events[i].title == 'ミーティング') {
         content = 'ミーティング';
       } else if(events[i].title == '輪講') {
@@ -65,7 +65,7 @@ class NewEventListModel extends ChangeNotifier {
             )
         );
       });
-      
+
     }
 
     notifyListeners();

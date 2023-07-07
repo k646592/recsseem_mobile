@@ -9,23 +9,24 @@ import '../../Calendar/model/calendar_event.dart';
 import '../../Calendar/src/calendar_event_data.dart';
 import '../../Calendar/view/app_colors.dart';
 import '../../Calendar/view/constants.dart';
-import 'create_event_model.dart';
+
 import '../../Calendar/widgets/custom_button.dart';
 import '../../Calendar/widgets/date_time_selector.dart';
+import 'add_attendance_widget_model.dart';
 
-class AddEventWidget extends StatefulWidget {
+class AddAttendanceWidget extends StatefulWidget {
   final void Function(CalendarEventData<CalendarEvent>)? onEventAdd;
 
-  const AddEventWidget({
+  const AddAttendanceWidget({
     Key? key,
     this.onEventAdd,
   }) : super(key: key);
 
   @override
-  _AddEventWidgetState createState() => _AddEventWidgetState();
+  _AddAttendanceWidgetState createState() => _AddAttendanceWidgetState();
 }
 
-class _AddEventWidgetState extends State<AddEventWidget> {
+class _AddAttendanceWidgetState extends State<AddAttendanceWidget> {
   late DateTime _startDate;
   late DateTime _endDate;
 
@@ -33,14 +34,14 @@ class _AddEventWidgetState extends State<AddEventWidget> {
 
   DateTime? _endTime;
 
-  String _title = "ミーティング";
+  String _title = "遅刻";
 
   String _description = "";
 
   //新しく追加
   String _unit = '全体';
   bool _mailSend = true;
-  String _content = "ミーティング";
+  String _content = "遅刻";
   bool _display = false;
   late CalendarEventData<CalendarEvent> calendarEvent;
 
@@ -111,9 +112,9 @@ class _AddEventWidgetState extends State<AddEventWidget> {
 
   @override
   Widget build(BuildContext context) {
-    return ChangeNotifierProvider<CreateEventModel>(
-      create: (_) => CreateEventModel()..fetchUser(),
-      child: Consumer<CreateEventModel>(builder: (context, model, child) {
+    return ChangeNotifierProvider<CreateAttendanceModel>(
+      create: (_) => CreateAttendanceModel()..fetchUser(),
+      child: Consumer<CreateAttendanceModel>(builder: (context, model, child) {
         return Form(
           key: _form,
           child: SingleChildScrollView(
@@ -421,10 +422,10 @@ class _AddEventWidgetState extends State<AddEventWidget> {
                     }
                     Navigator.of(context).push(
                       MaterialPageRoute(
-                        builder: (context) {
-                          return const Footer(pageNumber: 0);
-                        }
-                    ),
+                          builder: (context) {
+                            return const Footer(pageNumber: 0);
+                          }
+                      ),
                     );
                   },
                   title: "Add Event",
