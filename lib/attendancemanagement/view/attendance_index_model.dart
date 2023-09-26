@@ -1,49 +1,33 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/cupertino.dart';
+import 'package:recsseem_mobile/attendancemanagement/Calendar/model/calendar_event.dart';
+import 'package:recsseem_mobile/attendancemanagement/Calendar/src/calendar_event_data.dart';
 
-import '../../domain/event.dart';
-import '../../Calendar/model/calendar_event.dart';
-import '../../Calendar/src/calendar_event_data.dart';
+import '../../domain/attendance.dart';
+
 
 class AttendanceListModel extends ChangeNotifier {
   List<CalendarEventData<CalendarEvent>> eventsList = [];
 
-  String? email;
-  String? name;
-  String? group;
-  String? grade;
-  String? status;
-
-
   void fetchEventList() async {
 
     final QuerySnapshot snapshot =
-    await FirebaseFirestore.instance.collection('events').get();
+    await FirebaseFirestore.instance.collection('attendances').get();
 
-    final List<Event> events = snapshot.docs.map((DocumentSnapshot document) {
+    final List<Attendance> events = snapshot.docs.map((DocumentSnapshot document) {
       Map<String, dynamic> data = document.data()! as Map<String, dynamic>;
       final String id = document.id;
       final String title = data['title'].toString();
       final DateTime start = data['start'].toDate();
       final DateTime end = data['end'].toDate();
-      final String unit = data['unit'];
       final String description = data['description'];
       final bool mailSend = data['mailSend'];
       final String userId = data['userId'];
       final int color = data['color'];
-      return Event(id, title, start, end, unit, description, mailSend, userId, color);
+      return Attendance(id, title, start, end, description, mailSend, userId, color);
     }).toList();
 
-    String content = '';
     for(var i=0; i<events.length; i++) {
-
-      if(events[i].title == 'ミーティング') {
-        content = 'ミーティング';
-      } else if(events[i].title == '輪講') {
-        content = '輪講';
-      } else {
-        content = 'その他';
-      }
 
       FirebaseFirestore.instance.collection('users').doc(events[i].userId).snapshots().listen((DocumentSnapshot snapshot) {
         eventsList.add(
@@ -55,9 +39,8 @@ class AttendanceListModel extends ChangeNotifier {
               description: events[i].description,
               startTime: events[i].start,
               endTime: events[i].end,
-              content: content,
+              content: events[i].title,
               mailSend: events[i].mailSend,
-              unit: events[i].unit,
               id: events[i].id,
               color:  Color(events[i].color),
               name: snapshot.get('name'),

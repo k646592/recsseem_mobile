@@ -3,17 +3,17 @@ import 'package:intl/intl.dart';
 import 'package:recsseem_mobile/Event/view/new_event_edit.dart';
 
 import '../../view/new_event_show.dart';
-import '../../../Calendar/src/calendar_constants.dart';
-import '../../../Calendar/src/calendar_controller_provider.dart';
-import '../../../Calendar/src/calendar_event_data.dart';
+import '../../../Event/Calendar/src/calendar_constants.dart';
+import '../../../Event/Calendar/src/calendar_controller_provider.dart';
+import '../../../Event/Calendar/src/calendar_event_data.dart';
 import '../components/components.dart';
-import '../../../Calendar/src/components/safe_area_wrapper.dart';
-import '../../../Calendar/src/constants.dart';
-import '../../../Calendar/src/enumerations.dart';
-import '../../../Calendar/src/event_controller.dart';
-import '../../../Calendar/src/extensions.dart';
-import '../../../Calendar/src/style/header_style.dart';
-import '../../../Calendar/src/typedefs.dart';
+import '../../../Event/Calendar/src/components/safe_area_wrapper.dart';
+import '../../../Event/Calendar/src/constants.dart';
+import '../../../Event/Calendar/src/enumerations.dart';
+import '../../../Event/Calendar/src/event_controller.dart';
+import '../../../Event/Calendar/src/extensions.dart';
+import '../../../Event/Calendar/src/style/header_style.dart';
+import '../../../Event/Calendar/src/typedefs.dart';
 
 class MonthView<T extends Object?> extends StatefulWidget {
   /// A function that returns a [Widget] that determines appearance of
@@ -797,7 +797,7 @@ class _MonthPageBuilder<T> extends StatelessWidget {
       width: width,
       height: height,
       child: GridView.builder(
-        physics: ClampingScrollPhysics(),
+        physics: const ClampingScrollPhysics(),
         gridDelegate: SliverGridDelegateWithFixedCrossAxisCount(
           crossAxisCount: 7,
           childAspectRatio: cellRatio,
@@ -840,7 +840,12 @@ class _MonthPageBuilder<T> extends StatelessWidget {
                                 return ListTile(
                                   trailing: Column(
                                     children: [
-                                      Text('期間：${DateFormat('MM/dd(EEE)').format(events[index].date)}〜${DateFormat('MM/dd(EEE)').format(events[index].endDate)}'),
+                                      (() {
+                                        if (DateTime(events[index].date.year, events[index].date.month, events[index].date.day) == DateTime(events[index].endDate.year, events[index].endDate.month, events[index].endDate.day)) {
+                                          return Text('日付：${DateFormat('MM/dd(EEE)').format(events[index].date)}');
+                                        }
+                                        return Text('期間：${DateFormat('MM/dd(EEE)').format(events[index].date)}〜${DateFormat('MM/dd(EEE)').format(events[index].endDate)}');
+                                      })(),
                                       Text('時刻：${DateFormat('aa HH:mm').format(events[index].startTime!)}〜${DateFormat('aa HH:mm').format(events[index].endTime!)}'),
                                     ],
                                   ),
@@ -870,7 +875,12 @@ class _MonthPageBuilder<T> extends StatelessWidget {
                                                     child: Text('投稿者：${events[index].name!}'),
                                                   ),
                                                   SimpleDialogOption(
-                                                    child: Text('期間：${DateFormat('MM/dd(EEE)').format(events[index].date)}〜${DateFormat('MM/dd(EEE)').format(events[index].endDate)}'),
+                                                    child: (() {
+                                                      if (DateTime(events[index].date.year, events[index].date.month, events[index].date.day) == DateTime(events[index].endDate.year, events[index].endDate.month, events[index].endDate.day)) {
+                                                        return Text('日付：${DateFormat('MM/dd(EEE)').format(events[index].date)}');
+                                                      }
+                                                      return Text('期間：${DateFormat('MM/dd(EEE)').format(events[index].date)}〜${DateFormat('MM/dd(EEE)').format(events[index].endDate)}');
+                                                    })(),
                                                   ),
                                                   SimpleDialogOption(
                                                     child: Text('時刻：${DateFormat('aa HH:mm').format(events[index].startTime!)}〜${DateFormat('aa HH:mm').format(events[index].endTime!)}'),
@@ -962,7 +972,7 @@ class _MonthPageBuilder<T> extends StatelessWidget {
             onLongPress: () {
               //セルを長押しすると予定の追加のページへ遷移
               onDateLongPress?.call(monthDays[index]);
-              print('aaa');
+
             },
 
             //各セルの表示

@@ -4,14 +4,14 @@ import 'package:flutter_colorpicker/flutter_colorpicker.dart';
 import 'package:intl/intl.dart';
 import 'package:provider/provider.dart';
 import 'package:recsseem_mobile/HeaderandFooter/footer.dart';
-import 'package:recsseem_mobile/Calendar/src/calendar_event_data.dart';
-import 'package:recsseem_mobile/Calendar/view/extension.dart';
+import 'package:recsseem_mobile/Event/Calendar/src/calendar_event_data.dart';
+import 'package:recsseem_mobile/Event/Calendar/view/extension.dart';
 
-import '../../Calendar/model/calendar_event.dart';
-import '../../Calendar/widgets/custom_button.dart';
-import '../../Calendar/widgets/date_time_selector.dart';
-import '../../Calendar/view/app_colors.dart';
-import '../../Calendar/view/constants.dart';
+import '../../Event/Calendar/model/calendar_event.dart';
+import '../../Event/Calendar/widgets/custom_button.dart';
+import '../../Event/Calendar/widgets/date_time_selector.dart';
+import '../../Event/Calendar/view/app_colors.dart';
+import '../../Event/Calendar/view/constants.dart';
 import 'new_event_edit_model.dart';
 
 

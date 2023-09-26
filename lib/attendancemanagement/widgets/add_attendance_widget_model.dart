@@ -4,11 +4,12 @@ import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:intl/intl.dart';
 
-import '../../Calendar/model/calendar_event.dart';
-import '../../Calendar/src/calendar_event_data.dart';
+
 
 import 'package:mailer/mailer.dart';
 import 'package:mailer/smtp_server.dart';
+import 'package:recsseem_mobile/attendancemanagement/Calendar/model/calendar_event.dart';
+import 'package:recsseem_mobile/attendancemanagement/Calendar/src/calendar_event_data.dart';
 
 class CreateAttendanceModel extends ChangeNotifier {
 
@@ -28,13 +29,12 @@ class CreateAttendanceModel extends ChangeNotifier {
     final startDay = DateTime(event.date.year,event.date.month, event.date.day, event.startTime!.hour, event.startTime!.minute);
     final endDay = DateTime(event.endDate.year,event.endDate.month, event.endDate.day, event.endTime!.hour, event.endTime!.minute);
 
-    final doc = FirebaseFirestore.instance.collection('events').doc();
+    final doc = FirebaseFirestore.instance.collection('attendances').doc();
     //firestoreに追加
     await doc.set ({
       'title': event.title,
       'start': startDay,
       'end': endDay,
-      'unit': event.unit,
       'description': event.description,
       'mailSend': event.mailSend,
       'userId': event.userId,

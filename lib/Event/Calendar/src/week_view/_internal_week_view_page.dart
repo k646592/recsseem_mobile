@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
-import 'package:recsseem_mobile/Calendar/src/components/_internal_components.dart';
-import 'package:recsseem_mobile/Calendar/src/components/event_scroll_notifier.dart';
+import 'package:recsseem_mobile/Event/Calendar/src/components/_internal_components.dart';
+import 'package:recsseem_mobile/Event/Calendar/src/components/event_scroll_notifier.dart';
 
 
 import '../enumerations.dart';

@@ -2,7 +2,6 @@ import 'package:flutter/material.dart';
 import 'package:recsseem_mobile/Event/view/new_event_index_page.dart';
 import 'package:recsseem_mobile/attendancemanagement/view/attendance_index.dart';
 
-import '../attendancemanagement/attendance_management_page.dart';
 import '../chat/chat_room_page.dart';
 import '../mypage/my_page.dart';
 
@@ -25,7 +24,6 @@ class _FooterState extends State<Footer> {
     Icons.groups,
     Icons.chat,
     Icons.account_circle,
-    Icons.new_label,
   ];
 
   //アイコン文字列
@@ -34,15 +32,13 @@ class _FooterState extends State<Footer> {
     '出席管理',
     'チャット',
     'マイページ',
-    'New出席',
   ];
 
   final _routes = [
     TopPage(),
-    const AttendanceManagementPage(),
+    const AttendanceTop(),
     const ChatRoomListPage(),
     const MyPage(),
-    const AttendanceTop(),
   ];
 
   @override

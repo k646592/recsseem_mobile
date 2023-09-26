@@ -2,18 +2,11 @@ import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/cupertino.dart';
 
 import '../../domain/event.dart';
-import '../../Calendar/model/calendar_event.dart';
-import '../../Calendar/src/calendar_event_data.dart';
+import '../../Event/Calendar/model/calendar_event.dart';
+import '../../Event/Calendar/src/calendar_event_data.dart';
 
 class NewEventListModel extends ChangeNotifier {
   List<CalendarEventData<CalendarEvent>> eventsList = [];
-
-  String? email;
-  String? name;
-  String? group;
-  String? grade;
-  String? status;
-
 
   void fetchEventList() async {
 

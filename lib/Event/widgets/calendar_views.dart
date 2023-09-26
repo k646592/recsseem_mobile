@@ -2,8 +2,8 @@ import 'dart:math';
 
 import 'package:flutter/material.dart';
 
-import '../../Calendar/view/app_colors.dart';
-import '../../Calendar/view/enumerations.dart';
+import '../../Event/Calendar/view/app_colors.dart';
+import '../../Event/Calendar/view/enumerations.dart';
 import 'day_view_widget.dart';
 import 'month_view_widget.dart';
 import 'week_view_widget.dart';

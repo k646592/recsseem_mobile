@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
-import 'package:recsseem_mobile/Calendar/src/components/_internal_components.dart';
-import 'package:recsseem_mobile/Calendar/src/components/event_scroll_notifier.dart';
+import 'package:recsseem_mobile/attendancemanagement/Calendar/src/components/_internal_components.dart';
+import 'package:recsseem_mobile/attendancemanagement/Calendar/src/components/event_scroll_notifier.dart';
 
 import '../enumerations.dart';
 import '../events_arrangers/event_arrangers.dart';
@@ -121,7 +121,7 @@ class InternalDayViewPage<T extends Object?> extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return Container(
+    return SizedBox(
       height: height,
       width: width,
       child: Column(

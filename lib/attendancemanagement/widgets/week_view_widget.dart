@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
+import 'package:recsseem_mobile/attendancemanagement/Calendar/model/calendar_event.dart';
 
-import '../../Calendar/model/calendar_event.dart';
+
 import '../src/week_view/week_view.dart';
 
 class WeekViewWidget extends StatelessWidget {

@@ -1,9 +1,9 @@
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:intl/intl.dart';
-import 'package:recsseem_mobile/Calendar/src/calendar_event_data.dart';
+import 'package:recsseem_mobile/Event/Calendar/src/calendar_event_data.dart';
 
-import '../../Calendar/view/app_colors.dart';
+import '../../Event/Calendar/view/app_colors.dart';
 
 class NewEventShow extends StatefulWidget {
 

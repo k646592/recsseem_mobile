@@ -2,21 +2,21 @@ import 'dart:async';
 
 import 'package:flutter/material.dart';
 
-import '../../../Calendar/src/calendar_constants.dart';
-import '../../../Calendar/src/calendar_controller_provider.dart';
-import '../../../Calendar/src/calendar_event_data.dart';
+import '../../../Event/Calendar/src/calendar_constants.dart';
+import '../../../Event/Calendar/src/calendar_controller_provider.dart';
+import '../../../Event/Calendar/src/calendar_event_data.dart';
 import '../components/day_view_components.dart';
-import '../../../Calendar/src/components/event_scroll_notifier.dart';
-import '../../../Calendar/src/components/safe_area_wrapper.dart';
-import '../../../Calendar/src/constants.dart';
-import '../../../Calendar/src/enumerations.dart';
-import '../../../Calendar/src/events_arrangers/event_arrangers.dart';
-import '../../../Calendar/src/event_controller.dart';
-import '../../../Calendar/src/extensions.dart';
-import '../../../Calendar/src/modals.dart';
-import '../../../Calendar/src/style/header_style.dart';
-import '../../../Calendar/src/typedefs.dart';
-import '../../../Calendar/src/day_view/_internal_day_view_page.dart';
+import '../../../Event/Calendar/src/components/event_scroll_notifier.dart';
+import '../../../Event/Calendar/src/components/safe_area_wrapper.dart';
+import '../../../Event/Calendar/src/constants.dart';
+import '../../../Event/Calendar/src/enumerations.dart';
+import '../../../Event/Calendar/src/events_arrangers/event_arrangers.dart';
+import '../../../Event/Calendar/src/event_controller.dart';
+import '../../../Event/Calendar/src/extensions.dart';
+import '../../../Event/Calendar/src/modals.dart';
+import '../../../Event/Calendar/src/style/header_style.dart';
+import '../../../Event/Calendar/src/typedefs.dart';
+import '../../../Event/Calendar/src/day_view/_internal_day_view_page.dart';
 
 class DayView<T extends Object?> extends StatefulWidget {
   /// A function that returns a [Widget] that determines appearance of each

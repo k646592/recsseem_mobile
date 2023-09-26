@@ -2,16 +2,16 @@ import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_colorpicker/flutter_colorpicker.dart';
 import 'package:provider/provider.dart';
-import 'package:recsseem_mobile/Calendar/view/extension.dart';
+import 'package:recsseem_mobile/Event/Calendar/view/extension.dart';
 
 import '../../HeaderandFooter/footer.dart';
-import '../../Calendar/model/calendar_event.dart';
-import '../../Calendar/src/calendar_event_data.dart';
-import '../../Calendar/view/app_colors.dart';
-import '../../Calendar/view/constants.dart';
+import '../../Event/Calendar/model/calendar_event.dart';
+import '../../Event/Calendar/src/calendar_event_data.dart';
+import '../../Event/Calendar/view/app_colors.dart';
+import '../../Event/Calendar/view/constants.dart';
 import 'create_event_model.dart';
-import '../../Calendar/widgets/custom_button.dart';
-import '../../Calendar/widgets/date_time_selector.dart';
+import '../../Event/Calendar/widgets/custom_button.dart';
+import '../../Event/Calendar/widgets/date_time_selector.dart';
 
 class AddEventWidget extends StatefulWidget {
   final void Function(CalendarEventData<CalendarEvent>)? onEventAdd;

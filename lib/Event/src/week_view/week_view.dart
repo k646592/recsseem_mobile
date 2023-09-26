@@ -1,21 +1,20 @@
 import 'package:flutter/material.dart';
 
-import '../../../Calendar/src/calendar_constants.dart';
-import '../../../Calendar/src/calendar_controller_provider.dart';
-import '../../../Calendar/src/calendar_event_data.dart';
+import '../../../Event/Calendar/src/calendar_constants.dart';
+import '../../../Event/Calendar/src/calendar_controller_provider.dart';
+import '../../../Event/Calendar/src/calendar_event_data.dart';
 import '../components/components.dart';
-import '../../../Calendar/src/components/event_scroll_notifier.dart';
-import '../../../Calendar/src/components/safe_area_wrapper.dart';
-import '../../../Calendar/src/constants.dart';
-import '../../../Calendar/src/enumerations.dart';
-import '../../../Calendar/src/events_arrangers/event_arrangers.dart';
-import '../../../Calendar/src/event_controller.dart';
-import '../../../Calendar/src/extensions.dart';
-import '../../../Calendar/src/modals.dart';
-import '../../../Calendar/src/style/header_style.dart';
-import '../../../Calendar/src/typedefs.dart';
-import '../components/day_view_components.dart';
-import '../../../Calendar/src/week_view/_internal_week_view_page.dart';
+import '../../../Event/Calendar/src/components/event_scroll_notifier.dart';
+import '../../../Event/Calendar/src/components/safe_area_wrapper.dart';
+import '../../../Event/Calendar/src/constants.dart';
+import '../../../Event/Calendar/src/enumerations.dart';
+import '../../../Event/Calendar/src/events_arrangers/event_arrangers.dart';
+import '../../../Event/Calendar/src/event_controller.dart';
+import '../../../Event/Calendar/src/extensions.dart';
+import '../../../Event/Calendar/src/modals.dart';
+import '../../../Event/Calendar/src/style/header_style.dart';
+import '../../../Event/Calendar/src/typedefs.dart';
+import '../../../Event/Calendar/src/week_view/_internal_week_view_page.dart';
 
 /// [Widget] to display week view.
 class WeekView<T extends Object?> extends StatefulWidget {
@@ -532,7 +531,7 @@ class WeekViewState<T extends Object?> extends State<WeekView<T>> {
       List<CalendarEventData<T>> events, DateTime dateTime) {
     return FullDayEventView(
       events: events,
-      boxConstraints: BoxConstraints(maxHeight: 65),
+      boxConstraints: const BoxConstraints(maxHeight: 65),
       date: dateTime,
     );
   }
@@ -591,7 +590,7 @@ class WeekViewState<T extends Object?> extends State<WeekView<T>> {
     final heightPerSlot = minuteSlotSize.minutes * heightPerMinute;
     final slots = (Constants.hoursADay * 60) ~/ minuteSlotSize.minutes;
 
-    return Container(
+    return SizedBox(
       height: height,
       width: width,
       child: Stack(
@@ -666,13 +665,13 @@ class WeekViewState<T extends Object?> extends State<WeekView<T>> {
     final timeLineString = widget.timeLineStringBuilder?.call(date) ??
         "${((date.hour - 1) % 12) + 1} ${date.hour ~/ 12 == 0 ? "am" : "pm"}";
     return Transform.translate(
-      offset: Offset(0, -7.5),
+      offset: const Offset(0, -7.5),
       child: Padding(
         padding: const EdgeInsets.only(right: 7.0),
         child: Text(
           timeLineString,
           textAlign: TextAlign.right,
-          style: TextStyle(
+          style: const TextStyle(
             fontSize: 15.0,
           ),
         ),
@@ -688,7 +687,7 @@ class WeekViewState<T extends Object?> extends State<WeekView<T>> {
       Rect boundary,
       DateTime startDuration,
       DateTime endDuration) {
-    if (events.isNotEmpty)
+    if (events.isNotEmpty) {
       return RoundedEventTile(
         borderRadius: BorderRadius.circular(6.0),
         title: events[0].title,
@@ -699,11 +698,12 @@ class WeekViewState<T extends Object?> extends State<WeekView<T>> {
             ),
         descriptionStyle: events[0].descriptionStyle,
         totalEvents: events.length,
-        padding: EdgeInsets.all(7.0),
+        padding: const EdgeInsets.all(7.0),
         backgroundColor: events[0].color,
       );
-    else
+    } else {
       return Container();
+    }
   }
 
   /// Default view header builder. This builder will be used if
@@ -739,7 +739,7 @@ class WeekViewState<T extends Object?> extends State<WeekView<T>> {
           _currentStartDate.month,
           _currentStartDate.day + (index - _currentIndex) * 7,
         );
-        _currentEndDate = _currentStartDate.add(Duration(days: 6));
+        _currentEndDate = _currentStartDate.add(const Duration(days: 6));
         _currentIndex = index;
       });
     }

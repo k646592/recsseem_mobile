@@ -23,7 +23,7 @@ class MyPage extends StatelessWidget {
                   onPressed: () async {
                     await Navigator.of(context).push(
                         MaterialPageRoute(builder: (context){
-                          return ClockTimer();
+                          return const ClockTimer();
                         })
                     );
                   }
@@ -33,7 +33,7 @@ class MyPage extends StatelessWidget {
           backgroundColor: Colors.black,
           centerTitle: true,
           elevation: 0.0,
-          title: const Text('イベント'),
+          title: const Text('My Page'),
         ),
         drawer: const UserDrawer(),
         body: Center(

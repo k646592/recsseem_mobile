@@ -4,15 +4,17 @@ import 'package:flutter_colorpicker/flutter_colorpicker.dart';
 import 'package:intl/intl.dart';
 import 'package:provider/provider.dart';
 import 'package:recsseem_mobile/HeaderandFooter/footer.dart';
-import 'package:recsseem_mobile/Calendar/src/calendar_event_data.dart';
-import 'package:recsseem_mobile/Calendar/view/extension.dart';
+import 'package:recsseem_mobile/attendancemanagement/Calendar/model/calendar_event.dart';
+import 'package:recsseem_mobile/attendancemanagement/Calendar/src/calendar_event_data.dart';
+import 'package:recsseem_mobile/attendancemanagement/Calendar/view/app_colors.dart';
+import 'package:recsseem_mobile/attendancemanagement/Calendar/view/constants.dart';
+import 'package:recsseem_mobile/attendancemanagement/Calendar/view/extension.dart';
+import 'package:recsseem_mobile/attendancemanagement/Calendar/widgets/custom_button.dart';
+import 'package:recsseem_mobile/attendancemanagement/Calendar/widgets/date_time_selector.dart';
+
 import 'package:recsseem_mobile/attendancemanagement/view/attendance_edit_model.dart';
 
-import '../../Calendar/model/calendar_event.dart';
-import '../../Calendar/widgets/custom_button.dart';
-import '../../Calendar/widgets/date_time_selector.dart';
-import '../../Calendar/view/app_colors.dart';
-import '../../Calendar/view/constants.dart';
+
 
 class AttendanceEdit extends StatefulWidget {
 
@@ -28,16 +30,8 @@ class _AttendanceEditState extends State<AttendanceEdit> {
 
   final CalendarEventData event;
   _AttendanceEditState(this.event){
-    if (event.title == 'ミーティング' || event.title == '輪講') {
-      _content = event.title;
-      _display = false;
-    }
-    else {
-      _content = 'その他';
-      _display = true;
-    }
+    _content = event.title;
     _title = event.title;
-    _unit = event.unit;
     _description = event.description;
     _mailSend = event.mailSend;
     _color = event.color;
@@ -48,7 +42,6 @@ class _AttendanceEditState extends State<AttendanceEdit> {
   String? _content;
   String? _title;
   bool? _display;
-  String? _unit;
   String? _description;
   bool? _mailSend;
   Color? _color;
@@ -63,7 +56,6 @@ class _AttendanceEditState extends State<AttendanceEdit> {
 
   late FocusNode _titleNode;
   late FocusNode _descriptionNode;
-  late FocusNode _unitNode;
   late FocusNode _contentNode;
   late FocusNode _dateNode;
 
@@ -86,7 +78,6 @@ class _AttendanceEditState extends State<AttendanceEdit> {
     _titleNode = FocusNode();
     _descriptionNode = FocusNode();
     _dateNode = FocusNode();
-    _unitNode = FocusNode();
     _contentNode = FocusNode();
 
     _startDateController = TextEditingController();
@@ -117,7 +108,6 @@ class _AttendanceEditState extends State<AttendanceEdit> {
     _descriptionNode.dispose();
     _dateNode.dispose();
     _contentNode.dispose();
-    _unitNode.dispose();
 
     _startDateController.dispose();
     _endDateController.dispose();
@@ -190,37 +180,37 @@ class _AttendanceEditState extends State<AttendanceEdit> {
                             value: _content,
                             items: const [
                               DropdownMenuItem(
-                                value: 'ミーティング',
-                                child: Text('ミーティング'),
+                                value: '遅刻',
+                                child: Text('遅刻'),
                               ),
                               DropdownMenuItem(
-                                value: '輪講',
-                                child: Text('輪講'),
+                                value: '欠席',
+                                child: Text('欠席'),
                               ),
                               DropdownMenuItem(
-                                value: 'その他',
-                                child: Text('その他'),
+                                value: '早退',
+                                child: Text('早退'),
                               ),
                             ],
                             onChanged: (text) {
                               setState(() {
                                 _content = text.toString();
-                                if (text.toString() == 'ミーティング') {
+                                if (text.toString() == '遅刻') {
                                   _display = false;
-                                  _title = 'ミーティング';
-                                  _titleController.text = 'ミーティング';
+                                  _title = '遅刻';
+                                  _titleController.text = '遅刻';
                                 }
-                                if (text.toString() == '輪講') {
+                                if (text.toString() == '欠席') {
                                   _display = false;
-                                  _title = '輪講';
-                                  _titleController.text = '輪講';
+                                  _title = '欠席';
+                                  _titleController.text = '欠席';
                                 }
-                                if (text.toString() == 'その他') {
-                                  _display = true;
-                                  _title = '';
-                                  _titleController.text = '';
+                                if (text.toString() == '早退') {
+                                  _display = false;
+                                  _title = '早退';
+                                  _titleController.text = '早退';
                                 }
-                                colorSelector(_unit!, _content!);
+                                colorSelector(_content!);
                               });
                             },
                           ),
@@ -257,7 +247,6 @@ class _AttendanceEditState extends State<AttendanceEdit> {
                     const SizedBox(
                       height: 15,
                     ),
-                    unitSelector(_content!),
                     Row(
                       children: [
                         Expanded(
@@ -479,7 +468,7 @@ class _AttendanceEditState extends State<AttendanceEdit> {
                         Navigator.of(context).push(
                           MaterialPageRoute(
                               builder: (context) {
-                                return const Footer(pageNumber: 0);
+                                return const Footer(pageNumber: 1);
                               }
                           ),
                         );
@@ -511,7 +500,6 @@ class _AttendanceEditState extends State<AttendanceEdit> {
       endDate: _endDate,
       title: _title!,
       content: _content!,
-      unit: _unit,
       mailSend: _mailSend!,
       name: username,
       userId: userId,
@@ -524,109 +512,15 @@ class _AttendanceEditState extends State<AttendanceEdit> {
     });
   }
 
-  Widget unitSelector(String content) {
-    if (content == 'ミーティング'){
-      return Column(
-        children: [
-          Container(
-            padding: const EdgeInsets.all(5.0),
-            width: double.infinity,
-            decoration: BoxDecoration(
-              border: Border.all(
-                  width: 2,
-                  color: AppColors.lightNavyBlue
-              ),
-              borderRadius: BorderRadius.circular(7),
-            ),
-            child: Row(
-                children: [
-                  const SizedBox(
-                    width: 10,
-                  ),
-                  const Text('参加単位',
-                    style: TextStyle(
-                      fontSize: 17.0,
-                    ),
-                  ),
-                  const SizedBox(
-                    width: 10,
-                  ),
-                  DropdownButton(
-                      value: _unit,
-                      items: const [
-                        DropdownMenuItem(
-                          value: '全体',
-                          child: Text('全体'),
-                        ),
-                        DropdownMenuItem(
-                          value: '個人',
-                          child: Text('個人'),
-                        ),
-                        DropdownMenuItem(
-                          value: 'Net班',
-                          child: Text('Net班'),
-                        ),
-                        DropdownMenuItem(
-                          value: 'Grid班',
-                          child: Text('Grid班'),
-                        ),
-                        DropdownMenuItem(
-                          value: 'Web班',
-                          child: Text('Web班'),
-                        ),
-                        DropdownMenuItem(
-                          value: 'B4',
-                          child: Text('B4'),
-                        ),
-                        DropdownMenuItem(
-                          value: 'M1',
-                          child: Text('M1'),
-                        ),
-                        DropdownMenuItem(
-                          value: 'M2',
-                          child: Text('M2'),
-                        ),
-                      ],
-                      onChanged: (text) {
-                        setState(() {
-                          _unit = text.toString();
-                        });
-                        colorSelector(_unit!, _content!);
-                      }
-                  ),
-                ]),
-          ),
-          const SizedBox(
-            height: 15,
-          ),
-        ],
-      );
+  void colorSelector(String content) {
+    if(content == '遅刻') {
+      _color = Colors.orange;
+    }
+    else if(content == '欠席') {
+      _color = Colors.red;
     }
     else {
-      return const SizedBox();
-    }
-  }
-
-  void colorSelector(String unit, String content) {
-    if(content != 'ミーティング') {
-      _color = Colors.blue;
-    }
-    else {
-      if(unit == 'Grid班'){
-        _color = Colors.lightGreen;
-      }
-      else if(unit == '全体'){
-        _color = Colors.purple;
-      }
-      else if(unit == 'Web班') {
-        _color = Colors.lightBlue;
-      }
-      else if(unit == 'Net班') {
-        _color = Colors.yellow;
-      }
-      else {
-        _color = Colors.blueGrey;
-      }
+      _color = Colors.grey;
     }
   }
 

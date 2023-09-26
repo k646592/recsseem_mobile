@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
+import 'package:recsseem_mobile/attendancemanagement/Calendar/model/calendar_event.dart';
 import 'package:recsseem_mobile/attendancemanagement/src/month_view/month_view.dart';
 
-import '../../Calendar/model/calendar_event.dart';
 
 
 class MonthViewWidget extends StatelessWidget {

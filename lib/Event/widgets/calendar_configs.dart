@@ -1,10 +1,10 @@
 import 'package:flutter/material.dart';
-import 'package:recsseem_mobile/Calendar/view/extension.dart';
+import 'package:recsseem_mobile/Event/Calendar/view/extension.dart';
 
-import '../../Calendar/model/calendar_event.dart';
-import '../../Calendar/src/calendar_controller_provider.dart';
-import '../../Calendar/view/app_colors.dart';
-import '../../Calendar/view/enumerations.dart';
+import '../../Event/Calendar/model/calendar_event.dart';
+import '../../Event/Calendar/src/calendar_controller_provider.dart';
+import '../../Event/Calendar/view/app_colors.dart';
+import '../../Event/Calendar/view/enumerations.dart';
 import 'add_event_widget.dart';
 
 class CalendarConfig extends StatelessWidget {

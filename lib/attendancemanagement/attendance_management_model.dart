@@ -2,14 +2,10 @@ import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:firebase_auth/firebase_auth.dart';
-import '../domain/attendance.dart';
 import '../domain/user.dart';
 
 class AttendanceListModel extends ChangeNotifier {
   List<Member> users = [];
-
-  List<Attendance> attendances = [];
-  Map<DateTime, List<dynamic>> attendancesList = {};  //key:date, value:attendance
 
   Map<String, List<dynamic>> userGroupList = {};  //key:group, value:user
 
@@ -20,34 +16,6 @@ class AttendanceListModel extends ChangeNotifier {
   String? status;
 
   void fetchAttendanceList() async {
-    final QuerySnapshot snap = await FirebaseFirestore.instance.collection('attendances').get();
-
-    final List<Attendance> attendances = snap.docs.map((DocumentSnapshot document) {
-      Map<String, dynamic> data = document.data()! as Map<String, dynamic>;
-      final String id = document.id;
-      final String username = data['user_name'];
-      final String title = data['title'];
-      final DateTime start = data['start'].toDate();
-      final DateTime end = data['end'].toDate();
-      final String description = data['description'];
-      final bool mailSend = data['mailSend'];
-      final String userId = data['userId'];
-      return Attendance(id, username, title, start, end, description, mailSend, userId);
-    }).toList();
-
-    this.attendances = attendances;
-
-    attendancesList = {};
-
-    for (var event in attendances) {
-      if (attendancesList[DateTime(event.start.year, event.start.month, event.start.day)] != null) {
-        attendancesList[DateTime(event.start.year, event.start.month, event.start.day)]?.add(event);
-      }
-      else {
-        attendancesList[DateTime(event.start.year, event.start.month, event.start.day)] = [event];
-      }
-    }
-
     final QuerySnapshot snapshot = await FirebaseFirestore.instance.collection('users').get();
 
     final List<Member> users = snapshot.docs.map((DocumentSnapshot document) {
@@ -93,14 +61,6 @@ class AttendanceListModel extends ChangeNotifier {
     FirebaseFirestore.instance.collection('users').doc(user!.uid).update({
       'status': attendance,
     });
-  }
-
-  Future delete(Attendance attendance) {
-    final user = FirebaseAuth.instance.currentUser;
-    if ( user!.uid != attendance.userId){
-      throw 'イベント投稿者ではないため、削除できません。';
-    }
-    return FirebaseFirestore.instance.collection('attendances').doc(attendance.id).delete();
   }
 
 }

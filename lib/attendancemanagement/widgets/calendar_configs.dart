@@ -1,10 +1,11 @@
 import 'package:flutter/material.dart';
-import 'package:recsseem_mobile/Calendar/view/extension.dart';
+import 'package:recsseem_mobile/attendancemanagement/Calendar/model/calendar_event.dart';
+import 'package:recsseem_mobile/attendancemanagement/Calendar/src/calendar_controller_provider.dart';
+import 'package:recsseem_mobile/attendancemanagement/Calendar/view/app_colors.dart';
+import 'package:recsseem_mobile/attendancemanagement/Calendar/view/enumerations.dart';
+import 'package:recsseem_mobile/attendancemanagement/Calendar/view/extension.dart';
+import 'package:recsseem_mobile/attendancemanagement/attendance_management_page.dart';
 
-import '../../Calendar/model/calendar_event.dart';
-import '../../Calendar/src/calendar_controller_provider.dart';
-import '../../Calendar/view/app_colors.dart';
-import '../../Calendar/view/enumerations.dart';
 import 'add_attendance_widget.dart';
 
 
@@ -36,6 +37,9 @@ class CalendarConfig extends StatelessWidget {
         ),
         const Divider(
           color: AppColors.lightNavyBlue,
+        ),
+        const Expanded(
+            child: AttendanceManagementPage()
         ),
         Expanded(
           child: SingleChildScrollView(

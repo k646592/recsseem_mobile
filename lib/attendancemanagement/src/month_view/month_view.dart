@@ -1,21 +1,22 @@
 import 'package:flutter/material.dart';
 import 'package:intl/intl.dart';
+import 'package:recsseem_mobile/attendancemanagement/Calendar/src/calendar_constants.dart';
+import 'package:recsseem_mobile/attendancemanagement/Calendar/src/calendar_controller_provider.dart';
+import 'package:recsseem_mobile/attendancemanagement/Calendar/src/calendar_event_data.dart';
+import 'package:recsseem_mobile/attendancemanagement/Calendar/src/components/safe_area_wrapper.dart';
+import 'package:recsseem_mobile/attendancemanagement/Calendar/src/constants.dart';
+import 'package:recsseem_mobile/attendancemanagement/Calendar/src/enumerations.dart';
+import 'package:recsseem_mobile/attendancemanagement/Calendar/src/event_controller.dart';
+import 'package:recsseem_mobile/attendancemanagement/Calendar/src/extensions.dart';
+import 'package:recsseem_mobile/attendancemanagement/Calendar/src/style/header_style.dart';
+import 'package:recsseem_mobile/attendancemanagement/Calendar/src/typedefs.dart';
 import 'package:recsseem_mobile/attendancemanagement/view/attendance_edit.dart';
 import 'package:recsseem_mobile/attendancemanagement/view/attendance_show.dart';
 
-import '../../../Calendar/src/components/safe_area_wrapper.dart';
 
-import '../../../Calendar/src/calendar_constants.dart';
-import '../../../Calendar/src/calendar_controller_provider.dart';
-import '../../../Calendar/src/calendar_event_data.dart';
 import '../components/components.dart';
 
-import '../../../Calendar/src/constants.dart';
-import '../../../Calendar/src/enumerations.dart';
-import '../../../Calendar/src/event_controller.dart';
-import '../../../Calendar/src/extensions.dart';
-import '../../../Calendar/src/style/header_style.dart';
-import '../../../Calendar/src/typedefs.dart';
+
 
 class MonthView<T extends Object?> extends StatefulWidget {
   /// A function that returns a [Widget] that determines appearance of
@@ -842,8 +843,25 @@ class _MonthPageBuilder<T> extends StatelessWidget {
                                 return ListTile(
                                   trailing: Column(
                                     children: [
-                                      Text('期間：${DateFormat('MM/dd(EEE)').format(events[index].date)}〜${DateFormat('MM/dd(EEE)').format(events[index].endDate)}'),
-                                      Text('時刻：${DateFormat('aa HH:mm').format(events[index].startTime!)}〜${DateFormat('aa HH:mm').format(events[index].endTime!)}'),
+                                      (() {
+                                        if (events[index].title == '遅刻' || events[index].title == '早退') {
+                                          return Text('日付：${DateFormat('MM/dd(EEE)').format(events[index].date)}');
+                                        }
+                                        else {
+                                          return (() {
+                                            if (DateTime(events[index].date.year, events[index].date.month, events[index].date.day) == DateTime(events[index].endDate.year, events[index].endDate.month, events[index].endDate.day)) {
+                                              return Text('日付：${DateFormat('MM/dd(EEE)').format(events[index].date)}');
+                                            }
+                                            return Text('期間：${DateFormat('MM/dd(EEE)').format(events[index].date)}〜${DateFormat('MM/dd(EEE)').format(events[index].endDate)}');
+                                          })();
+                                        }
+                                      })(),
+                                      (() {
+                                        if (events[index].title == '遅刻' || events[index].title == '早退') {
+                                          return Text('${events[index].title}予定時刻：${DateFormat('aa HH:mm').format(events[index].startTime!)}');
+                                        }
+                                        return Text('時刻：${DateFormat('aa HH:mm').format(events[index].startTime!)}〜${DateFormat('aa HH:mm').format(events[index].endTime!)}');
+                                      })(),
                                     ],
                                   ),
                                   title: Text(
@@ -872,10 +890,20 @@ class _MonthPageBuilder<T> extends StatelessWidget {
                                                   child: Text('投稿者：${events[index].name!}'),
                                                 ),
                                                 SimpleDialogOption(
-                                                  child: Text('期間：${DateFormat('MM/dd(EEE)').format(events[index].date)}〜${DateFormat('MM/dd(EEE)').format(events[index].endDate)}'),
+                                                  child: (() {
+                                                    if (DateTime(events[index].date.year, events[index].date.month, events[index].date.day) == DateTime(events[index].endDate.year, events[index].endDate.month, events[index].endDate.day)) {
+                                                      return Text('日付：${DateFormat('MM/dd(EEE)').format(events[index].date)}');
+                                                    }
+                                                    return Text('期間：${DateFormat('MM/dd(EEE)').format(events[index].date)}〜${DateFormat('MM/dd(EEE)').format(events[index].endDate)}');
+                                                  })(),
                                                 ),
                                                 SimpleDialogOption(
-                                                  child: Text('時刻：${DateFormat('aa HH:mm').format(events[index].startTime!)}〜${DateFormat('aa HH:mm').format(events[index].endTime!)}'),
+                                                  child: (() {
+                                                    if (events[index].title == '遅刻' || events[index].title == '早退') {
+                                                      return Text('${events[index].title}予定時刻：${DateFormat('aa HH:mm').format(events[index].startTime!)}');
+                                                    }
+                                                    return Text('時刻：${DateFormat('aa HH:mm').format(events[index].startTime!)}〜${DateFormat('aa HH:mm').format(events[index].endTime!)}');
+                                                  })(),
                                                 ),
                                                 SimpleDialogOption(
                                                   child: Text(events[index].description),

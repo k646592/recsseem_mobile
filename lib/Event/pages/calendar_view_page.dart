@@ -1,13 +1,13 @@
 import 'package:flutter/material.dart';
-import 'package:recsseem_mobile/Calendar/view/extension.dart';
+import 'package:recsseem_mobile/Event/Calendar/view/extension.dart';
 import 'package:recsseem_mobile/Event/widgets/day_view_widget.dart';
 import 'package:recsseem_mobile/Event/widgets/week_view_widget.dart';
 
 import '../../HeaderandFooter/drawer.dart';
 import '../../timer/timer.dart';
-import '../../Calendar/model/calendar_event.dart';
-import '../../Calendar/src/calendar_controller_provider.dart';
-import '../../Calendar/src/calendar_event_data.dart';
+import '../../Event/Calendar/model/calendar_event.dart';
+import '../../Event/Calendar/src/calendar_controller_provider.dart';
+import '../../Event/Calendar/src/calendar_event_data.dart';
 import '../widgets/month_view_widget.dart';
 import 'create_event_page.dart';
 

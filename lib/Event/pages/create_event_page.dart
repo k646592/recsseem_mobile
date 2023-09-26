@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
-import 'package:recsseem_mobile/Calendar/view/extension.dart';
+import 'package:recsseem_mobile/Event/Calendar/view/extension.dart';
 
-import '../../Calendar/view/app_colors.dart';
+import '../../Event/Calendar/view/app_colors.dart';
 import '../widgets/add_event_widget.dart';
 
 class CreateEventPage extends StatefulWidget {

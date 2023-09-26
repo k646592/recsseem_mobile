@@ -1,12 +1,12 @@
 import 'dart:math';
 
 import 'package:flutter/material.dart';
+import 'package:recsseem_mobile/attendancemanagement/Calendar/view/app_colors.dart';
+import 'package:recsseem_mobile/attendancemanagement/Calendar/view/enumerations.dart';
 import 'package:recsseem_mobile/attendancemanagement/widgets/day_view_widget.dart';
 import 'package:recsseem_mobile/attendancemanagement/widgets/month_view_widget.dart';
 import 'package:recsseem_mobile/attendancemanagement/widgets/week_view_widget.dart';
 
-import '../../Calendar/view/app_colors.dart';
-import '../../Calendar/view/enumerations.dart';
 
 
 class CalendarViews extends StatelessWidget {

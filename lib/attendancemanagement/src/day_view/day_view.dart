@@ -1,22 +1,24 @@
 import 'dart:async';
 
 import 'package:flutter/material.dart';
+import 'package:recsseem_mobile/attendancemanagement/Calendar/src/calendar_constants.dart';
+import 'package:recsseem_mobile/attendancemanagement/Calendar/src/calendar_controller_provider.dart';
+import 'package:recsseem_mobile/attendancemanagement/Calendar/src/calendar_event_data.dart';
+import 'package:recsseem_mobile/attendancemanagement/Calendar/src/components/event_scroll_notifier.dart';
+import 'package:recsseem_mobile/attendancemanagement/Calendar/src/components/safe_area_wrapper.dart';
+import 'package:recsseem_mobile/attendancemanagement/Calendar/src/constants.dart';
+import 'package:recsseem_mobile/attendancemanagement/Calendar/src/day_view/_internal_day_view_page.dart';
+import 'package:recsseem_mobile/attendancemanagement/Calendar/src/enumerations.dart';
+import 'package:recsseem_mobile/attendancemanagement/Calendar/src/event_controller.dart';
+import 'package:recsseem_mobile/attendancemanagement/Calendar/src/events_arrangers/event_arrangers.dart';
+import 'package:recsseem_mobile/attendancemanagement/Calendar/src/extensions.dart';
+import 'package:recsseem_mobile/attendancemanagement/Calendar/src/modals.dart';
+import 'package:recsseem_mobile/attendancemanagement/Calendar/src/style/header_style.dart';
+import 'package:recsseem_mobile/attendancemanagement/Calendar/src/typedefs.dart';
 
-import '../../../Calendar/src/calendar_constants.dart';
-import '../../../Calendar/src/calendar_controller_provider.dart';
-import '../../../Calendar/src/calendar_event_data.dart';
+
 import '../components/day_view_components.dart';
-import '../../../Calendar/src/components/event_scroll_notifier.dart';
-import '../../../Calendar/src/components/safe_area_wrapper.dart';
-import '../../../Calendar/src/constants.dart';
-import '../../../Calendar/src/enumerations.dart';
-import '../../../Calendar/src/events_arrangers/event_arrangers.dart';
-import '../../../Calendar/src/event_controller.dart';
-import '../../../Calendar/src/extensions.dart';
-import '../../../Calendar/src/modals.dart';
-import '../../../Calendar/src/style/header_style.dart';
-import '../../../Calendar/src/typedefs.dart';
-import '../../../Calendar/src/day_view/_internal_day_view_page.dart';
+
 
 class DayView<T extends Object?> extends StatefulWidget {
   /// A function that returns a [Widget] that determines appearance of each
@@ -522,7 +524,7 @@ class DayViewState<T extends Object?> extends State<DayView<T>> {
     final heightPerSlot = minuteSlotSize.minutes * heightPerMinute;
     final slots = (Constants.hoursADay * 60) ~/ minuteSlotSize.minutes;
 
-    return Container(
+    return SizedBox(
       height: height,
       width: width,
       child: Stack(
@@ -577,7 +579,7 @@ class DayViewState<T extends Object?> extends State<DayView<T>> {
       DateTime startDuration,
       DateTime endDuration,
       ) {
-    if (events.isNotEmpty)
+    if (events.isNotEmpty) {
       return RoundedEventTile(
         borderRadius: BorderRadius.circular(10.0),
         title: events[0].title,
@@ -589,8 +591,9 @@ class DayViewState<T extends Object?> extends State<DayView<T>> {
         titleStyle: events[0].titleStyle,
         descriptionStyle: events[0].descriptionStyle,
       );
-    else
-      return SizedBox.shrink();
+    } else {
+      return const SizedBox.shrink();
+    }
   }
 
   /// Default view header builder. This builder will be used if

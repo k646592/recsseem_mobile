@@ -4,11 +4,12 @@ import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:intl/intl.dart';
 
-import '../../Calendar/model/calendar_event.dart';
-import '../../Calendar/src/calendar_event_data.dart';
+
 
 import 'package:mailer/mailer.dart';
 import 'package:mailer/smtp_server.dart';
+import 'package:recsseem_mobile/attendancemanagement/Calendar/model/calendar_event.dart';
+import 'package:recsseem_mobile/attendancemanagement/Calendar/src/calendar_event_data.dart';
 
 class EditAttendanceModel extends ChangeNotifier {
 
@@ -29,11 +30,10 @@ class EditAttendanceModel extends ChangeNotifier {
     final endDay = DateTime(event.endDate.year,event.endDate.month, event.endDate.day, event.endTime!.hour, event.endTime!.minute);
 
     // firestoreに更新
-    await FirebaseFirestore.instance.collection('events').doc(event.id).update({
+    await FirebaseFirestore.instance.collection('attendances').doc(event.id).update({
       'title': event.title,
       'start': startDay,
       'end': endDay,
-      'unit': event.unit,
       'description': event.description,
       'mailSend': event.mailSend,
       'userId': event.userId,

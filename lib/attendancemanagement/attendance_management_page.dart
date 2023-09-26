@@ -1,19 +1,9 @@
-import 'dart:collection';
+
 import 'package:cloud_firestore/cloud_firestore.dart';
-import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter_slidable/flutter_slidable.dart';
 import 'package:intl/intl.dart';
 import 'package:provider/provider.dart';
-import 'package:recsseem_mobile/attendancemanagement/show_attendance_page.dart';
-import 'package:recsseem_mobile/domain/attendance.dart';
-import 'package:table_calendar/table_calendar.dart';
-import '../HeaderandFooter/drawer.dart';
 
-import 'dart:async';
-import '../timer/timer.dart';
-import 'add_attendance_page.dart';
-import 'attendance_edit_page.dart';
 import 'attendance_management_model.dart';
 
 class AttendanceManagementPage extends StatefulWidget {
@@ -24,17 +14,6 @@ class AttendanceManagementPage extends StatefulWidget {
 }
 
 class _AttendanceManagementPage extends State<AttendanceManagementPage> {
-  DateTime? _selectedDay;
-  DateTime _focusedDay = DateTime.now();
-  CalendarFormat _calendarFormat = CalendarFormat.month;
-  DateTime? _rangeselectionStart;
-  DateTime? _rangeselectionEnd;
-
-  final RangeSelectionMode _rangeSelectionMode = RangeSelectionMode.toggledOn;
-
-  int getHashCode(DateTime key) {
-    return key.day * 1000000 + key.month * 10000 + key.year;
-  }
 
   late int  _lastPostDay;
   late int _today;
@@ -70,188 +49,79 @@ class _AttendanceManagementPage extends State<AttendanceManagementPage> {
 
   @override
   Widget build(BuildContext context) {
-    final user = FirebaseAuth.instance.currentUser;
 
     return ChangeNotifierProvider<AttendanceListModel>(
       create: (_) => AttendanceListModel()..fetchAttendanceList(),
-      child: Scaffold(
-        appBar: AppBar(
-          actions: [
-            Padding(
-              padding: const EdgeInsets.all(8.0),
-              child: IconButton(
-                  icon: const Icon(Icons.timer),
-                  onPressed: () async {
-                    await Navigator.of(context).push(
-                        MaterialPageRoute(builder: (context){
-                          return ClockTimer();
-                        })
-                    );
-                  }
-              ),
-            ),
-          ],
-          backgroundColor: Colors.black,
-          centerTitle: true,
-          elevation: 0.0,
-          title: const Text('イベント'),
-        ),
-        drawer: const UserDrawer(),
-        body: SingleChildScrollView(
+      child: SingleChildScrollView(
           child: Consumer<AttendanceListModel>(builder: (context, model, child) {
-            final attendancesList = model.attendancesList;
-
-            final attendances = LinkedHashMap<DateTime, List<dynamic>>(
-              equals: isSameDay,
-              hashCode: getHashCode,
-            )..addAll(attendancesList);
-
-            List _getAttendanceForDay(DateTime day) {
-              return attendances[day] ?? [];
-            }
-
-            final List<Widget> widgets = _getAttendanceForDay(_focusedDay).map(
-                  (attendance) => Slidable(
-                actionPane: SlidableDrawerActionPane(),
-                child: ListTile(
-                  leading: IconButton(
-                    onPressed: () {
-                      setState(() {
-                        _rangeselectionStart = attendance.start;
-                        _rangeselectionEnd = attendance.end;
-                      });
-                    },
-                    icon: Icon(Icons.calendar_month),
-                  ),
-                  title: Text(attendance.title),
-                  subtitle: Text(attendance.username),
-                  trailing: dateAndTimeList(attendance),
-                ),
-                actions: <Widget>[
-                  IconSlideAction(
-                    caption: '詳細',
-                    color: Colors.black87,
-                    icon: Icons.more_horiz,
-                    onTap: () async {
-                      //詳細画面に遷移
-                      await Navigator.push(
-                        context,
-                        MaterialPageRoute(
-                          builder: (context) => AttendanceShowPage(attendance),
-                          fullscreenDialog: true,
-                        ),
-                      );
-                    },
-                  ),
-                ],
-                secondaryActions: <Widget>[
-                  IconSlideAction(
-                    caption: '編集',
-                    color: Colors.blue,
-                    icon: Icons.edit,
-                    onTap: () async {
-                      try{
-                        if(user!.uid != attendance.userId){
-                          throw 'イベント投稿者ではないため、編集できません。';
-                        }
-                        //編集画面に遷移
-                        await Navigator.push(
-                          context,
-                          MaterialPageRoute(
-                            builder: (context) => EditAttendancePage(attendance),
-                            fullscreenDialog: true,
-                          ),
-                        );
-                      }
-                      catch(e){
-                        final snackBar = SnackBar(
-                          backgroundColor: Colors.red,
-                          content: Text(e.toString()),
-                        );
-                        ScaffoldMessenger.of(context).showSnackBar(snackBar);
-                      }
-                    },
-                  ),
-                  IconSlideAction(
-                    caption: '削除',
-                    color: Colors.red,
-                    icon: Icons.delete,
-                    onTap: () async {
-                      //削除しますか？って聞いて、はいだったら削除
-                      await showConfirmDialog(context, attendance, model);
-                    },
-                  ),
-                ],
-              ),
-            ).toList();
 
             final userGroupList = model.userGroupList;
 
-            List _getUserGroup(String text) {
+            List getUserGroup(String text) {
               return userGroupList[text] ?? [];
             }
 
-            String Network = 'Network班';
-            String Web = 'Web班';
-            String Grid = 'Grid班';
-            String Teacher = '教員';
+            String network = 'Network班';
+            String web = 'Web班';
+            String grid = 'Grid班';
+            String teacher = '教員';
 
-            final List<Widget> NetIndex = _getUserGroup(Network).map(
+            final List<Widget> netIndex = getUserGroup(network).map(
                     (user) => Expanded(
                       child: Container(
                         alignment: Alignment.center,
-                        child: Text('${user.name}'),
                         decoration: BoxDecoration(
                             color: _attendanceColor(user.status),
                             border: Border.all(
                               color: Colors.black45,
                             ),
                         ),
+                        child: Text('${user.name}'),
                       ),
                     ),
             ).toList();
 
-            final List<Widget> WebIndex = _getUserGroup(Web).map(
+            final List<Widget> webIndex = getUserGroup(web).map(
                   (user) => Expanded(
                 child: Container(
                   alignment: Alignment.center,
-                  child: Text('${user.name}'),
                   decoration: BoxDecoration(
                     color: _attendanceColor(user.status),
                     border: Border.all(
                       color: Colors.black45,
                     ),
                   ),
+                  child: Text('${user.name}'),
                 ),
               ),
             ).toList();
 
-            final List<Widget> GridIndex = _getUserGroup(Grid).map(
+            final List<Widget> gridIndex = getUserGroup(grid).map(
                   (user) => Expanded(
                   child: Container(
                     alignment: Alignment.center,
-                    child: Text('${user.name}'),
                     decoration: BoxDecoration(
                       color: _attendanceColor(user.status),
                       border: Border.all(
                         color: Colors.black45,
                       ),
                     ),
+                    child: Text('${user.name}'),
                   ),
                 ),
             ).toList();
 
-            final List<Widget> TeacherIndex = _getUserGroup(Teacher).map(
+            final List<Widget> teacherIndex = getUserGroup(teacher).map(
                   (user) => Expanded(
                 child: Container(
                   alignment: Alignment.center,
-                  child: Text('${user.name}'),
                   decoration: BoxDecoration(
                     color: _attendanceColor(user.status),
                     border: Border.all(
                       color: Colors.black45,
                     ),
                   ),
+                  child: Text('${user.name}'),
                 ),
               ),
             ).toList();
@@ -296,7 +166,7 @@ class _AttendanceManagementPage extends State<AttendanceManagementPage> {
                         child: ElevatedButton(
                             onPressed: () async {
                               await model.attendanceUpdate('一時退席');
-                              final snackBar = SnackBar(
+                              const snackBar = SnackBar(
                                 backgroundColor: Colors.yellow,
                                 content: Text("一時退席しました"),
                               );
@@ -304,15 +174,15 @@ class _AttendanceManagementPage extends State<AttendanceManagementPage> {
                               ScaffoldMessenger.of(context).
                               showSnackBar(snackBar);
                             },
-                          child: Text(
+                          style: ElevatedButton.styleFrom(
+                            foregroundColor: Colors.white, backgroundColor: Colors.yellow,
+                          ),
+                          child: const Text(
                             '一時退席',
                             style: TextStyle(
                               color: Colors.black,
                               fontSize: 9,
                             ),
-                          ),
-                          style: ElevatedButton.styleFrom(
-                            foregroundColor: Colors.white, backgroundColor: Colors.yellow,
                           ),
                         ),
                       ),
@@ -323,7 +193,7 @@ class _AttendanceManagementPage extends State<AttendanceManagementPage> {
                         child: ElevatedButton(
                           onPressed: () async {
                             await model.attendanceUpdate('帰宅');
-                            final snackBar = SnackBar(
+                            const snackBar = SnackBar(
                               backgroundColor: Colors.grey,
                               content: Text("帰宅しました"),
                             );
@@ -331,25 +201,25 @@ class _AttendanceManagementPage extends State<AttendanceManagementPage> {
                             ScaffoldMessenger.of(context).
                             showSnackBar(snackBar);
                           },
-                          child: Text(
+                          style: ElevatedButton.styleFrom(
+                            foregroundColor: Colors.white, backgroundColor: Colors.grey,
+                          ),
+                          child: const Text(
                             '帰宅',
                             style: TextStyle(
                               color: Colors.black,
                             ),
                           ),
-                          style: ElevatedButton.styleFrom(
-                            foregroundColor: Colors.white, backgroundColor: Colors.grey,
-                          ),
                         ),
                       ),
-                      SizedBox(
+                      const SizedBox(
                         width: 5,
                       ),
                       Expanded(
                         child: ElevatedButton(
                           onPressed: () async {
                             await model.attendanceUpdate('欠席');
-                            final snackBar = SnackBar(
+                            const snackBar = SnackBar(
                               backgroundColor: Colors.red,
                               content: Text("欠席しました"),
                             );
@@ -357,25 +227,25 @@ class _AttendanceManagementPage extends State<AttendanceManagementPage> {
                             ScaffoldMessenger.of(context).
                             showSnackBar(snackBar);
                           },
-                          child: Text(
+                          style: ElevatedButton.styleFrom(
+                            foregroundColor: Colors.white, backgroundColor: Colors.red,
+                          ),
+                          child: const Text(
                             '欠席',
                             style: TextStyle(
                               color: Colors.black,
                             ),
                           ),
-                          style: ElevatedButton.styleFrom(
-                            foregroundColor: Colors.white, backgroundColor: Colors.red,
-                          ),
                         ),
                       ),
-                      SizedBox(
+                      const SizedBox(
                         width: 5,
                       ),
                       Expanded(
                         child: ElevatedButton(
                           onPressed: () async {
                             await model.attendanceUpdate('未出席');
-                            final snackBar = SnackBar(
+                            const snackBar = SnackBar(
                               backgroundColor: Colors.blue,
                               content: Text("未出席になりました"),
                             );
@@ -383,15 +253,15 @@ class _AttendanceManagementPage extends State<AttendanceManagementPage> {
                             ScaffoldMessenger.of(context).
                             showSnackBar(snackBar);
                           },
-                          child: Text(
+                          style: ElevatedButton.styleFrom(
+                            foregroundColor: Colors.white, backgroundColor: Colors.blue,
+                          ),
+                          child: const Text(
                             '未出席',
                             style: TextStyle(
                               color: Colors.black,
                               fontSize: 12,
                             ),
-                          ),
-                          style: ElevatedButton.styleFrom(
-                            foregroundColor: Colors.white, backgroundColor: Colors.blue,
                           ),
                         ),
                       ),
@@ -406,17 +276,17 @@ class _AttendanceManagementPage extends State<AttendanceManagementPage> {
                       Container(
                         width: 100,
                           alignment: Alignment.center,
-                          child: Text('Net班'),
                           decoration: BoxDecoration(
                               color: Colors.white,
                               border: Border.all(
                                 color: Colors.black45,
                               )
                           ),
+                          child: const Text('Net班'),
                       ),
                       Expanded(
                           child: Row(
-                            children: NetIndex,
+                            children: netIndex,
                           ),
                       ),
                     ]
@@ -430,17 +300,17 @@ class _AttendanceManagementPage extends State<AttendanceManagementPage> {
                         Container(
                           width: 100,
                           alignment: Alignment.center,
-                          child: Text('Grid班'),
                           decoration: BoxDecoration(
                               color: Colors.white,
                               border: Border.all(
                                 color: Colors.black45,
                               )
                           ),
+                          child: const Text('Grid班'),
                         ),
                         Expanded(
                           child: Row(
-                            children: GridIndex,
+                            children: gridIndex,
                           ),
                         ),
                       ]
@@ -454,17 +324,17 @@ class _AttendanceManagementPage extends State<AttendanceManagementPage> {
                         Container(
                           width: 100,
                           alignment: Alignment.center,
-                          child: Text('Web班'),
                           decoration: BoxDecoration(
                               color: Colors.white,
                               border: Border.all(
                                 color: Colors.black45,
                               )
                           ),
+                          child: const Text('Web班'),
                         ),
                         Expanded(
                           child: Row(
-                            children: WebIndex,
+                            children: webIndex,
                           ),
                         ),
                       ]
@@ -478,240 +348,30 @@ class _AttendanceManagementPage extends State<AttendanceManagementPage> {
                         Container(
                           width: 100,
                           alignment: Alignment.center,
-                          child: Text('教員'),
                           decoration: BoxDecoration(
                               color: Colors.white,
                               border: Border.all(
                                 color: Colors.black45,
                               )
                           ),
+                          child: const Text('教員'),
                         ),
                         Expanded(
                           child: Row(
-                            children: TeacherIndex,
+                            children: teacherIndex,
                           ),
                         ),
                       ]
-                  ),
-                ),
-                Card(
-                  clipBehavior: Clip.antiAlias,
-                  margin: const EdgeInsets.all(8.0),
-                  child: TableCalendar(
-                    eventLoader: _getAttendanceForDay,
-
-                    rangeSelectionMode: _rangeSelectionMode,
-                    rangeStartDay: _rangeselectionStart,
-                    rangeEndDay: _rangeselectionEnd,
-
-                    firstDay: DateTime.utc(2010, 1, 1),
-                    lastDay: DateTime.utc(2030, 1, 1),
-                    focusedDay: _focusedDay,
-
-                    //カレンダー曜日スタイル
-                    calendarBuilders: CalendarBuilders(
-                        defaultBuilder: (
-                            BuildContext context, DateTime day, DateTime focusedDay) {
-                          return Container(
-                            alignment: Alignment(0.0, 0.0),
-                            child: Text(
-                              day.day.toString(),
-                              style: TextStyle(
-                                color: _textColor(day),
-                              ),
-                            ),
-                          );
-                        },
-                        dowBuilder: (context, day) {
-                          if (day.weekday == DateTime.sunday) {
-                            final text = DateFormat.E().format(day);
-
-                            return Center(
-                              child: Text(
-                                text,
-                                style: const TextStyle(color: Colors.red),
-                              ),
-                            );
-                          }
-                          else if(day.weekday == DateTime.saturday) {
-                            final text =DateFormat.E().format(day);
-
-                            return Center(
-                              child: Text(
-                                text,
-                                style: TextStyle(color: Colors.blue),
-                              ),
-                            );
-                          }
-                          return null;
-                        }
-                    ),
-
-                    //カレンダーのヘッダー
-                    headerStyle: HeaderStyle(
-                      decoration: const BoxDecoration(
-                        color: Colors.blue,
-                      ),
-                      headerMargin: const EdgeInsets.only(bottom: 8.0),
-                      titleTextStyle: TextStyle(color: Colors.white),
-                      formatButtonDecoration: BoxDecoration(
-                        border: Border.all(color: Colors.white),
-                        borderRadius: BorderRadius.circular(50),
-                      ),
-                      formatButtonTextStyle: TextStyle(color: Colors.white),
-                      leftChevronIcon: Icon(Icons.chevron_left, color: Colors.white,),
-                      rightChevronIcon: Icon(Icons.chevron_right, color: Colors.white,),
-                    ),
-
-                    //カレンダーのフォーマット
-                    calendarFormat: _calendarFormat,
-                    onFormatChanged: (format) {
-                      if (_calendarFormat != format) {
-                        setState(() {
-                          _calendarFormat = format;
-                        });
-                      }
-                    },
-                    startingDayOfWeek: StartingDayOfWeek.sunday,
-                    daysOfWeekVisible: true,
-
-                    //日付選択
-                    selectedDayPredicate: (day) {
-                      return isSameDay(_selectedDay, day);
-                    },
-                    onDaySelected: (selectedDay, focusedDay) {
-                      if (!isSameDay(_selectedDay, selectedDay)) {
-                        setState(() {
-                          _selectedDay = selectedDay;
-                          _focusedDay = focusedDay;
-                        });
-                      };
-                    },
-
-                    //カレンダースタイル
-                    calendarStyle: CalendarStyle(
-                      isTodayHighlighted: true,
-                      //選択された日付のUI
-                      selectedDecoration: BoxDecoration(
-                        color: Colors.blue,
-                        shape: BoxShape.circle,
-                      ),
-                      selectedTextStyle: TextStyle(color: Colors.white),
-
-                      //今日の日付のUI
-                      todayDecoration: BoxDecoration(
-                        color: Colors.blue.withOpacity(0.5),
-                        shape: BoxShape.circle,
-                      ),
-                      todayTextStyle: TextStyle(color: Colors.white),
-
-                    ),
-                  ),
-                ),
-                Scrollbar(
-                  child: ListView(
-                    shrinkWrap: true,
-                    children: widgets,
                   ),
                 ),
               ],
             );
           }),
         ),
-
-        floatingActionButton: Consumer<AttendanceListModel>(builder: (context, model, child) {
-          return FloatingActionButton(
-            tooltip: 'Increment',
-            backgroundColor: Colors.lightGreen,
-            //ボタンが押されたら
-            onPressed: () async {
-              //add_出席管理
-              await Navigator.of(context).push(
-                MaterialPageRoute(
-                  builder: (context) {
-                    return AddAttendancePage(_focusedDay, selectedDate: _focusedDay, outputdate: outputDate(_focusedDay),);
-                  },
-                  fullscreenDialog: true,
-                ),
-              );
-            },
-            child: const Icon(Icons.add),
-          );
-        }),
-      ),
-    );
-  }
-  Color _textColor(DateTime day) {
-    const defaultTextColor = Colors.black87;
-
-    if (day.weekday == DateTime.sunday) {
-      return Colors.red;
-    }
-
-    if (day.weekday == DateTime.saturday) {
-      return Colors.blue[600]!;
-    }
-
-    return defaultTextColor;
-  }
-
-
-  String outputDate(DateTime day) {
-    DateFormat output = DateFormat('yyyy/MM/dd/(EE)');
-    return output.format(day);
-  }
-
-  Future showConfirmDialog(BuildContext context, Attendance attendance, AttendanceListModel model,) {
-    return showDialog(
-        context: context,
-        barrierDismissible: false,
-        builder: (_) {
-          return AlertDialog(
-            title: Text("削除の確認"),
-            content: Text("『${attendance.title}』を削除しますか？"),
-            actions: [
-              TextButton(
-                child: Text("いいえ"),
-                onPressed: () => Navigator.pop(context),
-              ),
-              TextButton(
-                child: Text("はい"),
-                onPressed: () async {
-                  //modelで削除
-                  await model.delete(attendance);
-                  Navigator.pop(context);
-                  final snackBar = SnackBar(
-                    backgroundColor: Colors.blue,
-                    content: Text("${attendance.title}を削除しました"),
-                  );
-                  model.fetchAttendanceList();
-                  ScaffoldMessenger.of(context).
-                  showSnackBar(snackBar);
-                },
-              ),
-            ],
-          );
-        }
     );
   }
 
-  Widget dateAndTimeList(Attendance attendance) {
-    if(attendance.title == '遅刻'){
-      return Text('到着予定時刻：${DateFormat('a hh:mm').format(attendance.start)}');
-    }
-    else if(attendance.title == '早退'){
-      return Text('早退予定時刻：${DateFormat('a hh:mm').format(attendance.start)}');
-    }
-    else {
-      return Column(
-        children: [
-          Text('日付：${DateFormat('yyyy/MM/dd').format(attendance.start)} 〜 ${DateFormat('yyyy/MM/dd').format(attendance.end)}'),
-          Text('時刻：${DateFormat('a hh:mm').format(attendance.start)} 〜 ${DateFormat('a hh:mm').format(attendance.end)}')
-        ],
-      );
-    }
-  }
-  
+
   Color _attendanceColor(String text){
     if (text == '一時退席'){
       return Colors.yellow;
@@ -725,7 +385,9 @@ class _AttendanceManagementPage extends State<AttendanceManagementPage> {
     else if(text == '帰宅'){
       return Colors.grey;
     }
-    else return Colors.blue;
+    else {
+      return Colors.blue;
+    }
   }
   
 }

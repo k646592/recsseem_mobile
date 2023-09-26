@@ -3,17 +3,19 @@ import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:intl/intl.dart';
-import 'package:recsseem_mobile/Calendar/src/components/common_components.dart';
-import 'package:recsseem_mobile/Event/view/new_event_show.dart';
+
+import 'package:recsseem_mobile/attendancemanagement/Calendar/src/calendar_event_data.dart';
+import 'package:recsseem_mobile/attendancemanagement/Calendar/src/components/common_components.dart';
+import 'package:recsseem_mobile/attendancemanagement/Calendar/src/constants.dart';
+import 'package:recsseem_mobile/attendancemanagement/Calendar/src/extensions.dart';
+import 'package:recsseem_mobile/attendancemanagement/Calendar/src/style/header_style.dart';
+import 'package:recsseem_mobile/attendancemanagement/Calendar/src/typedefs.dart';
+import 'package:recsseem_mobile/attendancemanagement/view/attendance_show.dart';
+
 import '../../../HeaderandFooter/footer.dart';
 import '../../../domain/event.dart';
 
 
-import '../../../Calendar/src/calendar_event_data.dart';
-import '../../../Calendar/src/constants.dart';
-import '../../../Calendar/src/extensions.dart';
-import '../../../Calendar/src/style/header_style.dart';
-import '../../../Calendar/src/typedefs.dart';
 import '../../view/attendance_edit.dart';
 
 
@@ -176,10 +178,20 @@ class FilledCell<T extends Object?> extends StatelessWidget {
                                       child: Text('投稿者：${events[index].name!}'),
                                     ),
                                     SimpleDialogOption(
-                                      child: Text('期間：${DateFormat('MM/dd(EEE)').format(events[index].date)}〜${DateFormat('MM/dd(EEE)').format(events[index].endDate)}'),
+                                      child: (() {
+                                        if (DateTime(events[index].date.year, events[index].date.month, events[index].date.day) == DateTime(events[index].endDate.year, events[index].endDate.month, events[index].endDate.day)) {
+                                          return Text('日付：${DateFormat('MM/dd(EEE)').format(events[index].date)}');
+                                        }
+                                        return Text('期間：${DateFormat('MM/dd(EEE)').format(events[index].date)}〜${DateFormat('MM/dd(EEE)').format(events[index].endDate)}');
+                                      })(),
                                     ),
                                     SimpleDialogOption(
-                                      child: Text('時刻：${DateFormat('aa HH:mm').format(events[index].startTime!)}〜${DateFormat('aa HH:mm').format(events[index].endTime!)}'),
+                                      child: (() {
+                                        if (events[index].title == '遅刻' || events[index].title == '早退') {
+                                          return Text('${events[index].title}予定時刻：${DateFormat('aa HH:mm').format(events[index].startTime!)}');
+                                        }
+                                        return Text('時刻：${DateFormat('aa HH:mm').format(events[index].startTime!)}〜${DateFormat('aa HH:mm').format(events[index].endTime!)}');
+                                      })(),
                                     ),
                                     SimpleDialogOption(
                                       child: Text(events[index].description),
@@ -218,7 +230,7 @@ class FilledCell<T extends Object?> extends StatelessWidget {
                                                   Navigator.of(context).push(
                                                     MaterialPageRoute(
                                                         builder: (context) {
-                                                          return NewEventShow(events[index]);
+                                                          return AttendanceShow(events[index]);
                                                         }
                                                     ),
                                                   );
@@ -298,7 +310,7 @@ Future delete(Event event) {
   if ( user!.uid != event.userId){
     throw 'イベント投稿者ではないため、削除できません。';
   }
-  return FirebaseFirestore.instance.collection('events').doc(event.id).delete();
+  return FirebaseFirestore.instance.collection('attendances').doc(event.id).delete();
 }
 
 Future showConfirmDialog(BuildContext context, CalendarEventData events) {
@@ -326,7 +338,7 @@ Future showConfirmDialog(BuildContext context, CalendarEventData events) {
                   await Navigator.of(context).push(
                     MaterialPageRoute(
                         builder: (context) {
-                          return const Footer(pageNumber: 0);
+                          return const Footer(pageNumber: 1);
                         }
                     ),
                   );

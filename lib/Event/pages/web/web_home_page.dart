@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
+import 'package:recsseem_mobile/Event/Calendar/view/enumerations.dart';
 
-import '../../../Calendar/view/enumerations.dart';
+
 import '../../widgets/calendar_configs.dart';
 import '../../widgets/calendar_views.dart';
 

@@ -42,7 +42,7 @@ class _ChatRoomListPage extends State<ChatRoomListPage> {
             backgroundColor: Colors.black,
             centerTitle: true,
             elevation: 0.0,
-            title: const Text('イベント'),
+            title: const Text('チャット'),
             bottom: const TabBar(
               tabs: <Tab>[
                 Tab(text: '個人',),

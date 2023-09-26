@@ -1,17 +1,18 @@
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_colorpicker/flutter_colorpicker.dart';
+import 'package:intl/intl.dart';
 import 'package:provider/provider.dart';
-import 'package:recsseem_mobile/Calendar/view/extension.dart';
+import 'package:recsseem_mobile/attendancemanagement/Calendar/model/calendar_event.dart';
+import 'package:recsseem_mobile/attendancemanagement/Calendar/src/calendar_event_data.dart';
+import 'package:recsseem_mobile/attendancemanagement/Calendar/view/app_colors.dart';
+import 'package:recsseem_mobile/attendancemanagement/Calendar/view/constants.dart';
+import 'package:recsseem_mobile/attendancemanagement/Calendar/view/extension.dart';
+import 'package:recsseem_mobile/attendancemanagement/Calendar/widgets/custom_button.dart';
+import 'package:recsseem_mobile/attendancemanagement/Calendar/widgets/date_time_selector.dart';
 
 import '../../HeaderandFooter/footer.dart';
-import '../../Calendar/model/calendar_event.dart';
-import '../../Calendar/src/calendar_event_data.dart';
-import '../../Calendar/view/app_colors.dart';
-import '../../Calendar/view/constants.dart';
 
-import '../../Calendar/widgets/custom_button.dart';
-import '../../Calendar/widgets/date_time_selector.dart';
 import 'add_attendance_widget_model.dart';
 
 class AddAttendanceWidget extends StatefulWidget {
@@ -39,13 +40,17 @@ class _AddAttendanceWidgetState extends State<AddAttendanceWidget> {
   String _description = "";
 
   //新しく追加
-  String _unit = '全体';
   bool _mailSend = true;
   String _content = "遅刻";
   bool _display = false;
   late CalendarEventData<CalendarEvent> calendarEvent;
+  DateTime currentDate = DateTime.now();
+  DateFormat outputDate = DateFormat('yyyy年MM月dd日');
+  DateFormat outputTime = DateFormat('hh:mm a');
+  TimeOfDay timeZero = const TimeOfDay(hour: 0, minute: 0);
+  TimeOfDay timeLast = const TimeOfDay(hour: 23, minute: 0);
 
-  Color _color = Colors.purpleAccent;
+  Color _color = Colors.orange;
 
   late FocusNode _titleNode;
 
@@ -88,7 +93,15 @@ class _AddAttendanceWidgetState extends State<AddAttendanceWidget> {
     _leaveTimeController = TextEditingController();
     _mailSendController = TextEditingController();
     _titleController = TextEditingController();
-    _titleController.text = 'ミーティング';
+    _titleController.text = '遅刻';
+    _startDateController.text = outputDate.format(currentDate);
+    _endDateController.text = outputDate.format(currentDate);
+    _startTimeController.text = outputTime.format(currentDate);
+    _endTimeController.text = outputTime.format(currentDate);
+    _startDate = DateTime.now();
+    _endDate = DateTime.now();
+    _startTime = DateTime.now();
+    _endTime = DateTime.now();
   }
 
   @override
@@ -148,37 +161,38 @@ class _AddAttendanceWidgetState extends State<AddAttendanceWidget> {
                         value: _content,
                         items: const [
                           DropdownMenuItem(
-                            value: 'ミーティング',
-                            child: Text('ミーティング'),
+                            value: '遅刻',
+                            child: Text('遅刻'),
                           ),
                           DropdownMenuItem(
-                            value: '輪講',
-                            child: Text('輪講'),
+                            value: '欠席',
+                            child: Text('欠席'),
                           ),
                           DropdownMenuItem(
-                            value: 'その他',
-                            child: Text('その他'),
+                            value: '早退',
+                            child: Text('早退'),
                           ),
                         ],
                         onChanged: (text) {
                           setState(() {
                             _content = text.toString();
-                            if (text.toString() == 'ミーティング') {
+                            if (text.toString() == '遅刻') {
                               _display = false;
-                              _title = 'ミーティング';
-                              _titleController.text = 'ミーティング';
+                              _title = '遅刻';
+                              _titleController.text = '遅刻';
                             }
-                            if (text.toString() == '輪講') {
+                            if (text.toString() == '欠席') {
                               _display = false;
-                              _title = '輪講';
-                              _titleController.text = '輪講';
+                              _title = '欠席';
+                              _titleController.text = '欠席';
                             }
-                            if (text.toString() == 'その他') {
+                            if (text.toString() == '早退') {
                               _display = true;
-                              _title = '';
-                              _titleController.text = '';
+                              _title = '早退';
+                              _titleController.text = '早退';
                             }
-                            colorSelector(_unit, _content);
+                            colorSelector(_content);
+                            _resetDateTime(_content);
                           });
                         },
                       ),
@@ -218,107 +232,19 @@ class _AddAttendanceWidgetState extends State<AddAttendanceWidget> {
                 const SizedBox(
                   height: 15,
                 ),
-                unitSelector(_content),
-                Row(
-                  children: [
-                    Expanded(
-                      child: DateTimeSelectorFormField(
-                        controller: _startDateController,
-                        decoration: AppConstants.inputDecoration.copyWith(
-                          labelText: "Start Date",
-                        ),
-                        validator: (value) {
-                          if (value == null || value == "") {
-                            return "Please select date.";
-                          }
 
-                          return null;
-                        },
-                        textStyle: const TextStyle(
-                          color: AppColors.black,
-                          fontSize: 17.0,
-                        ),
-                        onSave: (date) => _startDate = date,
-                        type: DateTimeSelectionType.date,
-                      ),
-                    ),
-                    const SizedBox(width: 20.0),
-                    Expanded(
-                      child: DateTimeSelectorFormField(
-                        controller: _endDateController,
-                        decoration: AppConstants.inputDecoration.copyWith(
-                          labelText: "End Date",
-                        ),
-                        validator: (value) {
-                          if (value == null || value == "") {
-                            return "Please select date.";
-                          }
+                contentDate(_content),
 
-                          return null;
-                        },
-                        textStyle: const TextStyle(
-                          color: AppColors.black,
-                          fontSize: 17.0,
-                        ),
-                        onSave: (date) => _endDate = date,
-                        type: DateTimeSelectionType.date,
-                      ),
-                    ),
-                  ],
-                ),
                 const SizedBox(
                   height: 15,
                 ),
-                Row(
-                  children: [
-                    Expanded(
-                      child: DateTimeSelectorFormField(
-                        controller: _startTimeController,
-                        decoration: AppConstants.inputDecoration.copyWith(
-                          labelText: "Start Time",
-                        ),
-                        validator: (value) {
-                          if (value == null || value == "") {
-                            return "Please select start time.";
-                          }
 
-                          return null;
-                        },
-                        onSave: (date) => _startTime = date,
-                        textStyle: const TextStyle(
-                          color: AppColors.black,
-                          fontSize: 17.0,
-                        ),
-                        type: DateTimeSelectionType.time,
-                      ),
-                    ),
-                    const SizedBox(width: 20.0),
-                    Expanded(
-                      child: DateTimeSelectorFormField(
-                        controller: _endTimeController,
-                        decoration: AppConstants.inputDecoration.copyWith(
-                          labelText: "End Time",
-                        ),
-                        validator: (value) {
-                          if (value == null || value == "") {
-                            return "Please select end time.";
-                          }
+                contentTime(_content),
 
-                          return null;
-                        },
-                        onSave: (date) => _endTime = date,
-                        textStyle: const TextStyle(
-                          color: AppColors.black,
-                          fontSize: 17.0,
-                        ),
-                        type: DateTimeSelectionType.time,
-                      ),
-                    ),
-                  ],
-                ),
                 const SizedBox(
                   height: 15,
                 ),
+
                 TextFormField(
                   focusNode: _descriptionNode,
                   style: const TextStyle(
@@ -423,7 +349,7 @@ class _AddAttendanceWidgetState extends State<AddAttendanceWidget> {
                     Navigator.of(context).push(
                       MaterialPageRoute(
                           builder: (context) {
-                            return const Footer(pageNumber: 0);
+                            return const Footer(pageNumber: 1);
                           }
                       ),
                     );
@@ -436,6 +362,217 @@ class _AddAttendanceWidgetState extends State<AddAttendanceWidget> {
         );
       }),
     );
+  }
+
+  Widget contentDate(String content){
+    if(content == '遅刻') {
+      return DateTimeSelectorFormField(
+        controller: _startDateController,
+        decoration: AppConstants.inputDecoration.copyWith(
+          labelText: "日付",
+        ),
+        validator: (value) {
+          if (value == null || value == "") {
+            return "Please select date.";
+          }
+
+          return null;
+        },
+        textStyle: const TextStyle(
+          color: AppColors.black,
+          fontSize: 17.0,
+        ),
+        onSave: (date) => _startDate = date,
+        type: DateTimeSelectionType.date,
+      );
+    }
+    else if(content == '早退') {
+      return DateTimeSelectorFormField(
+        controller: _startDateController,
+        decoration: AppConstants.inputDecoration.copyWith(
+          labelText: "日付",
+        ),
+        validator: (value) {
+          if (value == null || value == "") {
+            return "Please select date.";
+          }
+
+          return null;
+        },
+        textStyle: const TextStyle(
+          color: AppColors.black,
+          fontSize: 17.0,
+        ),
+        onSave: (date) => _startDate = date,
+        type: DateTimeSelectionType.date,
+      );
+    }
+    else {
+      return Row(
+        children: [
+          Expanded(
+            child: DateTimeSelectorFormField(
+              controller: _startDateController,
+              decoration: AppConstants.inputDecoration.copyWith(
+                labelText: "Start Date",
+              ),
+              validator: (value) {
+                if (value == null || value == "") {
+                  return "Please select date.";
+                }
+
+                return null;
+              },
+              textStyle: const TextStyle(
+                color: AppColors.black,
+                fontSize: 17.0,
+              ),
+              onSave: (date) => _startDate = date,
+              type: DateTimeSelectionType.date,
+            ),
+          ),
+          const SizedBox(width: 20.0),
+          Expanded(
+            child: DateTimeSelectorFormField(
+              controller: _endDateController,
+              decoration: AppConstants.inputDecoration.copyWith(
+                labelText: "End Date",
+              ),
+              validator: (value) {
+                if (value == null || value == "") {
+                  return "Please select date.";
+                }
+
+                return null;
+              },
+              textStyle: const TextStyle(
+                color: AppColors.black,
+                fontSize: 17.0,
+              ),
+              onSave: (date) => _endDate = date,
+              type: DateTimeSelectionType.date,
+            ),
+          ),
+        ],
+      );
+    }
+  }
+
+  Widget contentTime(String content){
+    if(content == '遅刻') {
+      return DateTimeSelectorFormField(
+        controller: _startTimeController,
+        decoration: AppConstants.inputDecoration.copyWith(
+          labelText: "到着予定時刻",
+        ),
+        validator: (value) {
+          if (value == null || value == "") {
+            return "Please select start time.";
+          }
+
+          return null;
+        },
+        onSave: (date) => _startTime = date,
+        textStyle: const TextStyle(
+          color: AppColors.black,
+          fontSize: 17.0,
+        ),
+        type: DateTimeSelectionType.time,
+      );
+    }
+    else if(content == '早退') {
+      return DateTimeSelectorFormField(
+        controller: _startTimeController,
+        decoration: AppConstants.inputDecoration.copyWith(
+          labelText: "早退予定時刻",
+        ),
+        validator: (value) {
+          if (value == null || value == "") {
+            return "Please select start time.";
+          }
+
+          return null;
+        },
+        onSave: (date) => _startTime = date,
+        textStyle: const TextStyle(
+          color: AppColors.black,
+          fontSize: 17.0,
+        ),
+        type: DateTimeSelectionType.time,
+      );
+    }
+    else {
+      return Row(
+        children: [
+          Expanded(
+            child: DateTimeSelectorFormField(
+              controller: _startTimeController,
+              decoration: AppConstants.inputDecoration.copyWith(
+                labelText: "Start Time",
+              ),
+              validator: (value) {
+                if (value == null || value == "") {
+                  return "Please select start time.";
+                }
+
+                return null;
+              },
+              onSave: (date) => _startTime = date,
+              textStyle: const TextStyle(
+                color: AppColors.black,
+                fontSize: 17.0,
+              ),
+              type: DateTimeSelectionType.time,
+            ),
+          ),
+          const SizedBox(width: 20.0),
+          Expanded(
+            child: DateTimeSelectorFormField(
+              controller: _endTimeController,
+              decoration: AppConstants.inputDecoration.copyWith(
+                labelText: "End Time",
+              ),
+              validator: (value) {
+                if (value == null || value == "") {
+                  return "Please select end time.";
+                }
+
+                return null;
+              },
+              onSave: (date) => _endTime = date,
+              textStyle: const TextStyle(
+                color: AppColors.black,
+                fontSize: 17.0,
+              ),
+              type: DateTimeSelectionType.time,
+            ),
+          ),
+        ],
+      );
+    }
+  }
+
+  void _resetDateTime(String content) {
+    if(content == '遅刻' || content == '早退'){
+      _startDateController.text = outputDate.format(currentDate);
+      _endDateController.text = outputDate.format(currentDate);
+      _startDate = DateTime.now();
+      _endDate = DateTime.now();
+      _startTimeController.text = outputTime.format(currentDate);
+      _endTimeController.text = outputTime.format(currentDate);
+      _startTime = DateTime.now();
+      _endTime = DateTime.now();
+    }
+    else {
+      _startDateController.text = outputDate.format(currentDate);
+      _endDateController.text = outputDate.format(currentDate);
+      _startDate = DateTime.now();
+      _endDate = DateTime.now();
+      _startTimeController.text = outputTime.format(DateTime(currentDate.year, currentDate.month, currentDate.day, timeZero.hour, timeZero.minute));
+      _endTimeController.text = outputTime.format(DateTime(currentDate.year, currentDate.month, currentDate.day, timeLast.hour, timeLast.minute));
+      _startTime = DateTime(currentDate.year, currentDate.month, currentDate.day, timeZero.hour, timeZero.minute);
+      _endTime = DateTime(currentDate.year, currentDate.month, currentDate.day, timeLast.hour, timeLast.minute);
+    }
   }
 
   void _createEvent(String username, String userId) {
@@ -452,7 +589,6 @@ class _AddAttendanceWidgetState extends State<AddAttendanceWidget> {
       endDate: _endDate,
       title: _title,
       content: _content,
-      unit: _unit,
       mailSend: _mailSend,
       name: username,
       userId: userId,
@@ -533,109 +669,15 @@ class _AddAttendanceWidgetState extends State<AddAttendanceWidget> {
     );
   }
 
-  Widget unitSelector(String content) {
-    if (content == 'ミーティング'){
-      return Column(
-        children: [
-          Container(
-            padding: const EdgeInsets.all(5.0),
-            width: double.infinity,
-            decoration: BoxDecoration(
-              border: Border.all(
-                  width: 2,
-                  color: AppColors.lightNavyBlue
-              ),
-              borderRadius: BorderRadius.circular(7),
-            ),
-            child: Row(
-                children: [
-                  const SizedBox(
-                    width: 10,
-                  ),
-                  const Text('参加単位',
-                    style: TextStyle(
-                      fontSize: 17.0,
-                    ),
-                  ),
-                  const SizedBox(
-                    width: 10,
-                  ),
-                  DropdownButton(
-                      value: _unit,
-                      items: const [
-                        DropdownMenuItem(
-                          value: '全体',
-                          child: Text('全体'),
-                        ),
-                        DropdownMenuItem(
-                          value: '個人',
-                          child: Text('個人'),
-                        ),
-                        DropdownMenuItem(
-                          value: 'Net班',
-                          child: Text('Net班'),
-                        ),
-                        DropdownMenuItem(
-                          value: 'Grid班',
-                          child: Text('Grid班'),
-                        ),
-                        DropdownMenuItem(
-                          value: 'Web班',
-                          child: Text('Web班'),
-                        ),
-                        DropdownMenuItem(
-                          value: 'B4',
-                          child: Text('B4'),
-                        ),
-                        DropdownMenuItem(
-                          value: 'M1',
-                          child: Text('M1'),
-                        ),
-                        DropdownMenuItem(
-                          value: 'M2',
-                          child: Text('M2'),
-                        ),
-                      ],
-                      onChanged: (text) {
-                        setState(() {
-                          _unit = text.toString();
-                        });
-                        colorSelector(_unit, _content);
-                      }
-                  ),
-                ]),
-          ),
-          const SizedBox(
-            height: 15,
-          ),
-        ],
-      );
+  void colorSelector(String content) {
+    if(content == '遅刻') {
+      _color = Colors.orange;
+    }
+    else if(content == '欠席') {
+      _color = Colors.red;
     }
     else {
-      return const SizedBox();
-    }
-  }
-
-  void colorSelector(String unit, String content) {
-    if(content != 'ミーティング') {
-      _color = Colors.blue;
-    }
-    else {
-      if(unit == 'Grid班'){
-        _color = Colors.lightGreen;
-      }
-      else if(unit == '全体'){
-        _color = Colors.purple;
-      }
-      else if(unit == 'Web班') {
-        _color = Colors.lightBlue;
-      }
-      else if(unit == 'Net班') {
-        _color = Colors.yellow;
-      }
-      else {
-        _color = Colors.blueGrey;
-      }
+      _color = Colors.grey;
     }
   }
 

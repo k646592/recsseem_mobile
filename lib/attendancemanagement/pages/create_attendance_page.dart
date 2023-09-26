@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
-import 'package:recsseem_mobile/Calendar/view/extension.dart';
+import 'package:recsseem_mobile/attendancemanagement/Calendar/view/app_colors.dart';
+import 'package:recsseem_mobile/attendancemanagement/Calendar/view/extension.dart';
 
-import '../../Calendar/view/app_colors.dart';
 import '../widgets/add_attendance_widget.dart';
 
 

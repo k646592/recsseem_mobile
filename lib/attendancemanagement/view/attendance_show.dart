@@ -1,9 +1,9 @@
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:intl/intl.dart';
-import 'package:recsseem_mobile/Calendar/src/calendar_event_data.dart';
+import 'package:recsseem_mobile/attendancemanagement/Calendar/src/calendar_event_data.dart';
+import 'package:recsseem_mobile/attendancemanagement/Calendar/view/app_colors.dart';
 
-import '../../Calendar/view/app_colors.dart';
 
 class AttendanceShow extends StatefulWidget {
 
@@ -80,13 +80,24 @@ class _AttendanceShowState extends State<AttendanceShow> {
                   ),
                   borderRadius: BorderRadius.circular(7),
                 ),
-                child: Text(
-                  '参加単位：${event.unit}',
-                  style: const TextStyle(
-                    color: AppColors.black,
-                    fontSize: 17.0,
-                  ),
-                ),
+                child: (() {
+                  if (event.title == '欠席') {
+                    return Text(
+                      '開始日時：${DateFormat('yyyy/MM/dd(EEE)').format(event.startTime!)}',
+                      style: const TextStyle(
+                        color: AppColors.black,
+                        fontSize: 17.0,
+                      ),
+                    );
+                  }
+                  return Text(
+                    '日付：${DateFormat('yyyy/MM/dd(EEE)').format(event.startTime!)}',
+                    style: const TextStyle(
+                      color: AppColors.black,
+                      fontSize: 17.0,
+                    ),
+                  );
+                })(),
               ),
               const SizedBox(
                 height: 15,
@@ -101,13 +112,24 @@ class _AttendanceShowState extends State<AttendanceShow> {
                   ),
                   borderRadius: BorderRadius.circular(7),
                 ),
-                child: Text(
-                  '開始日時：${DateFormat('yyyy/MM/dd(EEE) a hh:mm').format(event.startTime!)}',
-                  style: const TextStyle(
-                    color: AppColors.black,
-                    fontSize: 17.0,
-                  ),
-                ),
+                child: (() {
+                  if (event.title == '欠席') {
+                    return Text(
+                      '終了日時：${DateFormat('yyyy/MM/dd(EEE)').format(event.startTime!)}',
+                      style: const TextStyle(
+                        color: AppColors.black,
+                        fontSize: 17.0,
+                      ),
+                    );
+                  }
+                  return Text(
+                    '${event.title}予定時刻：${DateFormat('a hh:mm').format(event.startTime!)}',
+                    style: const TextStyle(
+                      color: AppColors.black,
+                      fontSize: 17.0,
+                    ),
+                  );
+                })(),
               ),
               const SizedBox(
                 height: 15,
@@ -115,27 +137,7 @@ class _AttendanceShowState extends State<AttendanceShow> {
               Container(
                 padding: const EdgeInsets.all(12.0),
                 width: double.infinity,
-                decoration: BoxDecoration(
-                  border: Border.all(
-                      width: 2,
-                      color: AppColors.lightNavyBlue
-                  ),
-                  borderRadius: BorderRadius.circular(7),
-                ),
-                child: Text(
-                  '終了日時：${DateFormat('yyyy/MM/dd(EEE) a hh:mm').format(event.endTime!)}',
-                  style: const TextStyle(
-                    color: AppColors.black,
-                    fontSize: 17.0,
-                  ),
-                ),
-              ),
-              const SizedBox(
-                height: 15,
-              ),
-              Container(
-                padding: const EdgeInsets.all(12.0),
-                width: double.infinity,
+                height: 200,
                 decoration: BoxDecoration(
                   border: Border.all(
                       width: 2,

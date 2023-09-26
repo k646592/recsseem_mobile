@@ -1,14 +1,17 @@
 import 'package:flutter/material.dart';
-import 'package:recsseem_mobile/Calendar/view/extension.dart';
-import 'package:recsseem_mobile/Event/widgets/day_view_widget.dart';
-import 'package:recsseem_mobile/Event/widgets/week_view_widget.dart';
+import 'package:recsseem_mobile/attendancemanagement/member_board.dart';
+
+import 'package:recsseem_mobile/attendancemanagement/widgets/day_view_widget.dart';
+import 'package:recsseem_mobile/attendancemanagement/widgets/week_view_widget.dart';
+import 'package:recsseem_mobile/attendancemanagement/Calendar/model/calendar_event.dart';
+import 'package:recsseem_mobile/attendancemanagement/Calendar/src/calendar_controller_provider.dart';
+import 'package:recsseem_mobile/attendancemanagement/Calendar/src/calendar_event_data.dart';
+import 'package:recsseem_mobile/attendancemanagement/Calendar/view/extension.dart';
 import 'package:recsseem_mobile/attendancemanagement/widgets/month_view_widget.dart';
 
 import '../../HeaderandFooter/drawer.dart';
 import '../../timer/timer.dart';
-import '../../Calendar/model/calendar_event.dart';
-import '../../Calendar/src/calendar_controller_provider.dart';
-import '../../Calendar/src/calendar_event_data.dart';
+
 import 'create_attendance_page.dart';
 
 
@@ -26,7 +29,7 @@ class _ViewPageDemoState extends State<ViewPageDemo> {
   @override
   Widget build(BuildContext context) {
     return DefaultTabController(
-      length: 3,
+      length: 4,
       child: Scaffold(
         appBar: AppBar(
           actions: [
@@ -48,9 +51,10 @@ class _ViewPageDemoState extends State<ViewPageDemo> {
           backgroundColor: Colors.black,
           centerTitle: true,
           elevation: 0.0,
-          title: const Text('イベント'),
+          title: const Text('出席管理'),
           bottom: const TabBar(
             tabs: <Tab>[
+              Tab(text: 'Member',),
               Tab(text: 'Month',),
               Tab(text: 'Week',),
               Tab(text: 'Day',),
@@ -65,6 +69,7 @@ class _ViewPageDemoState extends State<ViewPageDemo> {
         ),
         body: const TabBarView(
           children: [
+            MemberBoardPage(),
             MonthViewWidget(),
             WeekViewWidget(),
             DayViewWidget()

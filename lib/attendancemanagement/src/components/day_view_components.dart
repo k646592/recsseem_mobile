@@ -1,12 +1,12 @@
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
-import 'package:recsseem_mobile/Calendar/src/components/common_components.dart';
+import 'package:recsseem_mobile/attendancemanagement/Calendar/src/calendar_event_data.dart';
+import 'package:recsseem_mobile/attendancemanagement/Calendar/src/components/common_components.dart';
+import 'package:recsseem_mobile/attendancemanagement/Calendar/src/constants.dart';
+import 'package:recsseem_mobile/attendancemanagement/Calendar/src/extensions.dart';
+import 'package:recsseem_mobile/attendancemanagement/Calendar/src/style/header_style.dart';
+import 'package:recsseem_mobile/attendancemanagement/Calendar/src/typedefs.dart';
 
-import '../../../Calendar/src/calendar_event_data.dart';
-import '../../../Calendar/src/constants.dart';
-import '../../../Calendar/src/extensions.dart';
-import '../../../Calendar/src/style/header_style.dart';
-import '../../../Calendar/src/typedefs.dart';
 
 /// This class defines default tile to display in day view.
 class RoundedEventTile extends StatelessWidget {

@@ -9,12 +9,12 @@ import '../../../domain/event.dart';
 import '../../../Event/view/new_event_edit.dart';
 import '../../../Event/src/month_view/month_view.dart';
 
-import '../../../Calendar/src/calendar_event_data.dart';
-import '../../../Calendar/src/constants.dart';
-import '../../../Calendar/src/extensions.dart';
-import '../../../Calendar/src/style/header_style.dart';
-import '../../../Calendar/src/typedefs.dart';
-import '../../../Calendar/src/components/common_components.dart';
+import '../../../Event/Calendar/src/calendar_event_data.dart';
+import '../../../Event/Calendar/src/constants.dart';
+import '../../../Event/Calendar/src/extensions.dart';
+import '../../../Event/Calendar/src/style/header_style.dart';
+import '../../../Event/Calendar/src/typedefs.dart';
+import '../../../Event/Calendar/src/components/common_components.dart';
 
 class CircularCell extends StatelessWidget {
   /// Date of cell.
@@ -175,7 +175,12 @@ class FilledCell<T extends Object?> extends StatelessWidget {
                                       child: Text('投稿者：${events[index].name!}'),
                                     ),
                                     SimpleDialogOption(
-                                      child: Text('期間：${DateFormat('MM/dd(EEE)').format(events[index].date)}〜${DateFormat('MM/dd(EEE)').format(events[index].endDate)}'),
+                                      child: (() {
+                                        if (DateTime(events[index].date.year, events[index].date.month, events[index].date.day) == DateTime(events[index].endDate.year, events[index].endDate.month, events[index].endDate.day)) {
+                                          return Text('日付：${DateFormat('MM/dd(EEE)').format(events[index].date)}');
+                                        }
+                                        return Text('期間：${DateFormat('MM/dd(EEE)').format(events[index].date)}〜${DateFormat('MM/dd(EEE)').format(events[index].endDate)}');
+                                      })(),
                                     ),
                                     SimpleDialogOption(
                                       child: Text('時刻：${DateFormat('aa HH:mm').format(events[index].startTime!)}〜${DateFormat('aa HH:mm').format(events[index].endTime!)}'),
