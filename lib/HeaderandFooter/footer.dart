@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:recsseem_mobile/Event/view/new_event_index_page.dart';
 import 'package:recsseem_mobile/attendancemanagement/view/attendance_index.dart';
+import 'package:recsseem_mobile/minutes_yoshioka/memo_list/memo_list_page.dart';
 
 import '../chat/chat_room_page.dart';
 import '../mypage/my_page.dart';
@@ -24,6 +25,7 @@ class _FooterState extends State<Footer> {
     Icons.groups,
     Icons.chat,
     Icons.account_circle,
+    Icons.edit_note,
   ];
 
   //アイコン文字列
@@ -32,6 +34,7 @@ class _FooterState extends State<Footer> {
     '出席管理',
     'チャット',
     'マイページ',
+    '議事録',
   ];
 
   final _routes = [
@@ -39,6 +42,7 @@ class _FooterState extends State<Footer> {
     const AttendanceTop(),
     const ChatRoomListPage(),
     const MyPage(),
+    const MemoListPage(),
   ];
 
   @override

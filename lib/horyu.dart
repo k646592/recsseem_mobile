@@ -71,3 +71,64 @@ Stack(
         });
   }
  */
+
+
+/*
+DateFormat outputDate = DateFormat('yyyy年MM月dd日(EEE) a hh:mm');
+final List<Memo> memo = model.memoList;
+            memo.sort(((a, b) => b.date.compareTo(a.date)));
+
+            final List<Widget> widgets = memo.map(
+              (memo) => Slidable(
+                actionPane: const SlidableDrawerActionPane(),
+                secondaryActions: <Widget>[
+                  IconSlideAction(
+                    caption: '編集',
+                    color: Colors.grey[350],
+                    icon: Icons.edit,
+                    onTap: () async {
+                      final String? title = await Navigator.push(
+                        context,
+                        MaterialPageRoute(
+                          builder: (context) => EditMemoPage(memo),
+                        ),
+                      );
+                      if (title != null) {
+                        final snackBar = SnackBar(
+                          backgroundColor: Colors.green,
+                          content: Text('『$title』を編集しました'),
+                        );
+                        ScaffoldMessenger.of(context).showSnackBar(snackBar);
+                      }
+
+                      model.fetchMemoList();
+                    },
+                  ),
+                  IconSlideAction(
+                    caption: '削除',
+                    color: Colors.red,
+                    icon: Icons.delete,
+                    onTap: () async {
+                      // 削除しますか？って聞いて、はいだったら削除
+                      await showConfirmDialog(context, memo, model);
+                    },
+                  ),
+                ],
+                child: ListTile(
+                  title: Text('${memo.title}　${memo.team}'),
+                  subtitle: Text('${outputDate.format(memo.date)}    製作者名 ${memo.name}'),
+                  trailing: IconButton(
+                    icon: const Icon(Icons.login_outlined),
+                    onPressed: () async {
+                      await Navigator.push(
+                        context,
+                        MaterialPageRoute(
+                            builder: (context) => MainTextPage(memo)),
+                      );
+                      model.fetchMemoList();
+                    },
+                  ),
+                ),
+              ),
+            ).toList();
+ */

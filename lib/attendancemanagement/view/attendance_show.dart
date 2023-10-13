@@ -122,6 +122,15 @@ class _AttendanceShowState extends State<AttendanceShow> {
                       ),
                     );
                   }
+                  else if(event.title == '遅刻') {
+                    return Text(
+                      '到着予定時刻：${DateFormat('a hh:mm').format(event.startTime!)}',
+                      style: const TextStyle(
+                        color: AppColors.black,
+                        fontSize: 17.0,
+                      ),
+                    );
+                  }
                   return Text(
                     '${event.title}予定時刻：${DateFormat('a hh:mm').format(event.startTime!)}',
                     style: const TextStyle(

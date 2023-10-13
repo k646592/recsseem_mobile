@@ -187,8 +187,11 @@ class FilledCell<T extends Object?> extends StatelessWidget {
                                     ),
                                     SimpleDialogOption(
                                       child: (() {
-                                        if (events[index].title == '遅刻' || events[index].title == '早退') {
+                                        if (events[index].title == '早退') {
                                           return Text('${events[index].title}予定時刻：${DateFormat('aa HH:mm').format(events[index].startTime!)}');
+                                        }
+                                        else if(events[index].title == '遅刻') {
+                                          return Text('到着予定時刻：${DateFormat('aa HH:mm').format(events[index].startTime!)}');
                                         }
                                         return Text('時刻：${DateFormat('aa HH:mm').format(events[index].startTime!)}〜${DateFormat('aa HH:mm').format(events[index].endTime!)}');
                                       })(),

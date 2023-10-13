@@ -58,6 +58,7 @@ dependencies:
   path_provider: ^2.0.15
   open_filex: ^4.3.2
   riverpod: ^2.4.0
+  flutter_email_sender: ^6.0.2
 
 dev_dependencies:
   flutter_test:

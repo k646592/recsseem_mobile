@@ -460,24 +460,31 @@ class _AddAttendanceWidgetState extends State<AddAttendanceWidget> {
 
   Widget contentTime(String content){
     if(content == '遅刻') {
-      return DateTimeSelectorFormField(
-        controller: _startTimeController,
-        decoration: AppConstants.inputDecoration.copyWith(
-          labelText: "到着予定時刻",
-        ),
-        validator: (value) {
-          if (value == null || value == "") {
-            return "Please select start time.";
-          }
+      return Row(
+        children: [
+          Expanded(
+            child: DateTimeSelectorFormField(
+              controller: _startTimeController,
+              decoration: AppConstants.inputDecoration.copyWith(
+                labelText: "到着予定時刻",
+              ),
+              validator: (value) {
+                if (value == null || value == "") {
+                  return "Please select start time.";
+                }
 
-          return null;
-        },
-        onSave: (date) => _startTime = date,
-        textStyle: const TextStyle(
-          color: AppColors.black,
-          fontSize: 17.0,
-        ),
-        type: DateTimeSelectionType.time,
+                return null;
+              },
+              onSave: (date) => _startTime = date,
+              textStyle: const TextStyle(
+                color: AppColors.black,
+                fontSize: 17.0,
+              ),
+              type: DateTimeSelectionType.time,
+            ),
+          ),
+
+        ],
       );
     }
     else if(content == '早退') {

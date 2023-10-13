@@ -15,12 +15,14 @@ class CreateAttendanceModel extends ChangeNotifier {
 
   String? username;
   String? userId;
+  String? email;
 
   Future fetchUser() async {
     final user = FirebaseAuth.instance.currentUser;
 
     FirebaseFirestore.instance.collection('users').doc(user!.uid).snapshots().listen((DocumentSnapshot snapshot) {
       username = snapshot.get('name');
+      email = snapshot.get('email');
     });
     userId = user.uid;
   }
@@ -51,7 +53,31 @@ class CreateAttendanceModel extends ChangeNotifier {
     String username = 'lab.algorithm@gmail.com';
     String password = 'adjmhyfkhphypoox';
 
-    DateFormat outputDate = DateFormat('yyyy年 MM月 dd日(EEE) a hh:mm');
+    DateFormat outputDate = DateFormat('MM月 dd日(EEE)');
+    DateFormat outputTime = DateFormat('a hh時 mm分');
+
+    String textMessages(String title) {
+      if(title == '遅刻') {
+        return '<p>${outputDate.format(event.date)}</p>\n'
+            '<p>${event.name}：${event.title}</p>\n'
+            '<p>メールアドレス：${email!}</p>\n'
+            '<p>${event.description}</p>\n'
+            '<p>到着予定時刻：${outputTime.format(event.date)}</p>';
+      }
+      else if(title == '早退') {
+        return '<p>${outputDate.format(event.date)}</p>\n'
+            '<p>${event.name}：${event.title}</p>\n'
+            '<p>メールアドレス：${email!}</p>\n'
+            '<p>${event.description}</p>\n'
+            '<p>早退予定時刻：${outputTime.format(event.date)}</p>';
+      }
+      else {
+        return '<p>${outputDate.format(event.date)}〜${outputDate.format(event.endDate)}</p>\n'
+            '<p>${event.name}：${event.title}</p>\n'
+            '<p>メールアドレス：${email!}</p>\n'
+            '<p>${event.description}</p>\n';
+      }
+    }
 
     final smtpServer = gmail(username, password);
     // Use the SmtpServer class to configure an SMTP server:
@@ -61,15 +87,12 @@ class CreateAttendanceModel extends ChangeNotifier {
 
     // Create our message.
     final message = Message()
-      ..from = Address(username, event.name)
+      ..from = Address('k646592@kansai-u.ac.jp', '${event.name}(${email!})')
       ..recipients.add('atukunare2@gmail.com')
-      ..subject = '新しいイベントの案内 :: 😀 :: ${DateTime.now()}'
+      ..subject = '${event.name}：${event.title}'
       ..text = 'This is the plain text.\nThis is line 2 of the text part.'
-      ..ccRecipients.addAll(['k646592@kansai-u.ac.jp', 'anperdesu238@gmail.com'])
-      ..html = "<h1>${event.title}</h1>\n"
-          "<p>単位:${event.unit} </p>\n"
-          "<p>詳細:${event.description}</p>\n"
-          "<p>期間:${outputDate.format(event.startTime!)}-~${outputDate.format(event.endTime!)}</p>";
+      ..ccRecipients.addAll(['anperdesu238@gmail.com'])
+      ..html = textMessages(event.title);
 
     //画像やファイルを送信する場合のコード
     //..attachments = [
@@ -78,6 +101,12 @@ class CreateAttendanceModel extends ChangeNotifier {
     //           ..cid = '<myimg@3.141>'
     //       ];
     //       ..bccRecipients.add(Address(''))   bccの設定
+
+
+    // "<h1>${event.title}</h1>\n"
+    //           "<p>単位:${event.unit} </p>\n"
+    //           "<p>詳細:${event.description}</p>\n"
+    //           "<p>期間:${outputDate.format(event.startTime!)}-~${outputDate.format(event.endTime!)}</p>";
 
     try {
       final sendReport = await send(message, smtpServer);
