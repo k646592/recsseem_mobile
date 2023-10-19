@@ -132,3 +132,69 @@ final List<Memo> memo = model.memoList;
               ),
             ).toList();
  */
+
+/*
+List<Memo> pageMemoList = memoList.getRange(_selectedIndex*10, _selectedIndex*10 + 10).toList();
+
+    if(memoList.length % 10 != 0 && _selectedIndex == memoList.length ~/ 10) {
+      pageMemoList = memoList.getRange(_selectedIndex*10, memoList.length-1).toList();
+      print('a');
+    }
+    else {
+      pageMemoList = memoList.getRange(_selectedIndex*10, _selectedIndex*10 + 10).toList();
+      print('b');
+    }
+
+    DateFormat outputDate = DateFormat('yyyy年MM月dd日(EEE) a hh:mm');
+
+    final List<Widget> widgets = pageMemoList.map(
+          (memo) => Slidable(
+        actionPane: const SlidableDrawerActionPane(),
+        secondaryActions: <Widget>[
+          IconSlideAction(
+            caption: '編集',
+            color: Colors.grey[350],
+            icon: Icons.edit,
+            onTap: () async {
+              final String? title = await Navigator.push(
+                context,
+                MaterialPageRoute(
+                  builder: (context) => EditMemoPage(memo),
+                ),
+              );
+              if (title != null) {
+                final snackBar = SnackBar(
+                  backgroundColor: Colors.green,
+                  content: Text('『$title』を編集しました'),
+                );
+                ScaffoldMessenger.of(context).showSnackBar(snackBar);
+              }
+            },
+          ),
+          IconSlideAction(
+            caption: '削除',
+            color: Colors.red,
+            icon: Icons.delete,
+            onTap: () async {
+              // 削除しますか？って聞いて、はいだったら削除
+              await showConfirmDialog(context, memo, memoList);
+            },
+          ),
+        ],
+        child: ListTile(
+          title: Text('${memo.title}　${memo.team}'),
+          subtitle: Text('${outputDate.format(memo.date)}    製作者名 ${memo.name}'),
+          trailing: IconButton(
+            icon: const Icon(Icons.login_outlined),
+            onPressed: () async {
+              await Navigator.push(
+                context,
+                MaterialPageRoute(
+                    builder: (context) => MainTextPage(memo)),
+              );
+            },
+          ),
+        ),
+      ),
+    ).toList();
+ */

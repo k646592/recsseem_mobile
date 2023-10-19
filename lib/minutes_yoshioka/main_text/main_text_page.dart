@@ -1,6 +1,5 @@
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
-import 'package:recsseem_mobile/HeaderandFooter/footer.dart';
 import '../domain/memo.dart';
 import 'main_text_model.dart';
 
@@ -19,12 +18,7 @@ class MainTextPage extends StatelessWidget {
               icon: const Icon(Icons.arrow_back_ios),
               onPressed: () {
                 model.update_main();
-                Navigator.push(
-                  context,
-                  MaterialPageRoute(
-                      builder: (context) => const Footer(pageNumber: 4),
-                  ),
-                );
+                Navigator.pop(context);
               },
             ),
             title: Text(memo.title),
