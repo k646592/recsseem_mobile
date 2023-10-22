@@ -29,7 +29,11 @@ class CreateAttendanceModel extends ChangeNotifier {
 
   Future addEvent(CalendarEventData<CalendarEvent> event) async {
     final startDay = DateTime(event.date.year,event.date.month, event.date.day, event.startTime!.hour, event.startTime!.minute);
-    final endDay = DateTime(event.endDate.year,event.endDate.month, event.endDate.day, event.endTime!.hour, event.endTime!.minute);
+    DateTime endDay = DateTime(event.endDate.year,event.endDate.month, event.endDate.day, event.endTime!.hour, event.endTime!.minute);
+
+    if(event.title == '遅刻' || event.title == '早退') {
+      endDay = startDay;
+    }
 
     final doc = FirebaseFirestore.instance.collection('attendances').doc();
     //firestoreに追加

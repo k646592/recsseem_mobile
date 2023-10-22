@@ -151,7 +151,7 @@ class _AddAttendanceWidgetState extends State<AddAttendanceWidget> {
                       const SizedBox(
                         width: 10,
                       ),
-                      const Text('Content',
+                      const Text('内容',
                         style: TextStyle(
                           fontSize: 17.0,
                         ),
@@ -465,7 +465,18 @@ class _AddAttendanceWidgetState extends State<AddAttendanceWidget> {
       return Row(
         children: [
           Expanded(
-            child: DateTimeSelectorFormField(
+            child: undecided ? Container(
+              padding: const EdgeInsets.all(5.0),
+              width: double.infinity,
+              decoration: BoxDecoration(
+                border: Border.all(
+                    width: 2,
+                    color: AppColors.lightNavyBlue
+                ),
+                borderRadius: BorderRadius.circular(7),
+              ),
+              child: const Center(child: Text('到着予定時刻未定(0:00)')),
+            ) : DateTimeSelectorFormField(
               controller: _startTimeController,
               decoration: AppConstants.inputDecoration.copyWith(
                 labelText: "到着予定時刻",
@@ -478,6 +489,7 @@ class _AddAttendanceWidgetState extends State<AddAttendanceWidget> {
                 return null;
               },
               onSave: (date) => _startTime = date,
+              displayDefault: false,
               textStyle: const TextStyle(
                 color: AppColors.black,
                 fontSize: 17.0,
@@ -497,12 +509,16 @@ class _AddAttendanceWidgetState extends State<AddAttendanceWidget> {
                     setState(() {
                       undecided = value!;
                       if(undecided == true) {
-                        _startTimeController.text = outputTime.format(undecidedDate);
-                        _startTime = undecidedDate;
+                        setState(() {
+                          _startTimeController.text = outputTime.format(undecidedDate);
+                          _startTime = undecidedDate;
+                        });
                       }
                       else {
-                        _startTimeController.text = outputTime.format(currentDate);
-                        _startTime = currentDate;
+                        setState(() {
+                          _startTimeController.text = outputTime.format(currentDate);
+                          _startTime = currentDate;
+                        });
                       }
 
                     });

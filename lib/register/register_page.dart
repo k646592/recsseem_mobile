@@ -37,6 +37,7 @@ class _RegisterPageState extends State<RegisterPage> {
       child: Scaffold(
         appBar: AppBar(
           title: const Text('新規登録'),
+          backgroundColor: Colors.black,
         ),
         body: Center(
           child: Consumer<RegisterModel>(builder: (context, model, child) {

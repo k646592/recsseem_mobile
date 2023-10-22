@@ -22,6 +22,7 @@ class LoginPage extends StatelessWidget {
         appBar: AppBar(
           title: const Text('ReCS/SEEM(ログイン)'),
           automaticallyImplyLeading: false,
+          backgroundColor: Colors.black,
         ),
         body: Center(
           child: Consumer<LoginModel>(builder: (context, model, child) {

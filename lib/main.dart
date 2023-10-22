@@ -1,7 +1,9 @@
 import 'dart:ui';
 
+import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:firebase_core/firebase_core.dart';
+import 'package:recsseem_mobile/HeaderandFooter/footer.dart';
 import 'package:recsseem_mobile/shared/constants.dart';
 import 'login/login_page.dart';
 import 'package:flutter/foundation.dart';
@@ -29,15 +31,8 @@ Future<void> main() async {
   runApp(const MyApp());
 }
 
-class MyApp extends StatefulWidget {
+class MyApp extends StatelessWidget {
   const MyApp({super.key});
-
-  @override
-  State<MyApp> createState() => _MyAppState();
-}
-
-class _MyAppState extends State<MyApp> {
-
 
   @override
   Widget build(BuildContext context) {
@@ -52,7 +47,19 @@ class _MyAppState extends State<MyApp> {
           PointerDeviceKind.touch,
         },
       ),
-      home: const LoginPage(),
+      home: StreamBuilder<User?>(
+        stream: FirebaseAuth.instance.authStateChanges(),
+        builder: (context, snapshot) {
+          if (snapshot.connectionState == ConnectionState.waiting) {
+            return const SizedBox();
+          }
+          if (snapshot.hasData) {
+            return const Footer(pageNumber: 0);
+          }
+
+          return const LoginPage();
+        },
+      ),
     );
   }
 }
