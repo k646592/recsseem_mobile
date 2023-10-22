@@ -88,7 +88,7 @@ class RegisterModel extends ChangeNotifier {
           'status': status,
           'joinChatRooms': [],
           'update': DateTime.now(),
-          'imgURl': 'https://4thsight.xyz/wp-content/uploads/2020/02/1582801063-300x300.png',
+          'imgURL': 'https://4thsight.xyz/wp-content/uploads/2020/02/1582801063-300x300.png',
         });
       }
     }

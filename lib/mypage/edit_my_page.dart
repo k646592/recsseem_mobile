@@ -22,6 +22,7 @@ class _EditMyPageState extends State<EditMyPage> {
       create: (_) => EditMyPageModel(widget.name, widget.email, widget.group, widget.grade)..fetchUser(),
       child: Scaffold(
         appBar: AppBar(
+          backgroundColor: Colors.black,
           title: const Text('ユーザー情報変更'),
         ),
         body: Center(
@@ -34,25 +35,48 @@ class _EditMyPageState extends State<EditMyPage> {
                     children: [
                       Text(
                           'メールアドレス：${model.email}',
-                        style: TextStyle(
+                        style: const TextStyle(
                           fontSize: 20,
                         ),
                       ),
                       const Divider(
                         color: Colors.black,
                       ),
-                      GestureDetector(
-                        child: SizedBox(
-                          width: 100,
-                          height: 100,
-                          child: model.imageFile != null ? Image.file(model.imageFile!) :
-                          Container(
-                            color: Colors.grey,
+                      Row(
+                        children: [
+                          Expanded(
+                            child: CircleAvatar(
+                              backgroundColor: Colors.grey,
+                              radius: 50,
+                              backgroundImage: model.imgURL != '' ? NetworkImage(model.imgURL) : const NetworkImage('https://4thsight.xyz/wp-content/uploads/2020/02/1582801063-300x300.png'),
+                            ),
                           ),
-                        ),
-                        onTap: () async {
-                          await model.pickImage();
-                        },
+                          const Expanded(
+                            child: Icon(
+                              Icons.arrow_forward,
+                              color: Colors.black,
+                            ),
+                          ),
+                          Expanded(
+                            child: GestureDetector(
+                              child: model.imageFile != null ?
+                              CircleAvatar(
+                                radius: 50,
+                                backgroundImage: Image.file(model.imageFile!, fit:  BoxFit.cover,).image,
+                              ) :
+                              const CircleAvatar(
+                                backgroundColor: Colors.grey,
+                                radius: 50,
+                                child: Text('ここをタップ',
+                                  style: TextStyle(color: Colors.black),
+                                ),
+                              ),
+                              onTap: () async {
+                                await model.pickImage();
+                              },
+                            ),
+                          ),
+                        ],
                       ),
                       const Divider(
                         color: Colors.black,
@@ -88,7 +112,7 @@ class _EditMyPageState extends State<EditMyPage> {
                                   model.setGroup(text!);
                                 },
                               ),
-                              Text('Web班'),
+                              const Text('Web班'),
                             ],
                           ),
                           Row(
@@ -101,7 +125,7 @@ class _EditMyPageState extends State<EditMyPage> {
                                   model.setGroup(text!);
                                 },
                               ),
-                              Text('Grid班'),
+                              const Text('Grid班'),
                             ],
                           ),
                           Row(
@@ -114,7 +138,7 @@ class _EditMyPageState extends State<EditMyPage> {
                                   model.setGroup(text!);
                                 },
                               ),
-                              Text('Network班'),
+                              const Text('Network班'),
                             ],
                           ),
                           Row(
@@ -127,7 +151,7 @@ class _EditMyPageState extends State<EditMyPage> {
                                   model.setGroup(text!);
                                 },
                               ),
-                              Text('教員'),
+                              const Text('教員'),
                             ],
                           ),
                         ],
@@ -137,7 +161,7 @@ class _EditMyPageState extends State<EditMyPage> {
                       ),
                       Text(
                         '選択した学年：${model.grade}',
-                        style: TextStyle(
+                        style: const TextStyle(
                           fontSize: 15,
                         ),
                       ),
@@ -145,32 +169,32 @@ class _EditMyPageState extends State<EditMyPage> {
                           value: model.grade,
                           items: const [
                             DropdownMenuItem(
-                              child: Text('B4'),
                               value: 'B4',
+                              child: Text('B4'),
                             ),
                             DropdownMenuItem(
-                              child: Text('M1'),
                               value: 'M1',
+                              child: Text('M1'),
                             ),
                             DropdownMenuItem(
-                              child: Text('M2'),
                               value: 'M2',
+                              child: Text('M2'),
                             ),
                             DropdownMenuItem(
-                              child: Text('D1'),
                               value: 'D1',
+                              child: Text('D1'),
                             ),
                             DropdownMenuItem(
-                              child: Text('D2'),
                               value: 'D2',
+                              child: Text('D2'),
                             ),
                             DropdownMenuItem(
-                              child: Text('D3'),
                               value: 'D3',
+                              child: Text('D3'),
                             ),
                             DropdownMenuItem(
-                              child: Text('教授'),
                               value: '教授',
+                              child: Text('教授'),
                             ),
                           ],
                           onChanged: (text) {
@@ -203,7 +227,7 @@ class _EditMyPageState extends State<EditMyPage> {
                             model.endLoading();
                           }
                         },
-                        child: Text('変更する'),
+                        child: const Text('変更する'),
                       ),
                     ],
                   ),
@@ -211,7 +235,7 @@ class _EditMyPageState extends State<EditMyPage> {
                 if (model.isLoading)
                   Container(
                     color: Colors.black45,
-                    child: Center(
+                    child: const Center(
                       child: CircularProgressIndicator(),
                     ),
                   ),

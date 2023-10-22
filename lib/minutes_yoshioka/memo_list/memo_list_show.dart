@@ -154,6 +154,9 @@ class _MemoListShow extends State<MemoListShow> {
     // サンプル数
     _itemCount = memoList.length;
 
+
+
+
     // ページの最大数
     if(_itemCount % 10 == 0) {
       _maxPage = _itemCount ~/10;

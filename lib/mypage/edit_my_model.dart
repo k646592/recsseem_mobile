@@ -22,6 +22,9 @@ class EditMyPageModel extends ChangeNotifier {
   String group;
   String grade;
 
+  String? userId;
+  String imgURL = '';
+
   File? imageFile;
   final picker = ImagePicker();
 
@@ -54,11 +57,9 @@ class EditMyPageModel extends ChangeNotifier {
 
   void fetchUser() async {
     final uid = FirebaseAuth.instance.currentUser!.uid;
-    final snapshot = await FirebaseFirestore.instance.collection('users').doc(uid).get();
-    email = snapshot.data()!['email'];
-    name = snapshot.data()!['name'];
-    group = snapshot.data()!['group'];
-    grade = snapshot.data()!['grade'];
+    userId = uid;
+    final DocumentSnapshot<Map<String, dynamic>> userSnapshot = await FirebaseFirestore.instance.collection('users').doc(uid).get();
+    imgURL = userSnapshot.data()!['imgURL'];
     notifyListeners();
   }
 
@@ -78,20 +79,22 @@ class EditMyPageModel extends ChangeNotifier {
     
     final doc = FirebaseFirestore.instance.collection('users').doc();
     String? imgURL;
-    if(imageFile!= null) {
+    if(imageFile != null) {
       final task = await FirebaseStorage.instance.ref('users/${doc.id}').putFile(imageFile!);
       task.ref.getDownloadURL();
       imgURL = await task.ref.getDownloadURL();
     }
+
+    imgURL ??= this.imgURL;
     
     
     //firestoreに更新
-    final uid = FirebaseAuth.instance.currentUser!.uid;
-    await FirebaseFirestore.instance.collection('users').doc(uid).update({
+    await FirebaseFirestore.instance.collection('users').doc(userId).update({
       'name': name,
       'group': group,
       'grade': grade,
       'imgURL': imgURL,
+      'update': DateTime.now(),
     });
     notifyListeners();
   }
@@ -101,6 +104,7 @@ class EditMyPageModel extends ChangeNotifier {
     if(pickedFile != null) {
       imageFile = File(pickedFile.path);
     }
+    notifyListeners();
   }
 
 }

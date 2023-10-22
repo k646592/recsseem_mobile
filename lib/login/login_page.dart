@@ -9,6 +9,8 @@ import '../HeaderandFooter/footer.dart';
 //エラーを表示
 String? error;
 
+
+
 class LoginPage extends StatelessWidget {
   const LoginPage({super.key});
 

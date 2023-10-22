@@ -36,6 +36,7 @@ class _AddAttendanceWidgetState extends State<AddAttendanceWidget> {
   DateTime? _endTime;
 
   String _title = "遅刻";
+  bool undecided = false;
 
   String _description = "";
 
@@ -45,6 +46,7 @@ class _AddAttendanceWidgetState extends State<AddAttendanceWidget> {
   bool _display = false;
   late CalendarEventData<CalendarEvent> calendarEvent;
   DateTime currentDate = DateTime.now();
+  DateTime undecidedDate = DateTime(DateTime.now().year, DateTime.now().month, DateTime.now().day, 0, 0);
   DateFormat outputDate = DateFormat('yyyy年MM月dd日');
   DateFormat outputTime = DateFormat('hh:mm a');
   TimeOfDay timeZero = const TimeOfDay(hour: 0, minute: 0);
@@ -483,7 +485,33 @@ class _AddAttendanceWidgetState extends State<AddAttendanceWidget> {
               type: DateTimeSelectionType.time,
             ),
           ),
+          const SizedBox(width: 10,),
+          Expanded(
+            child: Row(
+              mainAxisAlignment: MainAxisAlignment.start,
+              crossAxisAlignment: CrossAxisAlignment.center,
+              children: [
+                Checkbox(
+                  value: undecided,
+                  onChanged: (value) {
+                    setState(() {
+                      undecided = value!;
+                      if(undecided == true) {
+                        _startTimeController.text = outputTime.format(undecidedDate);
+                        _startTime = undecidedDate;
+                      }
+                      else {
+                        _startTimeController.text = outputTime.format(currentDate);
+                        _startTime = currentDate;
+                      }
 
+                    });
+                  },
+                ),
+                const Text('未定'),
+              ],
+            ),
+          ),
         ],
       );
     }
