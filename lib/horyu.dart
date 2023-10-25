@@ -198,3 +198,36 @@ List<Memo> pageMemoList = memoList.getRange(_selectedIndex*10, _selectedIndex*10
       ),
     ).toList();
  */
+/*
+//EmailJSを用いたメール送信機能(reply_toは使用できる)
+
+import 'package:http/http.dart' as http;
+import 'dart:convert';
+
+sendEmail() async {
+    final url = Uri.parse("https://api.emailjs.com/api/v1.0/email/send");
+    final service_id = "service_0dffs6s";
+    final template_id = "template_qu36w3w";
+    final user_id = "mUoppOrruL5s4QJCG";
+    var respond = await http.post(url,
+        headers: {
+          'origin': 'http:/localhost',
+          'Content-Type': 'application/json'
+        },
+        body: jsonEncode({
+      "service_id": service_id,
+      "template_id": template_id,
+      "user_id": user_id,
+      "template_params": {
+        "to_email": 'atukunare2@gmail.com',
+        "to_name": '西尾',
+        "from_email": 'k646592@kansai-u.ac.jp',
+        "name": 'k646592',
+        "reply_to": 'anperdesu238@gmail.com',
+        "message": 'test',
+      },
+    }));
+    print(respond.body);
+  }
+
+ */
