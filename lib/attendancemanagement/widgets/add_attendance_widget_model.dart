@@ -91,11 +91,11 @@ class CreateAttendanceModel extends ChangeNotifier {
 
     // Create our message.
     final message = Message()
-      ..from = Address('k646592@kansai-u.ac.jp', '${event.name}(${email!})')
-      ..recipients.add('atukunare2@gmail.com')
+      ..from = Address(username, '${event.name}(${email!})')
+      ..recipients.add('Recsmail@ml.al.kansai-u.ac.jp')
       ..subject = '${event.name}：${event.title}'
       ..text = 'This is the plain text.\nThis is line 2 of the text part.'
-      ..ccRecipients.addAll(['anperdesu238@gmail.com'])
+      ..ccRecipients.addAll([email])
       ..html = textMessages(event.title);
 
     //画像やファイルを送信する場合のコード

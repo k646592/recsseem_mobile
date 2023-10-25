@@ -14,12 +14,14 @@ class CreateEventModel extends ChangeNotifier {
   
   String? username;
   String? userId;
+  String? email;
 
   Future fetchUser() async {
     final user = FirebaseAuth.instance.currentUser;
 
     FirebaseFirestore.instance.collection('users').doc(user!.uid).snapshots().listen((DocumentSnapshot snapshot) {
       username = snapshot.get('name');
+      email = snapshot.get('email');
     });
     userId = user.uid;
   }
@@ -61,12 +63,12 @@ class CreateEventModel extends ChangeNotifier {
 
     // Create our message.
     final message = Message()
-      ..from = Address(username, event.name)
-      ..recipients.add('atukunare2@gmail.com')
-      ..subject = '新しいイベントの案内 :: 😀 :: ${DateTime.now()}'
+      ..from = Address(username, '${event.name}(${email!})')
+      ..recipients.add('Recsmail@ml.al.kansai-u.ac.jp')
+      ..subject = '${event.name}：${event.title}'
       ..text = 'This is the plain text.\nThis is line 2 of the text part.'
-      ..ccRecipients.addAll(['k646592@kansai-u.ac.jp', 'anperdesu238@gmail.com'])
-      ..html = "<h1>${event.title}</h1>\n"
+      ..ccRecipients.addAll([email])
+      ..html =
           "<p>単位:${event.unit} </p>\n"
           "<p>詳細:${event.description}</p>\n"
           "<p>期間:${outputDate.format(event.startTime!)}-~${outputDate.format(event.endTime!)}</p>";
