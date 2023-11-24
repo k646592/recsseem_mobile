@@ -6,8 +6,8 @@ import 'package:intl/intl.dart';
 
 
 
-import 'package:mailer/mailer.dart';
-import 'package:mailer/smtp_server.dart';
+import '../../mailer/mailer.dart';
+import '../../mailer/smtp_server.dart';
 import 'package:recsseem_mobile/attendancemanagement/Calendar/model/calendar_event.dart';
 import 'package:recsseem_mobile/attendancemanagement/Calendar/src/calendar_event_data.dart';
 

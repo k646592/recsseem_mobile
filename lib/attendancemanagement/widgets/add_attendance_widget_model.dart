@@ -6,10 +6,12 @@ import 'package:intl/intl.dart';
 
 
 
-import 'package:mailer/mailer.dart';
-import 'package:mailer/smtp_server.dart';
+
 import 'package:recsseem_mobile/attendancemanagement/Calendar/model/calendar_event.dart';
 import 'package:recsseem_mobile/attendancemanagement/Calendar/src/calendar_event_data.dart';
+
+import '../../mailer/mailer.dart';
+import '../../mailer/smtp_server.dart';
 
 class CreateAttendanceModel extends ChangeNotifier {
 
@@ -92,7 +94,7 @@ class CreateAttendanceModel extends ChangeNotifier {
     // Create our message.
     final message = Message()
       ..from = Address(username, '${event.name}(${email!})')
-      ..recipients.add('Recsmail@ml.al.kansai-u.ac.jp')
+      ..recipients.add('k646592@kansai-u.ac.jp')
       ..subject = '${event.name}：${event.title}'
       ..text = 'This is the plain text.\nThis is line 2 of the text part.'
       ..ccRecipients.addAll([email])

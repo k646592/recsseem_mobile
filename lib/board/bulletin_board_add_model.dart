@@ -4,8 +4,8 @@ import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:intl/intl.dart';
 
-import 'package:mailer/mailer.dart';
-import 'package:mailer/smtp_server.dart';
+import '../../mailer/mailer.dart';
+import '../../mailer/smtp_server.dart';
 
 class BoardAddModel extends ChangeNotifier {
 

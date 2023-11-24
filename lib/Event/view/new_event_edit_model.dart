@@ -7,8 +7,8 @@ import 'package:intl/intl.dart';
 import '../../Event/Calendar/model/calendar_event.dart';
 import '../../Event/Calendar/src/calendar_event_data.dart';
 
-import 'package:mailer/mailer.dart';
-import 'package:mailer/smtp_server.dart';
+import '../../mailer/mailer.dart';
+import '../../mailer/smtp_server.dart';
 
 class NewEditEventModel extends ChangeNotifier {
 
